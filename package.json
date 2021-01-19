@@ -1,0 +1,79 @@
+{
+  "name": "coderscamp2020.project.typescript.chess",
+  "version": "1.0.0",
+  "description": "**UWAGA! Zaczynając pracę nad projektem — nie róbcie forka.\r Jedna osoba z zespołu (np. Mentor) powinna użyć przycisku `Use this template` i dodać innych członków zespołu jako Collaborators do tego repozytorium.\r Mentorzy mogą dowolnie zmieniać zakres projektu lub zdecydować się na zupełnie inny temat.**",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rimraf .cache && rimraf coverage && rimraf dist && rimraf node_modules",
+    "prebuild": "rimraf dist",
+    "build": "parcel build index.html --public-url ./",
+    "format": "prettier --write \"src/**/*.js\" \"src/**/*.ts\" \"test/**/*.js\" \"test/**/*.ts\"",
+    "start:dev": "parcel -p 8765 watch index.html",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nowakprojects/CodersCamp2020.Project.TypeScript.Chess.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nowakprojects/CodersCamp2020.Project.TypeScript.Chess/issues"
+  },
+  "homepage": "https://github.com/nowakprojects/CodersCamp2020.Project.TypeScript.Chess#readme",
+  "dependencies": {
+    "parcel": "^1.12.4",
+    "@types/jest": "^26.0.19",
+    "regenerator-runtime": "^0.13.7",
+    "uuid": "^8.3.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.6",
+    "@babel/preset-env": "^7.11.5",
+    "@testing-library/dom": "^7.26.6",
+    "@testing-library/jest-dom": "^5.11.6",
+    "@testing-library/user-event": "^12.2.2",
+    "babel-jest": "^26.5.0",
+    "cssnano": "^4.1.10",
+    "husky": "^4.3.6",
+    "jest": "^26.4.2",
+    "jest-fetch-mock": "^3.0.3",
+    "msw": "^0.21.3",
+    "parcel-bundler": "^1.12.4",
+    "parcel-plugin-static-files-copy": "^2.5.0",
+    "prettier": "2.2.1",
+    "pretty-quick": "^3.1.0",
+    "rimraf": "^3.0.2",
+    "sass": "^1.30.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "testRegex": "(spec|test)[.]js",
+    "coverageDirectory": "../coverage",
+    "setupFiles": [
+      "./test/setupJest.js"
+    ],
+    "collectCoverageFrom": [
+      "./src/**"
+    ]
+  },
+  "staticFiles": {
+    "staticPath": [
+      {
+        "staticPath": "static",
+        "staticOutDir": "static"
+      }
+    ]
+  }
+}
