@@ -1,14 +1,13 @@
 {
   "name": "coderscamp2020.project.typescript.chess",
   "version": "1.0.0",
-  "description": "**UWAGA! Zaczynając pracę nad projektem — nie róbcie forka.\r Jedna osoba z zespołu (np. Mentor) powinna użyć przycisku `Use this template` i dodać innych członków zespołu jako Collaborators do tego repozytorium.\r Mentorzy mogą dowolnie zmieniać zakres projektu lub zdecydować się na zupełnie inny temat.**",
-  "main": "index.js",
+  "description": "",
   "scripts": {
     "clean": "rimraf .cache && rimraf coverage && rimraf dist && rimraf node_modules",
     "prebuild": "rimraf dist",
     "build": "parcel build index.html --public-url ./",
     "format": "prettier --write \"src/**/*.js\" \"src/**/*.ts\" \"test/**/*.js\" \"test/**/*.ts\"",
-    "start:dev": "parcel -p 8765 watch index.html",
+    "start:dev": "parcel -p 7575 index.html --open",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage"
@@ -25,7 +24,6 @@
   "homepage": "https://github.com/nowakprojects/CodersCamp2020.Project.TypeScript.Chess#readme",
   "dependencies": {
     "parcel": "^1.12.4",
-    "@types/jest": "^26.0.19",
     "regenerator-runtime": "^0.13.7",
     "uuid": "^8.3.0"
   },
@@ -35,10 +33,15 @@
     "@testing-library/dom": "^7.26.6",
     "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/user-event": "^12.2.2",
+    "@types/jest": "^26.0.20",
+    "@types/node": "^14.14.22",
+    "@typescript-eslint/eslint-plugin": "^4.14.0",
+    "@typescript-eslint/parser": "^4.14.0",
     "babel-jest": "^26.5.0",
     "cssnano": "^4.1.10",
+    "eslint": "^7.18.0",
     "husky": "^4.3.6",
-    "jest": "^26.4.2",
+    "jest": "^26.6.3",
     "jest-fetch-mock": "^3.0.3",
     "msw": "^0.21.3",
     "parcel-bundler": "^1.12.4",
@@ -46,7 +49,10 @@
     "prettier": "2.2.1",
     "pretty-quick": "^3.1.0",
     "rimraf": "^3.0.2",
-    "sass": "^1.30.0"
+    "sass": "^1.30.0",
+    "ts-jest": "^26.4.4",
+    "tsc-watch": "^4.2.9",
+    "typescript": "^4.1.3"
   },
   "husky": {
     "hooks": {
@@ -59,14 +65,17 @@
       "json",
       "ts"
     ],
-    "testRegex": "(spec|test)[.]js",
+    "testRegex": "(spec|test)[.]ts",
     "coverageDirectory": "../coverage",
     "setupFiles": [
-      "./test/setupJest.js"
+      "./test/setupJest.ts"
     ],
     "collectCoverageFrom": [
       "./src/**"
-    ]
+    ],
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    }
   },
   "staticFiles": {
     "staticPath": [
