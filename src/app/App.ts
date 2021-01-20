@@ -1,3 +1,1 @@
-export const App = () => {
-  console.log('cos');
-};
+export const App = () => {};
