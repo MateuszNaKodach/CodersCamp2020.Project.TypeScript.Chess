@@ -2,13 +2,12 @@
   "name": "coderscamp2020.project.typescript.chess",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "clean": "rimraf .cache && rimraf coverage && rimraf dist && rimraf node_modules",
     "prebuild": "rimraf dist",
-    "build": "rm -rf dist && tsc --noEmit && parcel build index.html",
+    "build": "parcel build index.html --public-url ./",
     "format": "prettier --write \"src/**/*.js\" \"src/**/*.ts\" \"test/**/*.js\" \"test/**/*.ts\"",
-    "start": "parcel -p 8765 index.html --open",
+    "start:dev": "parcel -p 7575 index.html --open",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage"
@@ -35,6 +34,7 @@
     "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/user-event": "^12.2.2",
     "@types/jest": "^26.0.20",
+    "@types/node": "^14.14.22",
     "@typescript-eslint/eslint-plugin": "^4.14.0",
     "@typescript-eslint/parser": "^4.14.0",
     "babel-jest": "^26.5.0",
@@ -72,7 +72,10 @@
     ],
     "collectCoverageFrom": [
       "./src/**"
-    ]
+    ],
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    }
   },
   "staticFiles": {
     "staticPath": [
