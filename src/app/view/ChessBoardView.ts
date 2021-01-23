@@ -1,4 +1,6 @@
-type Square = {
+//Nie przywiazujcie sie do tego kodu. Mozecie sprobowac wszystko pozmieniac / zrobic inaczej.
+
+export type Square = {
   id: string;
 };
 
@@ -7,9 +9,9 @@ enum Side {
   BLACK = 'BLACK',
 }
 
-type Piece = { name: string; side: Side };
+export type Piece = { name: string; side: Side };
 
-interface ChessBoardView {
+export interface ChessBoardView {
   showPieceOn(square: Square, piece: Piece): void;
 
   removePieceFrom(square: Square): void;
