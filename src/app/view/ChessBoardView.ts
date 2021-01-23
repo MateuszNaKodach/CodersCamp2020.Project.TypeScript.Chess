@@ -4,7 +4,7 @@ export type Square = {
   id: string;
 };
 
-enum Side {
+export enum Side {
   WHITE = 'WHITE',
   BLACK = 'BLACK',
 }
