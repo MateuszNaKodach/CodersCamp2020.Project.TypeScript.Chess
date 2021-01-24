@@ -1,6 +1,7 @@
 import { WebChessBoardView } from '../../../src/app/view/WebChessBoardView';
 import { screen } from '@testing-library/dom';
 import { PieceComponent } from '../../../src/app/view/PieceComponent';
+import { ChessBoardView, Side } from '../../../src/app/view/ChessBoardView';
 
 xit('Showing piece on square', () => {
   const chessBoardView: ChessBoardView = new WebChessBoardView();
