@@ -1,5 +1,7 @@
-type Board = { squares: Square[] };
+import { Board, Piece, Square } from './Types';
 
-interface PieceMovement {
-  possibleMoves(position: string, board: Board): string[];
+export interface PieceMovement {
+  possibleMoves(position: Square, board: Board): Square[];
+  isPositionEmpty(position: Square): boolean;
+  onPositionPiece(position: Square): Piece;
 }
