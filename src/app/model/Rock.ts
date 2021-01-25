@@ -29,7 +29,7 @@ export class Rock implements PieceMovement {
       return movesToGo;
     } else {
       for (let i = position.row; i < matrixDimension; i++) {
-        if (board.squares[i][position.column - 1].isEmpty) {
+        if (board.squares[i][position.column - 1].piece == null) {
           movesToGo.push(board.squares[i][position.column - 1]);
         } else {
           if (board.squares[i][position.column - 1].piece?.side !== this.side) {
@@ -50,7 +50,7 @@ export class Rock implements PieceMovement {
       return movesToGo;
     } else {
       for (let i = position.row - 2; i >= 0; i--) {
-        if (board.squares[i][position.column - 1].isEmpty) {
+        if (board.squares[i][position.column - 1].piece == null) {
           movesToGo.push(board.squares[i][position.column - 1]);
         } else {
           if (board.squares[i][position.column - 1].piece?.side !== this.side) {
@@ -71,7 +71,7 @@ export class Rock implements PieceMovement {
       return movesToGo;
     } else {
       for (let i = position.column - 2; i >= 0; i--) {
-        if (board.squares[position.row - 1][i].isEmpty) {
+        if (board.squares[position.row - 1][i].piece == null) {
           movesToGo.push(board.squares[position.row - 1][i]);
         } else {
           if (board.squares[position.row - 1][i].piece?.side !== this.side) {
@@ -93,7 +93,7 @@ export class Rock implements PieceMovement {
       return movesToGo;
     } else {
       for (let i = position.column; i < matrixDimension; i++) {
-        if (board.squares[position.row - 1][i].isEmpty) {
+        if (board.squares[position.row - 1][i].piece == null) {
           movesToGo.push(board.squares[position.row - 1][i]);
         } else {
           if (board.squares[position.row - 1][i].piece?.side !== this.side) {
