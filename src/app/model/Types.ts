@@ -9,6 +9,6 @@ export enum Column {
   'H' = 8,
 }
 export type Row = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
-export type Square = { row: Row; column: Column; piece: Piece | null };
+export type Square = { column: Column; row: Row; piece: Piece | null };
 export type Side = 'WHITE' | 'BLACK';
 export type Piece = { id: string; side: Side };
