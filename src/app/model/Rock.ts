@@ -1,11 +1,14 @@
 import { Board } from './Board';
+import { Piece } from './Piece';
 import { PieceMovement } from './PieceMovement';
 import { Side, Square } from './Types';
 
-export class Rock implements PieceMovement {
+export class Rock extends Piece implements PieceMovement {
   readonly boardSize = 8;
 
-  constructor(private id: string, private side: Side) {}
+  constructor(id: string, side: Side) {
+    super(id, side);
+  }
 
   possibleMoves(position: Square, board: Board): Square[] {
     let movesToGo: Square[] = [];
