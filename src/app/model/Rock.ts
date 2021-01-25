@@ -3,36 +3,33 @@ import { PieceMovement } from './PieceMovement';
 import { Side, Square } from './Types';
 
 export class Rock implements PieceMovement {
-  id: string;
-  side: Side;
+  readonly boardSize = 8;
 
-  constructor(id: string, side: Side) {
-    this.id = id;
-    this.side = side;
-  }
+  constructor(private id: string, private side: Side) {}
 
   possibleMoves(position: Square, board: Board): Square[] {
     let movesToGo: Square[] = [];
-    movesToGo.concat(this._goUp(position, board));
-    movesToGo.concat(this._goDown(position, board));
-    movesToGo.concat(this._goLeft(position, board));
-    movesToGo.concat(this._goRight(position, board));
+    movesToGo = this.goUp(position, board).concat(
+      this.goDown(position, board),
+      this.goLeft(position, board),
+      this.goRight(position, board),
+    );
 
     return movesToGo;
   }
 
-  _goUp(position: Square, board: Board): Square[] {
-    let movesToGo: Square[] = [];
-    let matrixDimension = board.squares[0].length;
+  private goUp(position: Square, board: Board): Square[] {
+    const movesToGo: Square[] = [];
 
     if (position.row === 8) {
       return movesToGo;
     } else {
-      for (let i = position.row; i < matrixDimension; i++) {
+      for (let i = position.row; i < this.boardSize; i++) {
         if (board.squares[i][position.column - 1].piece == null) {
           movesToGo.push(board.squares[i][position.column - 1]);
         } else {
-          if (board.squares[i][position.column - 1].piece?.side !== this.side) {
+          if (this.checkIfOponent(i, position.column - 1, board, this.side)) {
+            // if (board.squares[i][position.column - 1].piece?.side !== this.side) {
             movesToGo.push(board.squares[i][position.column - 1]);
             break;
           } else break;
@@ -43,8 +40,8 @@ export class Rock implements PieceMovement {
     return movesToGo;
   }
 
-  _goDown(position: Square, board: Board): Square[] {
-    let movesToGo: Square[] = [];
+  private goDown(position: Square, board: Board): Square[] {
+    const movesToGo: Square[] = [];
 
     if (position.row === 1) {
       return movesToGo;
@@ -53,7 +50,8 @@ export class Rock implements PieceMovement {
         if (board.squares[i][position.column - 1].piece == null) {
           movesToGo.push(board.squares[i][position.column - 1]);
         } else {
-          if (board.squares[i][position.column - 1].piece?.side !== this.side) {
+          if (this.checkIfOponent(i, position.column - 1, board, this.side)) {
+            // if (board.squares[i][position.column - 1].piece?.side !== this.side) {
             movesToGo.push(board.squares[i][position.column - 1]);
             break;
           } else break;
@@ -64,8 +62,8 @@ export class Rock implements PieceMovement {
     return movesToGo;
   }
 
-  _goLeft(position: Square, board: Board): Square[] {
-    let movesToGo: Square[] = [];
+  private goLeft(position: Square, board: Board): Square[] {
+    const movesToGo: Square[] = [];
 
     if (position.column === 1) {
       return movesToGo;
@@ -74,7 +72,8 @@ export class Rock implements PieceMovement {
         if (board.squares[position.row - 1][i].piece == null) {
           movesToGo.push(board.squares[position.row - 1][i]);
         } else {
-          if (board.squares[position.row - 1][i].piece?.side !== this.side) {
+          if (this.checkIfOponent(position.row - 1, i, board, this.side)) {
+            // if (board.squares[position.row - 1][i].piece?.side !== this.side) {
             movesToGo.push(board.squares[position.row - 1][i]);
             break;
           } else break;
@@ -85,18 +84,18 @@ export class Rock implements PieceMovement {
     return movesToGo;
   }
 
-  _goRight(position: Square, board: Board): Square[] {
-    let movesToGo: Square[] = [];
-    let matrixDimension = board.squares[0].length;
+  private goRight(position: Square, board: Board): Square[] {
+    const movesToGo: Square[] = [];
 
     if (position.column === 8) {
       return movesToGo;
     } else {
-      for (let i = position.column; i < matrixDimension; i++) {
+      for (let i = position.column; i < this.boardSize; i++) {
         if (board.squares[position.row - 1][i].piece == null) {
           movesToGo.push(board.squares[position.row - 1][i]);
         } else {
-          if (board.squares[position.row - 1][i].piece?.side !== this.side) {
+          if (this.checkIfOponent(position.row - 1, i, board, this.side)) {
+            // if (board.squares[position.row - 1][i].piece?.side !== this.side) {
             movesToGo.push(board.squares[position.row - 1][i]);
             break;
           } else break;
@@ -105,5 +104,9 @@ export class Rock implements PieceMovement {
     }
 
     return movesToGo;
+  }
+
+  private checkIfOponent(rowPosition: number, columnPosition: number, board: Board, side: Side): boolean {
+    return board.squares[rowPosition][columnPosition].piece?.side !== side ? true : false;
   }
 }
