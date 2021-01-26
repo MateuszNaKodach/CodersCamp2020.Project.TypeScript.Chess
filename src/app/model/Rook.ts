@@ -55,7 +55,7 @@ export class Rook extends Piece implements PieceMovement {
   private goLeft(position: Square, board: Board): Square[] {
     const movesToGo: Square[] = [];
 
-    for (let i = position.column.indexOf(position.column) - 1; i >= 0; i--) {
+    for (let i = columns.indexOf(position.column) - 1; i >= 0; i--) {
       if (board.onPositionPiece({ column: columns[i], row: position.row }) === null) {
         movesToGo.push({ column: columns[i], row: position.row });
       } else {
@@ -72,7 +72,7 @@ export class Rook extends Piece implements PieceMovement {
   private goRight(position: Square, board: Board): Square[] {
     const movesToGo: Square[] = [];
 
-    for (let i = position.column.indexOf(position.column) + 1; i < BOARDSIZE; i++) {
+    for (let i = columns.indexOf(position.column) + 1; i < BOARDSIZE; i++) {
       if (board.onPositionPiece({ column: columns[i], row: position.row }) === null) {
         movesToGo.push({ column: columns[i], row: position.row });
       } else {
