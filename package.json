@@ -5,7 +5,7 @@
   "scripts": {
     "clean": "rimraf .cache && rimraf coverage && rimraf dist && rimraf node_modules",
     "prebuild": "rimraf dist",
-    "build": "parcel build index.html --public-url ./",
+    "build": "rm -rf dist && tsc --noEmit && parcel build index.html",
     "format": "prettier --write \"src/**/*.js\" \"src/**/*.ts\" \"test/**/*.js\" \"test/**/*.ts\"",
     "start:dev": "parcel -p 7575 index.html --open",
     "test": "jest",
@@ -42,6 +42,7 @@
     "eslint": "^7.18.0",
     "husky": "^4.3.6",
     "jest": "^26.6.3",
+    "jest-extended": "^0.11.5",
     "jest-fetch-mock": "^3.0.3",
     "msw": "^0.21.3",
     "parcel-bundler": "^1.12.4",
