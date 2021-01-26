@@ -58,4 +58,32 @@ describe('Rook movement', () => {
 
     expect(rockPossibleMoves).toIncludeSameMembers(possibleMovesWhenRookOnD4);
   });
+
+  it('Check possible squares to go, when Rook is on D4 and there are some pieces on D7 and F4', () => {
+    mockOnPositionPiece.mockImplementation((square) => {
+      if (square.column === 'D' && square.row === 7) {
+        return { id: '10', side: 'BLACK' };
+      } else if (square.column === 'F' && square.row === 4) {
+        return { id: '11', side: 'WHITE' };
+      } else return null;
+    });
+    const possibleMovesWhenRookOnD4 = [
+      { column: 'D', row: 7 },
+      { column: 'D', row: 6 },
+      { column: 'D', row: 5 },
+      { column: 'D', row: 3 },
+      { column: 'D', row: 2 },
+      { column: 'D', row: 1 },
+      { column: 'A', row: 4 },
+      { column: 'B', row: 4 },
+      { column: 'C', row: 4 },
+      { column: 'E', row: 4 },
+    ];
+    const rook = new Rook('1', 'WHITE');
+    const rockPosition: Square = { column: 'D', row: 4 };
+
+    const rockPossibleMoves = rook.possibleMoves(rockPosition, board);
+
+    expect(rockPossibleMoves).toIncludeSameMembers(possibleMovesWhenRookOnD4);
+  });
 });
