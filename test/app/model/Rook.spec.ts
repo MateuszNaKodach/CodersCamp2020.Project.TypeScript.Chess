@@ -1,28 +1,19 @@
 import { Rook } from '../../../src/app/model/Rook';
 import { Square, Row, Column } from '../../../src/app/model/Types';
+import { Board } from '../../../src/app/model/Board';
+import { Piece } from '../../../src/app/model/Piece';
 
 describe('Rook movement', () => {
-  // it('Check possibles values, when Rook is on A1', () => {
-  //   let board = generateEmptyBoard();
-  //   let rook = new Rook('1', 'WHITE');
-  //   let rockPosition: Square = { column: 'A', row: 1, piece: rook };
+  it('Check possibles values, when Rook is on A1', () => {
+    const mockOnPositionPiece = jest.fn();
+    const board: Board = { onPositionPiece: mockOnPositionPiece };
+    mockOnPositionPiece.mockReturnValue(null);
 
-  //   let rockPossibleMoves = rook.possibleMoves(rockPosition, board);
+    const rook = new Rook('1', 'WHITE');
+    const rockPosition: Square = { column: 'A', row: 1 };
 
-  //   expect(rockPossibleMoves).toBe('here will go Square[] with possible moves to go');
-  // });
+    const rockPossibleMoves = rook.possibleMoves(rockPosition, board);
 
-  function generateEmptyBoard(): Square[][] {
-    const board: Square[][] = [];
-    for (let i = 0; i < 8; i++) {
-      board[i] = [];
-      for (let j = 0; j < 8; j++) {
-        board[i][j] = { column: j as Column, row: (i + 1) as Row, piece: null };
-      }
-    }
-    console.log(board);
-    return board;
-  }
-
-  generateEmptyBoard();
+    expect(rockPossibleMoves).toBe('here will go Square[] with possible moves to go');
+  });
 });

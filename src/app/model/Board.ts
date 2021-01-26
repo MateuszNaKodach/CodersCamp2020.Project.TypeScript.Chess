@@ -1,5 +1,6 @@
+import { Piece } from './Piece';
 import { Square } from './Types';
 
 export interface Board {
-  readonly squares: Square[][];
+  onPositionPiece(sqaure: Square): Piece | null;
 }

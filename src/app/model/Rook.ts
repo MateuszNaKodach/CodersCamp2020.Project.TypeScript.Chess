@@ -1,41 +1,35 @@
 import { Board } from './Board';
+import { BOARDSIZE } from './Constances';
 import { Piece } from './Piece';
 import { PieceMovement } from './PieceMovement';
-import { Side, Square } from './Types';
+import { Column, Row, Side, Square } from './Types';
 
 export class Rook extends Piece implements PieceMovement {
-  readonly boardSize = 8;
-
   constructor(id: string, side: Side) {
     super(id, side);
   }
 
   possibleMoves(position: Square, board: Board): Square[] {
-    let movesToGo: Square[] = [];
-    movesToGo = this.goUp(position, board).concat(
+    const movesToGo = this.goUp(position, board).concat(
       this.goDown(position, board),
       this.goLeft(position, board),
       this.goRight(position, board),
     );
-
     return movesToGo;
   }
 
   private goUp(position: Square, board: Board): Square[] {
     const movesToGo: Square[] = [];
 
-    if (position.row === 8) {
-      return movesToGo;
-    } else {
-      for (let i = position.row; i < this.boardSize; i++) {
-        if (board.squares[i][position.column.indexOf(position.column)].piece == null) {
-          movesToGo.push(board.squares[i][position.column.indexOf(position.column)]);
-        } else {
-          if (this.checkIfOponent(i, position.column.indexOf(position.column), board, this.side)) {
-            movesToGo.push(board.squares[i][position.column.indexOf(position.column)]);
-            break;
-          } else break;
-        }
+    for (let i = position.row + 1; i <= BOARDSIZE; i++) {
+      if (board.onPositionPiece({ column: position.column, row: i as Row } as Square) === null) {
+        // is 'as Square' needed here? without it it also works! but it's less visible
+        movesToGo.push({ column: position.column, row: i as Row } as Square); // same here
+      } else {
+        if (this.checkIfOponent(position.column, i as Row, board)) {
+          movesToGo.push({ column: position.column, row: i as Row } as Square); // same here
+          break;
+        } else break;
       }
     }
 
@@ -45,18 +39,14 @@ export class Rook extends Piece implements PieceMovement {
   private goDown(position: Square, board: Board): Square[] {
     const movesToGo: Square[] = [];
 
-    if (position.row === 1) {
-      return movesToGo;
-    } else {
-      for (let i = position.row - 2; i >= 0; i--) {
-        if (board.squares[i][position.column.indexOf(position.column)].piece == null) {
-          movesToGo.push(board.squares[i][position.column.indexOf(position.column)]);
-        } else {
-          if (this.checkIfOponent(i, position.column.indexOf(position.column), board, this.side)) {
-            movesToGo.push(board.squares[i][position.column.indexOf(position.column)]);
-            break;
-          } else break;
-        }
+    for (let i = position.row - 1; i >= 1; i--) {
+      if (board.onPositionPiece({ column: position.column, row: i as Row }) === null) {
+        movesToGo.push({ column: position.column, row: i as Row });
+      } else {
+        if (this.checkIfOponent(position.column, i as Row, board)) {
+          movesToGo.push({ column: position.column, row: i as Row });
+          break;
+        } else break;
       }
     }
 
@@ -66,18 +56,14 @@ export class Rook extends Piece implements PieceMovement {
   private goLeft(position: Square, board: Board): Square[] {
     const movesToGo: Square[] = [];
 
-    if (position.column.indexOf(position.column) === 1) {
-      return movesToGo;
-    } else {
-      for (let i = position.column.indexOf(position.column) - 1; i >= 0; i--) {
-        if (board.squares[position.row - 1][i].piece == null) {
-          movesToGo.push(board.squares[position.row - 1][i]);
-        } else {
-          if (this.checkIfOponent(position.row - 1, i, board, this.side)) {
-            movesToGo.push(board.squares[position.row - 1][i]);
-            break;
-          } else break;
-        }
+    for (let i = position.column.indexOf(position.column) - 1; i >= 0; i--) {
+      if (board.onPositionPiece({ column: position.column[i] as Column, row: position.row }) === null) {
+        movesToGo.push({ column: position.column[i] as Column, row: position.row });
+      } else {
+        if (this.checkIfOponent(position.column[i] as Column, position.row, board)) {
+          movesToGo.push({ column: position.column[i] as Column, row: position.row });
+          break;
+        } else break;
       }
     }
 
@@ -87,25 +73,21 @@ export class Rook extends Piece implements PieceMovement {
   private goRight(position: Square, board: Board): Square[] {
     const movesToGo: Square[] = [];
 
-    if (position.column.indexOf(position.column) === 8) {
-      return movesToGo;
-    } else {
-      for (let i = position.column.indexOf(position.column); i < this.boardSize; i++) {
-        if (board.squares[position.row - 1][i].piece == null) {
-          movesToGo.push(board.squares[position.row - 1][i]);
-        } else {
-          if (this.checkIfOponent(position.row - 1, i, board, this.side)) {
-            movesToGo.push(board.squares[position.row - 1][i]);
-            break;
-          } else break;
-        }
+    for (let i = position.column.indexOf(position.column) + 1; i < BOARDSIZE; i++) {
+      if (board.onPositionPiece({ column: position.column[i] as Column, row: position.row }) === null) {
+        movesToGo.push({ column: position.column[i] as Column, row: position.row });
+      } else {
+        if (this.checkIfOponent(position.column[i] as Column, position.row, board)) {
+          movesToGo.push({ column: position.column[i] as Column, row: position.row });
+          break;
+        } else break;
       }
     }
 
     return movesToGo;
   }
 
-  private checkIfOponent(rowPosition: number, columnPosition: number, board: Board, side: Side): boolean {
-    return board.squares[rowPosition][columnPosition].piece?.side !== side ? true : false;
+  private checkIfOponent(columnPosition: Column, rowPosition: Row, board: Board): boolean {
+    return board.onPositionPiece({ column: columnPosition, row: rowPosition })?.side !== this.side;
   }
 }
