@@ -1,8 +1,7 @@
 import { Rook } from '../../../src/app/model/Rook';
 import { Square } from '../../../src/app/model/Types';
-import { Board } from '../../../src/app/model/Board';
 import 'jest-extended';
-import { Piece } from '../../../src/app/model/Piece';
+import { boardWithPieces, emptyBoard } from './BoardFixture';
 
 describe('Rook movement', () => {
   it("Check possible squares to go, when Rook is on A1 and there is no pieces on Roook's way", () => {
@@ -80,15 +79,3 @@ describe('Rook movement', () => {
     expect(rockPossibleMoves).toIncludeSameMembers(possibleMovesWhenRookOnD4);
   });
 });
-
-const emptyBoard: Board = { onPositionPiece: (square: Square) => null };
-type SquareWithPiece = { [key: string]: Piece };
-
-const boardWithPieces: (squaresWithPiece: SquareWithPiece) => Board = (squaresWithPiece) => {
-  return {
-    onPositionPiece: (square: Square) => {
-      const pieceOnSquare = squaresWithPiece[`${square.column}${square.row}`];
-      return pieceOnSquare ? pieceOnSquare : null;
-    },
-  };
-};
