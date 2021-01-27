@@ -2,13 +2,10 @@ import { Rook } from '../../../src/app/model/Rook';
 import { Square } from '../../../src/app/model/Types';
 import { Board } from '../../../src/app/model/Board';
 import 'jest-extended';
+import { Piece } from '../../../src/app/model/Piece';
 
 describe('Rook movement', () => {
-  const mockOnPositionPiece = jest.fn();
-  const board: Board = { onPositionPiece: mockOnPositionPiece };
-
   it("Check possible squares to go, when Rook is on A1 and there is no pieces on Roook's way", () => {
-    mockOnPositionPiece.mockReturnValue(null);
     const possibleMovesWhenRookOnA1 = [
       { column: 'B', row: 1 },
       { column: 'C', row: 1 },
@@ -28,13 +25,12 @@ describe('Rook movement', () => {
     const rook = new Rook('1', 'WHITE');
     const rockPosition: Square = { column: 'A', row: 1 };
 
-    const rockPossibleMoves = rook.possibleMoves(rockPosition, board);
+    const rockPossibleMoves = rook.possibleMoves(rockPosition, emptyBoard);
 
     expect(rockPossibleMoves).toIncludeSameMembers(possibleMovesWhenRookOnA1);
   });
 
   it("Check possible squares to go, when Rook is on D4 and there is no pieces on Roook's way", () => {
-    mockOnPositionPiece.mockReturnValue(null);
     const possibleMovesWhenRookOnD4 = [
       { column: 'D', row: 8 },
       { column: 'D', row: 7 },
@@ -54,18 +50,15 @@ describe('Rook movement', () => {
     const rook = new Rook('1', 'WHITE');
     const rockPosition: Square = { column: 'D', row: 4 };
 
-    const rockPossibleMoves = rook.possibleMoves(rockPosition, board);
+    const rockPossibleMoves = rook.possibleMoves(rockPosition, emptyBoard);
 
     expect(rockPossibleMoves).toIncludeSameMembers(possibleMovesWhenRookOnD4);
   });
 
   it('Check possible squares to go, when Rook is on D4 and there are some pieces on D7 and F4', () => {
-    mockOnPositionPiece.mockImplementation((square) => {
-      if (square.column === 'D' && square.row === 7) {
-        return { id: '10', side: 'BLACK' };
-      } else if (square.column === 'F' && square.row === 4) {
-        return { id: '11', side: 'WHITE' };
-      } else return null;
+    const board = boardWithPieces({
+      D7: { id: '10', side: 'BLACK' },
+      F4: { id: '11', side: 'WHITE' },
     });
     const possibleMovesWhenRookOnD4 = [
       { column: 'D', row: 7 },
@@ -87,3 +80,15 @@ describe('Rook movement', () => {
     expect(rockPossibleMoves).toIncludeSameMembers(possibleMovesWhenRookOnD4);
   });
 });
+
+const emptyBoard: Board = { onPositionPiece: (square: Square) => null };
+type SquareWithPiece = { [key: string]: Piece };
+
+const boardWithPieces: (squaresWithPiece: SquareWithPiece) => Board = (squaresWithPiece) => {
+  return {
+    onPositionPiece: (square: Square) => {
+      const pieceOnSquare = squaresWithPiece[`${square.column}${square.row}`];
+      return pieceOnSquare ? pieceOnSquare : null;
+    },
+  };
+};
