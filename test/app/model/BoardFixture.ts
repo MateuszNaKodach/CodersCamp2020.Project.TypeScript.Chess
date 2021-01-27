@@ -7,9 +7,6 @@ export type SquareWithPiece = { [key: string]: Piece };
 
 export const boardWithPieces: (squaresWithPiece: SquareWithPiece) => Board = (squaresWithPiece) => {
   return {
-    onPositionPiece: (square: Square) => {
-      const pieceOnSquare = squaresWithPiece[`${square.column}${square.row}`];
-      return pieceOnSquare ? pieceOnSquare : null;
-    },
+    onPositionPiece: (square: Square) => squaresWithPiece[`${square.column}${square.row}`] ?? null,
   };
 };
