@@ -20,23 +20,19 @@ export class Button {
   }
 
   withText(text: string): Button {
-    this.btnText = text;
-    return this;
+    return new Button(this.id, this.size, text, this.onClickFn);
   }
 
   large(): Button {
-    this.size = Size.LARGE;
-    return this;
+    return new Button(this.id, Size.LARGE, this.btnText, this.onClickFn);
   }
 
   small(): Button {
-    this.size = Size.SMALL;
-    return this;
+    return new Button(this.id, Size.SMALL, this.btnText, this.onClickFn);
   }
 
   onClick(clickFn: any): Button {
-    this.onClickFn = clickFn;
-    return this;
+    return new Button(this.id, this.size, this.btnText, clickFn);
   }
 
   updateHtml(): void {
