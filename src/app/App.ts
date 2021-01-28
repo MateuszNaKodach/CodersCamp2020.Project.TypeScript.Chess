@@ -1,12 +1,12 @@
-import { Button, Size } from './view/Button';
+import { Button } from './view/Button';
 
 export const App = () => {
-  const testButton = new Button('test', 'play', ['test', 'test1', 'button--large'], undefined);
-  console.log(testButton);
-  console.log(testButton);
-  // testButton.changeSizeToLarge();
-  // testButton.changeSizeTo(Size.LARGE);
-  testButton.changeSizeToSmall();
+  const button: Button = Button.small('buttonId')
+    .withText('Text')
+    .onClick(() => console.log('sad'));
 
-  document.body.appendChild(testButton.withText('lala').large().html());
+  const buttonHtml = button.toHtml();
+  document.body.appendChild(buttonHtml);
+
+  Button.fromHtml(buttonHtml).large().withText('Sratata').updateHtml();
 };
