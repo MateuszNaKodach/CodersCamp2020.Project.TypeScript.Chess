@@ -22,7 +22,7 @@ export class Rook extends Piece implements PieceMovement {
     const movesToGo: Square[] = [];
 
     for (let i = position.row + 1; i <= BOARDSIZE; i++) {
-      if (board.onPositionPiece({ column: position.column, row: i as Row }) === null) {
+      if (!board.onPositionPiece({ column: position.column, row: i as Row })) {
         movesToGo.push({ column: position.column, row: i as Row });
       } else {
         if (this.checkIfOponent(position.column, i as Row, board)) {
@@ -39,7 +39,7 @@ export class Rook extends Piece implements PieceMovement {
     const movesToGo: Square[] = [];
 
     for (let i = position.row - 1; i >= 1; i--) {
-      if (board.onPositionPiece({ column: position.column, row: i as Row }) === null) {
+      if (!board.onPositionPiece({ column: position.column, row: i as Row })) {
         movesToGo.push({ column: position.column, row: i as Row });
       } else {
         if (this.checkIfOponent(position.column, i as Row, board)) {
@@ -56,7 +56,7 @@ export class Rook extends Piece implements PieceMovement {
     const movesToGo: Square[] = [];
 
     for (let i = columns.indexOf(position.column) - 1; i >= 0; i--) {
-      if (board.onPositionPiece({ column: columns[i], row: position.row }) === null) {
+      if (!board.onPositionPiece({ column: columns[i], row: position.row })) {
         movesToGo.push({ column: columns[i], row: position.row });
       } else {
         if (this.checkIfOponent(columns[i], position.row, board)) {
@@ -73,7 +73,7 @@ export class Rook extends Piece implements PieceMovement {
     const movesToGo: Square[] = [];
 
     for (let i = columns.indexOf(position.column) + 1; i < BOARDSIZE; i++) {
-      if (board.onPositionPiece({ column: columns[i], row: position.row }) === null) {
+      if (!board.onPositionPiece({ column: columns[i], row: position.row })) {
         movesToGo.push({ column: columns[i], row: position.row });
       } else {
         if (this.checkIfOponent(columns[i], position.row, board)) {
