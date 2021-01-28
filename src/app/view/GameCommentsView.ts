@@ -1,1 +1,1 @@
-interface GameCommentsView {}
+export interface GameCommentsView {}
