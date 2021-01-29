@@ -25,7 +25,14 @@ export class Pawn extends Piece implements PieceMovement {
 
   private goDoubleAhead(position: Square, board: Board): Square[] {
     const movesToGo: Square[] = [];
-
+    if (position.row === 2) {
+      if (
+        board.onPositionPiece({ column: position.column, row: (position.row + 1) as Row }) === null &&
+        board.onPositionPiece({ column: position.column, row: (position.row + 2) as Row }) === null
+      ) {
+        movesToGo.push({ column: position.column, row: (position.row + 2) as Row });
+      }
+    }
     return movesToGo;
   }
 
