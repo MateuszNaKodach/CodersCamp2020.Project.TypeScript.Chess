@@ -7,6 +7,9 @@
     "prebuild": "rimraf dist",
     "build": "rm -rf dist && tsc --noEmit && parcel build index.html",
     "format": "prettier --write \"src/**/*.js\" \"src/**/*.ts\" \"test/**/*.js\" \"test/**/*.ts\"",
+    "format:ci": "prettier -c \"src/**/*.js\" \"src/**/*.ts\" \"test/**/*.js\" \"test/**/*.ts\"",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix --format codeframe",
+    "lint:ci": "eslint \"{src,apps,libs,test}/**/*.ts\" --format codeframe",
     "start:dev": "parcel -p 7575 index.html --open",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -23,6 +26,7 @@
   },
   "homepage": "https://github.com/nowakprojects/CodersCamp2020.Project.TypeScript.Chess#readme",
   "dependencies": {
+    "eslint-config-prettier": "^7.2.0",
     "parcel": "^1.12.4",
     "regenerator-runtime": "^0.13.7",
     "uuid": "^8.3.0"
