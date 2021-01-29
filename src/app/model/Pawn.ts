@@ -17,7 +17,7 @@ export class Pawn extends Piece implements PieceMovement {
 
   private goAhead(position: Square, board: Board): Square[] {
     const movesToGo: Square[] = [];
-    if (board.onPositionPiece({ column: position.column, row: (position.row + 1) as Row }) === null) {
+    if (!board.onPositionPiece({ column: position.column, row: (position.row + 1) as Row })) {
       movesToGo.push({ column: position.column, row: (position.row + 1) as Row });
     }
     return movesToGo;
@@ -27,8 +27,8 @@ export class Pawn extends Piece implements PieceMovement {
     const movesToGo: Square[] = [];
     if (position.row === 2) {
       if (
-        board.onPositionPiece({ column: position.column, row: (position.row + 1) as Row }) === null &&
-        board.onPositionPiece({ column: position.column, row: (position.row + 2) as Row }) === null
+        !board.onPositionPiece({ column: position.column, row: (position.row + 1) as Row }) &&
+        !board.onPositionPiece({ column: position.column, row: (position.row + 2) as Row })
       ) {
         movesToGo.push({ column: position.column, row: (position.row + 2) as Row });
       }
@@ -38,6 +38,23 @@ export class Pawn extends Piece implements PieceMovement {
 
   private goDiagonalAhead(position: Square, board: Board): Square[] {
     const movesToGo: Square[] = [];
+    const currentColumnNumber = columns.indexOf(position.column);
+    const currentRowNumber = position.row;
+
+    if (
+      board.onPositionPiece({ column: columns[currentColumnNumber + 1], row: (currentRowNumber + 1) as Row }) &&
+      this.checkIfOponent(columns[currentColumnNumber + 1], (currentRowNumber + 1) as Row, board)
+    ) {
+      movesToGo.push({ column: columns[currentColumnNumber + 1], row: (currentRowNumber + 1) as Row });
+    }
+
+    if (
+      board.onPositionPiece({ column: columns[currentColumnNumber - 1], row: (currentRowNumber + 1) as Row }) &&
+      this.checkIfOponent(columns[currentColumnNumber - 1], (currentRowNumber + 1) as Row, board)
+    ) {
+      movesToGo.push({ column: columns[currentColumnNumber - 1], row: (currentRowNumber + 1) as Row });
+    }
+
     return movesToGo;
   }
 
