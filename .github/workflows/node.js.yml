@@ -1,7 +1,7 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Node.js CI
+name: CodersCamp2020 | ♟️ Chess Game - TypeScript CI
 
 on:
   push:
@@ -22,13 +22,19 @@ jobs:
       - run: npm run lint:ci
       - run: npm run format:ci
       - run: npm run build --if-present
-      - run: npm test
+      - run: npm run test:ci
       - uses: actions/upload-artifact@v1
         name: Upload build as artifact
         if: always()
         with:
           name: chess-dist
           path: ./dist
+
+      - name: Upload test coverage report to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          flags: chess,coderscamp,coderscamp202,typescript
+
   deploy-on-github-pages:
     name: 'Deploy app to GitHub Pages from develop branch source code'
     if: github.ref == 'refs/heads/develop'
