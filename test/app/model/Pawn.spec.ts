@@ -1,6 +1,5 @@
 import { Pawn } from '../../../src/app/model/Pawn';
 import { Square } from '../../../src/app/model/Types';
-import { Board } from '../../../src/app/model/Board';
 import 'jest-extended';
 import { boardWithPieces, emptyBoard } from './BoardFixture';
 

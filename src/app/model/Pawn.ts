@@ -1,16 +1,20 @@
 import { Board } from './Board';
-import { BOARDSIZE } from './Constances';
 import { Piece } from './Piece';
 import { PieceMovement } from './PieceMovement';
 import { Column, columns, Row, Side, Square } from './Types';
 
+const NEXT_ROW_DIFFERENCE = {
+  WHITE: 1,
+  BLACK: -1,
+};
+
 export class Pawn extends Piece implements PieceMovement {
-  private nextRowDifference: number = 1;
+  private nextRowDifference = 1;
 
   constructor(id: string, side: Side) {
-    super(id, side);
+    super('uselessId', side);
     if (this.side !== 'WHITE') this.nextRowDifference = -1;
-    console.log(this.nextRowDifference);
+    this.nextRowDifference = this.side === 'WHITE' ? NEXT_ROW_DIFFERENCE.WHITE : NEXT_ROW_DIFFERENCE.BLACK;
   }
 
   possibleMoves(position: Square, board: Board): Square[] {
@@ -64,7 +68,6 @@ export class Pawn extends Piece implements PieceMovement {
   }
 
   private checkIfOponent(columnPosition: Column, rowPosition: Row, board: Board): boolean {
-    // ! nie rozumiem tego znaka zapytania na końcu
     return board.onPositionPiece({ column: columnPosition, row: rowPosition })?.side !== this.side;
   }
 }
