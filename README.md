@@ -2,6 +2,8 @@
 
 **CodersCamp (coderscamp.edu.pl) - Największy otwarty kurs programowania webowego**
 
+[![codecov](https://codecov.io/gh/nowakprojects/CodersCamp2020.Project.TypeScript.Chess/branch/develop/graph/badge.svg?token=N3DLMXP3WM)](https://codecov.io/gh/nowakprojects/CodersCamp2020.Project.TypeScript.Chess)
+
 ![Szachy - Ekrany](./.github/images/SzachyEkrany.png)
 Proponowany projekt — Szachy (opis poniżej).
 
