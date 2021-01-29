@@ -5,8 +5,11 @@
   "scripts": {
     "clean": "rimraf .cache && rimraf coverage && rimraf dist && rimraf node_modules",
     "prebuild": "rimraf dist",
-    "build": "parcel build index.html --public-url ./",
-    "format": "prettier --write \"src/**/*.js\" \"src/**/*.ts\" \"test/**/*.js\" \"test/**/*.ts\"",
+    "build": "rm -rf dist && tsc --noEmit && parcel build index.html",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format:ci": "prettier -c \"src/**/*.ts\" \"test/**/*.ts\"",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix --format codeframe",
+    "lint:ci": "eslint \"{src,apps,libs,test}/**/*.ts\" --format codeframe",
     "start:dev": "parcel -p 7575 index.html --open",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -23,6 +26,7 @@
   },
   "homepage": "https://github.com/nowakprojects/CodersCamp2020.Project.TypeScript.Chess#readme",
   "dependencies": {
+    "eslint-config-prettier": "^7.2.0",
     "parcel": "^1.12.4",
     "regenerator-runtime": "^0.13.7",
     "uuid": "^8.3.0"
@@ -42,6 +46,7 @@
     "eslint": "^7.18.0",
     "husky": "^4.3.6",
     "jest": "^26.6.3",
+    "jest-extended": "^0.11.5",
     "jest-fetch-mock": "^3.0.3",
     "msw": "^0.21.3",
     "parcel-bundler": "^1.12.4",
