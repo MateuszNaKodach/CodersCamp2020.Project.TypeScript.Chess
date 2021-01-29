@@ -10,6 +10,6 @@ export class Pawn extends Piece implements PieceMovement {
   }
 
   possibleMoves(position: Square, board: Board): Square[] {
-    return [];
+    return [{ column: 'Z', row: 8 }];
   }
 }
