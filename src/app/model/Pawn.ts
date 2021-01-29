@@ -14,4 +14,28 @@ export class Pawn extends Piece implements PieceMovement {
     movesToGo = movesToGo.concat(this.goAhead(position, board), this.goDoubleAhead(position, board), this.goDiagonalAhead(position, board));
     return movesToGo;
   }
+
+  private goAhead(position: Square, board: Board): Square[] {
+    const movesToGo: Square[] = [];
+    if (board.onPositionPiece({ column: position.column, row: (position.row + 1) as Row }) === null) {
+      movesToGo.push({ column: position.column, row: (position.row + 1) as Row });
+    }
+    return movesToGo;
+  }
+
+  private goDoubleAhead(position: Square, board: Board): Square[] {
+    const movesToGo: Square[] = [];
+
+    return movesToGo;
+  }
+
+  private goDiagonalAhead(position: Square, board: Board): Square[] {
+    const movesToGo: Square[] = [];
+    return movesToGo;
+  }
+
+  private checkIfOponent(columnPosition: Column, rowPosition: Row, board: Board): boolean {
+    // ! nie rozumiem tego znaka zapytania na końcu
+    return board.onPositionPiece({ column: columnPosition, row: rowPosition })?.side !== this.side;
+  }
 }
