@@ -8,7 +8,7 @@ describe('Pawn movement', () => {
   it("Check possible squares to go, when White Pawn is on D4 and there is no pieces on Pawn's way", () => {
     const expectedPossibleMoves = [{ column: 'D', row: 5 }];
     const whitePawn = new Pawn('testId', 'WHITE');
-    const whitePawnPosition: Square = { column: 'A', row: 1 };
+    const whitePawnPosition: Square = { column: 'D', row: 4 };
     const whitePawnPossibleMoves = whitePawn.possibleMoves(whitePawnPosition, emptyBoard);
 
     expect(whitePawnPossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
