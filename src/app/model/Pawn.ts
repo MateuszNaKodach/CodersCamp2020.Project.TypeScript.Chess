@@ -5,8 +5,12 @@ import { PieceMovement } from './PieceMovement';
 import { Column, columns, Row, Side, Square } from './Types';
 
 export class Pawn extends Piece implements PieceMovement {
+  private nextRowDifference: number = 1;
+
   constructor(id: string, side: Side) {
     super(id, side);
+    if (this.side !== 'WHITE') this.nextRowDifference = -1;
+    console.log(this.nextRowDifference);
   }
 
   possibleMoves(position: Square, board: Board): Square[] {
@@ -17,20 +21,21 @@ export class Pawn extends Piece implements PieceMovement {
 
   private goAhead(position: Square, board: Board): Square[] {
     const movesToGo: Square[] = [];
-    if (!board.onPositionPiece({ column: position.column, row: (position.row + 1) as Row })) {
-      movesToGo.push({ column: position.column, row: (position.row + 1) as Row });
+    if (!board.onPositionPiece({ column: position.column, row: (position.row + 1 * this.nextRowDifference) as Row })) {
+      movesToGo.push({ column: position.column, row: (position.row + 1 * this.nextRowDifference) as Row });
     }
     return movesToGo;
   }
 
   private goDoubleAhead(position: Square, board: Board): Square[] {
     const movesToGo: Square[] = [];
-    if (position.row === 2) {
+    if ((position.row === 2 && this.side === 'WHITE') || (position.row === 7 && this.side === 'BLACK')) {
+      // console.log()
       if (
-        !board.onPositionPiece({ column: position.column, row: (position.row + 1) as Row }) &&
-        !board.onPositionPiece({ column: position.column, row: (position.row + 2) as Row })
+        !board.onPositionPiece({ column: position.column, row: (position.row + 1 * this.nextRowDifference) as Row }) &&
+        !board.onPositionPiece({ column: position.column, row: (position.row + 2 * this.nextRowDifference) as Row })
       ) {
-        movesToGo.push({ column: position.column, row: (position.row + 2) as Row });
+        movesToGo.push({ column: position.column, row: (position.row + 2 * this.nextRowDifference) as Row });
       }
     }
     return movesToGo;
@@ -42,17 +47,17 @@ export class Pawn extends Piece implements PieceMovement {
     const currentRowNumber = position.row;
 
     if (
-      board.onPositionPiece({ column: columns[currentColumnNumber + 1], row: (currentRowNumber + 1) as Row }) &&
-      this.checkIfOponent(columns[currentColumnNumber + 1], (currentRowNumber + 1) as Row, board)
+      board.onPositionPiece({ column: columns[currentColumnNumber + 1], row: (currentRowNumber + 1 * this.nextRowDifference) as Row }) &&
+      this.checkIfOponent(columns[currentColumnNumber + 1], (currentRowNumber + 1 * this.nextRowDifference) as Row, board)
     ) {
-      movesToGo.push({ column: columns[currentColumnNumber + 1], row: (currentRowNumber + 1) as Row });
+      movesToGo.push({ column: columns[currentColumnNumber + 1], row: (currentRowNumber + 1 * this.nextRowDifference) as Row });
     }
 
     if (
-      board.onPositionPiece({ column: columns[currentColumnNumber - 1], row: (currentRowNumber + 1) as Row }) &&
-      this.checkIfOponent(columns[currentColumnNumber - 1], (currentRowNumber + 1) as Row, board)
+      board.onPositionPiece({ column: columns[currentColumnNumber - 1], row: (currentRowNumber + 1 * this.nextRowDifference) as Row }) &&
+      this.checkIfOponent(columns[currentColumnNumber - 1], (currentRowNumber + 1 * this.nextRowDifference) as Row, board)
     ) {
-      movesToGo.push({ column: columns[currentColumnNumber - 1], row: (currentRowNumber + 1) as Row });
+      movesToGo.push({ column: columns[currentColumnNumber - 1], row: (currentRowNumber + 1 * this.nextRowDifference) as Row });
     }
 
     return movesToGo;
