@@ -46,9 +46,11 @@ export class Button {
     buttonDomElement.innerText = this.btnText;
     buttonDomElement.classList.add('button');
     if (this.size == Size.SMALL) {
+      buttonDomElement.classList.remove('button--large');
       buttonDomElement.classList.add('button--small');
     }
     if (this.size == Size.LARGE) {
+      buttonDomElement.classList.remove('button--small');
       buttonDomElement.classList.add('button--large');
     }
     buttonDomElement.addEventListener('click', this.onClickFn);
