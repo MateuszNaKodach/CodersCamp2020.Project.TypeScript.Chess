@@ -10,7 +10,8 @@ export class Pawn extends Piece implements PieceMovement {
   }
 
   possibleMoves(position: Square, board: Board): Square[] {
-    const movesToGo = [].concat(this.goAhead(position, board), this.goDoubleAhead(position, board), this.goDiagonalAhead(position, board));
+    let movesToGo: Square[] = [] as Square[];
+    movesToGo = movesToGo.concat(this.goAhead(position, board), this.goDoubleAhead(position, board), this.goDiagonalAhead(position, board));
     return movesToGo;
   }
 }
