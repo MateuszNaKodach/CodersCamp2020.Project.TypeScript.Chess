@@ -11,9 +11,9 @@ export class Knight extends Piece implements PieceMovement {
 
   possibleMoves(position: Square, board: Board): Square[] {
     let movesToGo = [] as Square[];
-    // TODO: wypisz wszystkie pola
     movesToGo = movesToGo.concat(this.movesOnEmptyBoard(position, board));
     // TODO: usuń pola zajęte
+    movesToGo = this.removeImpossibleSquares(movesToGo, board);
     return movesToGo;
   }
 
@@ -53,6 +53,11 @@ export class Knight extends Piece implements PieceMovement {
   private isWithinChessboardBorders(checkedColumnNumber: number, checkedRowNumber: number): boolean {
     return checkedColumnNumber < BOARDSIZE && checkedColumnNumber >= 0 && checkedRowNumber <= BOARDSIZE && checkedRowNumber > 0;
   }
-}
 
-// Fix possible moves on empty chessboard. Add check function of chessboard borders
+  private removeImpossibleSquares(movesToGoOnEmptyBoard: Square[], board: Board): Square[] {
+    const movesToGo = movesToGoOnEmptyBoard.filter((checkedPosition) => {
+      return board.onPositionPiece(checkedPosition)?.side !== this.side;
+    });
+    return movesToGo as Square[];
+  }
+}
