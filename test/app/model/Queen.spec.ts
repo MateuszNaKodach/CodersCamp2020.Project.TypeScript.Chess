@@ -86,14 +86,8 @@ describe('Queen possible moves', () => {
   });
   it('When white Queen is on D5 and there are black pieces on D7 and D8', () => {
     const testBoard = boardWithPieces({
-      C3: { id: '', side: 'WHITE' },
-      B4: { id: '', side: 'WHITE' },
-      C5: { id: '', side: 'WHITE' },
-      D6: { id: '', side: 'WHITE' },
-      E5: { id: '', side: 'BLACK' },
-      F4: { id: '', side: 'BLACK' },
-      E3: { id: '', side: 'BLACK' },
-      D2: { id: '', side: 'BLACK' },
+      D7: { id: '', side: 'BLACK' },
+      D8: { id: '', side: 'BLACK' },
     });
     const whiteQueen = new Queen('useless', 'WHITE');
     const whiteQueenPosition: Square = { column: 'D', row: 5 };
