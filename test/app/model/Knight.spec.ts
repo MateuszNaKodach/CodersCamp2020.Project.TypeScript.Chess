@@ -40,6 +40,21 @@ describe('Knight movement', () => {
     expect(testPiecePossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
   });
 
+  it("Check possible squares to go, when Knight is on G7 and there is no pieces on Knight's final movement squares", () => {
+    const testPiece = new Knight('testId', 'WHITE');
+    const testPiecePosition: Square = { column: 'G', row: 7 };
+
+    const testPiecePossibleMoves = testPiece.possibleMoves(testPiecePosition, emptyBoard);
+
+    const expectedPossibleMoves = [
+      { column: 'E', row: 6 },
+      { column: 'E', row: 8 },
+      { column: 'F', row: 5 },
+      { column: 'H', row: 5 },
+    ];
+    expect(testPiecePossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
+  });
+
   it("Check possible squares to go, when Knight is on B2 and there is no pieces on Knight's final movement squares", () => {
     const testPiece = new Knight('testId', 'WHITE');
     const testPiecePosition: Square = { column: 'B', row: 2 };
