@@ -11,13 +11,13 @@ export class Knight extends Piece implements PieceMovement {
 
   possibleMoves(position: Square, board: Board): Square[] {
     let movesToGo = [] as Square[];
-    movesToGo = movesToGo.concat(this.movesOnEmptyBoard(position, board));
+    movesToGo = movesToGo.concat(this.movesOnEmptyBoard(position));
     // TODO: usuń pola zajęte
     movesToGo = this.removeImpossibleSquares(movesToGo, board);
     return movesToGo;
   }
 
-  private movesOnEmptyBoard(position: Square, board: Board): Square[] {
+  private movesOnEmptyBoard(position: Square): Square[] {
     const movesToGo: Square[] = [];
     const currentColumnNumber = columns.indexOf(position.column);
     const currentRowNumber = position.row;
