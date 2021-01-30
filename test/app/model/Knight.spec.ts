@@ -3,8 +3,8 @@ import { Square } from '../../../src/app/model/Types';
 import 'jest-extended';
 import { boardWithPieces, emptyBoard } from './BoardFixture';
 
-describe('Knight movement', () => {
-  it("Check possible squares to go, when Knight is on F3 and there is no pieces on Knight's final movement squares", () => {
+describe('Knight possible moves', () => {
+  it("When Knight is on F3 and there is no pieces on Knight's final movement squares", () => {
     const testPiece = new Knight('testId', 'WHITE');
     const testPiecePosition: Square = { column: 'F', row: 3 };
 
@@ -23,7 +23,7 @@ describe('Knight movement', () => {
     expect(testPiecePossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
   });
 
-  it("Check possible squares to go, when Knight is on C2 and there is no pieces on Knight's final movement squares", () => {
+  it("When Knight is on C2 and there is no pieces on Knight's final movement squares", () => {
     const testPiece = new Knight('testId', 'WHITE');
     const testPiecePosition: Square = { column: 'C', row: 2 };
 
@@ -40,7 +40,7 @@ describe('Knight movement', () => {
     expect(testPiecePossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
   });
 
-  it("Check possible squares to go, when Knight is on G7 and there is no pieces on Knight's final movement squares", () => {
+  it("When Knight is on G7 and there is no pieces on Knight's final movement squares", () => {
     const testPiece = new Knight('testId', 'WHITE');
     const testPiecePosition: Square = { column: 'G', row: 7 };
 
@@ -55,7 +55,7 @@ describe('Knight movement', () => {
     expect(testPiecePossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
   });
 
-  it("Check possible squares to go, when Knight is on B2 and there is no pieces on Knight's final movement squares", () => {
+  it("When Knight is on B2 and there is no pieces on Knight's final movement squares", () => {
     const testPiece = new Knight('testId', 'WHITE');
     const testPiecePosition: Square = { column: 'B', row: 2 };
 
@@ -70,7 +70,7 @@ describe('Knight movement', () => {
     expect(testPiecePossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
   });
 
-  it("Check possible squares to go, when Knight is on F3 and there is no pieces on Knight's final movement squares but there are pieces directly around of Knight", () => {
+  it("When Knight is on F3 and there is no pieces on Knight's final movement squares but there are pieces directly around of Knight", () => {
     const testBoard = boardWithPieces({
       E2: { id: 'testId', side: 'WHITE' },
       E3: { id: 'testId', side: 'WHITE' },
@@ -97,7 +97,7 @@ describe('Knight movement', () => {
     expect(testPiecePossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
   });
 
-  it("Check possible squares to go, when WHITE Knight is on F3 and there is WHITE piece on Knight's final movement square on D2", () => {
+  it("When WHITE Knight is on F3 and there is WHITE piece on Knight's final movement square on D2", () => {
     const testBoard = boardWithPieces({
       D2: { id: 'testId', side: 'WHITE' },
     });
@@ -118,7 +118,7 @@ describe('Knight movement', () => {
     expect(testPiecePossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
   });
 
-  it("Check possible squares to go, when WHITE Knight is on F3 and there is BLACK piece on Knight's final movement square on D2", () => {
+  it("When WHITE Knight is on F3 and there is BLACK piece on Knight's final movement square on D2", () => {
     const testBoard = boardWithPieces({
       D2: { id: 'testId', side: 'BLACK' },
     });
@@ -140,7 +140,7 @@ describe('Knight movement', () => {
     expect(testPiecePossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
   });
 
-  it("Check possible squares to go, when BLACK Knight is on F3 and there is WHITE piece on Knight's final movement square on D2", () => {
+  it("When BLACK Knight is on F3 and there is WHITE piece on Knight's final movement square on D2", () => {
     const testBoard = boardWithPieces({
       D2: { id: 'testId', side: 'WHITE' },
     });
@@ -162,7 +162,7 @@ describe('Knight movement', () => {
     expect(testPiecePossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
   });
 
-  it("Check possible squares to go, when BLACK Knight is on F3 and there is WHITE piece on Knight's final movement square on G6 and there are BLACK pieces on F6, F7, F8, H7", () => {
+  it("When BLACK Knight is on F3 and there is WHITE piece on Knight's final movement square on G6 and there are BLACK pieces on F6, F7, F8, H7", () => {
     const testBoard = boardWithPieces({
       G6: { id: 'testId', side: 'WHITE' },
       F6: { id: 'testId', side: 'BLACK' },
@@ -179,7 +179,7 @@ describe('Knight movement', () => {
     expect(testPiecePossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
   });
 
-  it("Check possible squares to go, when BLACK Knight is on H8 and there is BLACK pieces on Knight's final movement squares on G6 and F7 - no movement", () => {
+  it("When BLACK Knight is on H8 and there is BLACK pieces on Knight's final movement squares on G6 and F7 - no movement", () => {
     const testBoard = boardWithPieces({
       G6: { id: 'testId', side: 'BLACK' },
       F7: { id: 'testId', side: 'BLACK' },
