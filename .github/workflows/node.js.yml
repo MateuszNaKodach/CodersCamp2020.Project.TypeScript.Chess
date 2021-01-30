@@ -30,6 +30,8 @@ jobs:
           path: ./dist
       - name: Upload test coverage report to Codecov
         uses: codecov/codecov-action@v1
+        with:
+          flags: typescript-project-chess
 
   deploy-on-github-pages:
     name: 'Deploy app to GitHub Pages from develop branch source code'
