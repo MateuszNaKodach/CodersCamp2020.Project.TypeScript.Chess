@@ -162,7 +162,7 @@ describe('Knight movement', () => {
     expect(testPiecePossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
   });
 
-  it("Check possible squares to go, when BLACK Knight is on A1 and there is WHITE piece on Knight's final movement square on G6 and there are BLACK pieces on F6, F7, F8, H7", () => {
+  it("Check possible squares to go, when BLACK Knight is on F3 and there is WHITE piece on Knight's final movement square on G6 and there are BLACK pieces on F6, F7, F8, H7", () => {
     const testBoard = boardWithPieces({
       G6: { id: 'testId', side: 'WHITE' },
       F6: { id: 'testId', side: 'BLACK' },
@@ -171,7 +171,7 @@ describe('Knight movement', () => {
       H7: { id: 'testId', side: 'BLACK' },
     });
     const testPiece = new Knight('testId', 'BLACK');
-    const testPiecePosition: Square = { column: 'A', row: 1 };
+    const testPiecePosition: Square = { column: 'H', row: 8 };
 
     const testPiecePossibleMoves = testPiece.possibleMoves(testPiecePosition, testBoard);
 
@@ -179,13 +179,13 @@ describe('Knight movement', () => {
     expect(testPiecePossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
   });
 
-  it("Check possible squares to go, when BLACK Knight is on A1 and there is BLACK pieces on Knight's final movement squares on G6 and F7 - no movement", () => {
+  it("Check possible squares to go, when BLACK Knight is on H8 and there is BLACK pieces on Knight's final movement squares on G6 and F7 - no movement", () => {
     const testBoard = boardWithPieces({
       G6: { id: 'testId', side: 'BLACK' },
-      F6: { id: 'testId', side: 'BLACK' },
+      F7: { id: 'testId', side: 'BLACK' },
     });
     const testPiece = new Knight('testId', 'BLACK');
-    const testPiecePosition: Square = { column: 'A', row: 1 };
+    const testPiecePosition: Square = { column: 'H', row: 8 };
 
     const testPiecePossibleMoves = testPiece.possibleMoves(testPiecePosition, testBoard);
 
