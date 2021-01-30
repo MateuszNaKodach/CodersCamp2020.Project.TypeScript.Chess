@@ -23,26 +23,21 @@ export class Pawn extends Piece implements PieceMovement {
   }
 
   private goAhead(position: Square, board: Board): Square[] {
-    const movesToGo: Square[] = [];
     const aheadSquare = { column: position.column, row: (position.row + 1 * this.nextRowDifference()) as Row };
-    if (!board.onPositionPiece(aheadSquare)) {
-      movesToGo.push(aheadSquare);
-    }
-    return movesToGo;
+    const isPieceOnAheadSquare = board.onPositionPiece(aheadSquare);
+    return !isPieceOnAheadSquare ? [aheadSquare] : [];
   }
 
   private goDoubleAhead(position: Square, board: Board): Square[] {
-    const movesToGo: Square[] = [];
-    if ((position.row === 2 && this.side === 'WHITE') || (position.row === 7 && this.side === 'BLACK')) {
-      // console.log()
-      if (
-        !board.onPositionPiece({ column: position.column, row: (position.row + 1 * this.nextRowDifference()) as Row }) &&
-        !board.onPositionPiece({ column: position.column, row: (position.row + 2 * this.nextRowDifference()) as Row })
-      ) {
-        movesToGo.push({ column: position.column, row: (position.row + 2 * this.nextRowDifference()) as Row });
-      }
-    }
-    return movesToGo;
+    const aheadSquare = { column: position.column, row: (position.row + 1 * this.nextRowDifference()) as Row };
+    const doubleAheadSquare = { column: position.column, row: (position.row + 2 * this.nextRowDifference()) as Row };
+    const canMoveDoubleAhead =
+      this.isOnStartingPosition(position) && !board.onPositionPiece(aheadSquare) && !board.onPositionPiece(doubleAheadSquare);
+    return canMoveDoubleAhead ? [doubleAheadSquare] : [];
+  }
+
+  private isOnStartingPosition(position: Square) {
+    return (position.row === 2 && this.side === 'WHITE') || (position.row === 7 && this.side === 'BLACK');
   }
 
   private goDiagonalAhead(position: Square, board: Board): Square[] {
