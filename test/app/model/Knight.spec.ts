@@ -34,8 +34,8 @@ describe('Knight movement', () => {
       { column: 'A', row: 3 },
       { column: 'B', row: 4 },
       { column: 'D', row: 4 },
-      { column: 'C', row: 1 },
-      { column: 'C', row: 3 },
+      { column: 'E', row: 1 },
+      { column: 'E', row: 3 },
     ];
     expect(testPiecePossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
   });
