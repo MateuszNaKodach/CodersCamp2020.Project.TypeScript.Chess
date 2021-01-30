@@ -81,4 +81,100 @@ describe('Knight movement', () => {
     ];
     expect(testPiecePossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
   });
+
+  it("Check possible squares to go, when WHITE Knight is on F3 and there is WHITE piece on Knight's final movement square on D2", () => {
+    const testBoard = boardWithPieces({
+      D2: { id: 'testId', side: 'WHITE' },
+    });
+    const testPiece = new Knight('testId', 'WHITE');
+    const testPiecePosition: Square = { column: 'F', row: 3 };
+
+    const testPiecePossibleMoves = testPiece.possibleMoves(testPiecePosition, testBoard);
+
+    const expectedPossibleMoves = [
+      { column: 'D', row: 4 },
+      { column: 'E', row: 1 },
+      { column: 'E', row: 5 },
+      { column: 'G', row: 1 },
+      { column: 'G', row: 5 },
+      { column: 'H', row: 4 },
+      { column: 'H', row: 2 },
+    ];
+    expect(testPiecePossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
+  });
+
+  it("Check possible squares to go, when WHITE Knight is on F3 and there is BLACK piece on Knight's final movement square on D2", () => {
+    const testBoard = boardWithPieces({
+      D2: { id: 'testId', side: 'WHITE' },
+    });
+    const testPiece = new Knight('testId', 'WHITE');
+    const testPiecePosition: Square = { column: 'F', row: 3 };
+
+    const testPiecePossibleMoves = testPiece.possibleMoves(testPiecePosition, testBoard);
+
+    const expectedPossibleMoves = [
+      { column: 'D', row: 2 },
+      { column: 'D', row: 4 },
+      { column: 'E', row: 1 },
+      { column: 'E', row: 5 },
+      { column: 'G', row: 1 },
+      { column: 'G', row: 5 },
+      { column: 'H', row: 4 },
+      { column: 'H', row: 2 },
+    ];
+    expect(testPiecePossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
+  });
+
+  it("Check possible squares to go, when BLACK Knight is on F3 and there is WHITE piece on Knight's final movement square on D2", () => {
+    const testBoard = boardWithPieces({
+      D2: { id: 'testId', side: 'WHITE' },
+    });
+    const testPiece = new Knight('testId', 'BLACK');
+    const testPiecePosition: Square = { column: 'F', row: 3 };
+
+    const testPiecePossibleMoves = testPiece.possibleMoves(testPiecePosition, testBoard);
+
+    const expectedPossibleMoves = [
+      { column: 'D', row: 2 },
+      { column: 'D', row: 4 },
+      { column: 'E', row: 1 },
+      { column: 'E', row: 5 },
+      { column: 'G', row: 1 },
+      { column: 'G', row: 5 },
+      { column: 'H', row: 4 },
+      { column: 'H', row: 2 },
+    ];
+    expect(testPiecePossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
+  });
+
+  it("Check possible squares to go, when BLACK Knight is on A1 and there is WHITE piece on Knight's final movement square on G6 and there are BLACK pieces on F6, F7, F8, H7", () => {
+    const testBoard = boardWithPieces({
+      G6: { id: 'testId', side: 'WHITE' },
+      F6: { id: 'testId', side: 'BLACK' },
+      F7: { id: 'testId', side: 'BLACK' },
+      F8: { id: 'testId', side: 'BLACK' },
+      H7: { id: 'testId', side: 'BLACK' },
+    });
+    const testPiece = new Knight('testId', 'BLACK');
+    const testPiecePosition: Square = { column: 'A', row: 1 };
+
+    const testPiecePossibleMoves = testPiece.possibleMoves(testPiecePosition, testBoard);
+
+    const expectedPossibleMoves = [{ column: 'G', row: 6 }];
+    expect(testPiecePossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
+  });
+
+  it("Check possible squares to go, when BLACK Knight is on A1 and there is BLACK pieces on Knight's final movement squares on G6 and F7 - no movement", () => {
+    const testBoard = boardWithPieces({
+      G6: { id: 'testId', side: 'BLACK' },
+      F6: { id: 'testId', side: 'BLACK' },
+    });
+    const testPiece = new Knight('testId', 'BLACK');
+    const testPiecePosition: Square = { column: 'A', row: 1 };
+
+    const testPiecePossibleMoves = testPiece.possibleMoves(testPiecePosition, testBoard);
+
+    const expectedPossibleMoves = [] as Square[];
+    expect(testPiecePossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
+  });
 });
