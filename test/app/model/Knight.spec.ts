@@ -85,8 +85,8 @@ describe('Knight movement', () => {
     const testPiecePossibleMoves = testPiece.possibleMoves(testPiecePosition, testBoard);
 
     const expectedPossibleMoves = [
-      { column: 'C', row: 2 },
-      { column: 'C', row: 4 },
+      { column: 'D', row: 2 },
+      { column: 'D', row: 4 },
       { column: 'E', row: 5 },
       { column: 'E', row: 1 },
       { column: 'G', row: 5 },
@@ -120,7 +120,7 @@ describe('Knight movement', () => {
 
   it("Check possible squares to go, when WHITE Knight is on F3 and there is BLACK piece on Knight's final movement square on D2", () => {
     const testBoard = boardWithPieces({
-      D2: { id: 'testId', side: 'WHITE' },
+      D2: { id: 'testId', side: 'BLACK' },
     });
     const testPiece = new Knight('testId', 'WHITE');
     const testPiecePosition: Square = { column: 'F', row: 3 };
