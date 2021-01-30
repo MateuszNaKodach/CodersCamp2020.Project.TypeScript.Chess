@@ -189,7 +189,6 @@ describe('Knight possible moves', () => {
 
     const testPiecePossibleMoves = testPiece.possibleMoves(testPiecePosition, testBoard);
 
-    const expectedPossibleMoves = [] as Square[];
-    expect(testPiecePossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
+    expect(testPiecePossibleMoves).toBeEmpty();
   });
 });

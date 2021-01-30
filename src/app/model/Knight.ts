@@ -10,44 +10,28 @@ export class Knight extends Piece implements PieceMovement {
   }
 
   possibleMoves(position: Square, board: Board): Square[] {
-    return this.removeSquaresWithAllyPieces(this.movesOnEmptyBoard(position), board);
+    return this.removeSquaresWithAllyPieces(Knight.movesOnEmptyBoard(position), board);
   }
 
-  private movesOnEmptyBoard(position: Square): Square[] {
-    const movesToGo: Square[] = [];
+  private static movesOnEmptyBoard(position: Square): Square[] {
     const currentColumnNumber = columns.indexOf(position.column);
     const currentRowNumber = position.row;
 
-    if (this.isWithinChessboardBorders(currentColumnNumber + 2, currentRowNumber + 1)) {
-      movesToGo.push({ column: columns[currentColumnNumber + 2], row: (currentRowNumber + 1) as Row });
-    }
-    if (this.isWithinChessboardBorders(currentColumnNumber + 2, currentRowNumber - 1)) {
-      movesToGo.push({ column: columns[currentColumnNumber + 2], row: (currentRowNumber - 1) as Row });
-    }
-    if (this.isWithinChessboardBorders(currentColumnNumber + 1, currentRowNumber + 2)) {
-      movesToGo.push({ column: columns[currentColumnNumber + 1], row: (currentRowNumber + 2) as Row });
-    }
-    if (this.isWithinChessboardBorders(currentColumnNumber + 1, currentRowNumber - 2)) {
-      movesToGo.push({ column: columns[currentColumnNumber + 1], row: (currentRowNumber - 2) as Row });
-    }
-    if (this.isWithinChessboardBorders(currentColumnNumber - 1, currentRowNumber + 2)) {
-      movesToGo.push({ column: columns[currentColumnNumber - 1], row: (currentRowNumber + 2) as Row });
-    }
-    if (this.isWithinChessboardBorders(currentColumnNumber - 1, currentRowNumber - 2)) {
-      movesToGo.push({ column: columns[currentColumnNumber - 1], row: (currentRowNumber - 2) as Row });
-    }
-    if (this.isWithinChessboardBorders(currentColumnNumber - 2, currentRowNumber + 1)) {
-      movesToGo.push({ column: columns[currentColumnNumber - 2], row: (currentRowNumber + 1) as Row });
-    }
-    if (this.isWithinChessboardBorders(currentColumnNumber - 2, currentRowNumber - 1)) {
-      movesToGo.push({ column: columns[currentColumnNumber - 2], row: (currentRowNumber - 1) as Row });
-    }
-
-    return movesToGo;
+    return [
+      { column: columns[currentColumnNumber + 2], row: (currentRowNumber + 1) as Row },
+      { column: columns[currentColumnNumber + 2], row: (currentRowNumber - 1) as Row },
+      { column: columns[currentColumnNumber + 1], row: (currentRowNumber + 2) as Row },
+      { column: columns[currentColumnNumber + 1], row: (currentRowNumber - 2) as Row },
+      { column: columns[currentColumnNumber - 1], row: (currentRowNumber + 2) as Row },
+      { column: columns[currentColumnNumber - 1], row: (currentRowNumber - 2) as Row },
+      { column: columns[currentColumnNumber - 2], row: (currentRowNumber + 1) as Row },
+      { column: columns[currentColumnNumber - 2], row: (currentRowNumber - 1) as Row },
+    ].filter(Knight.isWithinChessboardBorders);
   }
 
-  private isWithinChessboardBorders(checkedColumnNumber: number, checkedRowNumber: number): boolean {
-    return checkedColumnNumber < BOARDSIZE && checkedColumnNumber >= 0 && checkedRowNumber <= BOARDSIZE && checkedRowNumber > 0;
+  private static isWithinChessboardBorders(position: Square): boolean {
+    const columnNumber = columns.indexOf(position.column);
+    return columnNumber < BOARDSIZE && columnNumber >= 0 && position.row <= BOARDSIZE && position.row > 0;
   }
 
   private removeSquaresWithAllyPieces(movesToGoOnEmptyBoard: Square[], board: Board): Square[] {
