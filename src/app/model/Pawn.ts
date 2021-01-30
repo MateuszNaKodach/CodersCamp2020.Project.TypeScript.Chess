@@ -1,7 +1,7 @@
 import { Board } from './Board';
 import { Piece } from './Piece';
 import { PieceMovement } from './PieceMovement';
-import { Column, columns, Row, Side, Square } from './Types';
+import { columns, Row, Side, Square } from './Types';
 
 type RowDifference = 1 | -1;
 const NEXT_ROW_DIFFERENCE: { WHITE: RowDifference; BLACK: RowDifference } = {
@@ -45,24 +45,26 @@ export class Pawn extends Piece implements PieceMovement {
     const currentColumnNumber = columns.indexOf(position.column);
     const currentRowNumber = position.row;
 
-    if (
-      board.onPositionPiece({ column: columns[currentColumnNumber + 1], row: (currentRowNumber + 1 * this.nextRowDifference()) as Row }) &&
-      this.checkIfOponent(columns[currentColumnNumber + 1], (currentRowNumber + 1 * this.nextRowDifference()) as Row, board)
-    ) {
-      movesToGo.push({ column: columns[currentColumnNumber + 1], row: (currentRowNumber + 1 * this.nextRowDifference()) as Row });
+    const rightDiagonal: Square = {
+      column: columns[currentColumnNumber + 1],
+      row: (currentRowNumber + 1 * this.nextRowDifference()) as Row,
+    };
+    if (board.onPositionPiece(rightDiagonal) && this.checkIfOponent(rightDiagonal, board)) {
+      movesToGo.push(rightDiagonal);
     }
 
-    if (
-      board.onPositionPiece({ column: columns[currentColumnNumber - 1], row: (currentRowNumber + 1 * this.nextRowDifference()) as Row }) &&
-      this.checkIfOponent(columns[currentColumnNumber - 1], (currentRowNumber + 1 * this.nextRowDifference()) as Row, board)
-    ) {
-      movesToGo.push({ column: columns[currentColumnNumber - 1], row: (currentRowNumber + 1 * this.nextRowDifference()) as Row });
+    const leftDiagonal: Square = {
+      column: columns[currentColumnNumber - 1],
+      row: (currentRowNumber + 1 * this.nextRowDifference()) as Row,
+    };
+    if (board.onPositionPiece(leftDiagonal) && this.checkIfOponent(leftDiagonal, board)) {
+      movesToGo.push(leftDiagonal);
     }
 
     return movesToGo;
   }
 
-  private checkIfOponent(columnPosition: Column, rowPosition: Row, board: Board): boolean {
-    return board.onPositionPiece({ column: columnPosition, row: rowPosition })?.side !== this.side;
+  private checkIfOponent(position: Square, board: Board): boolean {
+    return board.onPositionPiece(position)?.side !== this.side;
   }
 }
