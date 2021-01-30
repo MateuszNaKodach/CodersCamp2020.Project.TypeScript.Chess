@@ -15,25 +15,23 @@ export class Pawn extends Piece implements PieceMovement {
   }
 
   possibleMoves(position: Square, board: Board): Square[] {
-    return this.goAhead(position, board).concat(this.goDoubleAhead(position, board)).concat(this.goDiagonalAhead(position, board));
+    const aheadSquare = { column: position.column, row: (position.row + 1 * this.nextRowDifference()) as Row };
+    const doubleAheadSquare = { column: position.column, row: (position.row + 2 * this.nextRowDifference()) as Row };
+    const aheadMoves: Square[] = this.isOnStartingPosition(position) ? [aheadSquare, doubleAheadSquare] : [aheadSquare];
+    return this.goAhead(board, aheadMoves).concat(this.goDiagonalAhead(position, board));
   }
 
-  private goAhead(position: Square, board: Board): Square[] {
-    const aheadSquare = { column: position.column, row: (position.row + 1 * this.nextRowDifference()) as Row };
-    const isPieceOnAheadSquare = board.onPositionPiece(aheadSquare);
-    return !isPieceOnAheadSquare ? [aheadSquare] : [];
+  private goAhead(board: Board, aheadMoves: Square[]): Square[] {
+    if (aheadMoves.length === 0) {
+      return [];
+    }
+    const [nextMove, ...otherMoves] = aheadMoves;
+    const isPieceOnNextSquare = board.onPositionPiece(nextMove) !== undefined;
+    return isPieceOnNextSquare ? [] : [nextMove, ...this.goAhead(board, otherMoves)];
   }
 
   private nextRowDifference(): RowDifference {
     return NEXT_ROW_DIFFERENCE[this.side];
-  }
-
-  private goDoubleAhead(position: Square, board: Board): Square[] {
-    const aheadSquare = { column: position.column, row: (position.row + 1 * this.nextRowDifference()) as Row };
-    const doubleAheadSquare = { column: position.column, row: (position.row + 2 * this.nextRowDifference()) as Row };
-    const canMoveDoubleAhead =
-      this.isOnStartingPosition(position) && !board.onPositionPiece(aheadSquare) && !board.onPositionPiece(doubleAheadSquare);
-    return canMoveDoubleAhead ? [doubleAheadSquare] : [];
   }
 
   private isOnStartingPosition(position: Square) {
