@@ -10,11 +10,7 @@ export class Knight extends Piece implements PieceMovement {
   }
 
   possibleMoves(position: Square, board: Board): Square[] {
-    let movesToGo = [] as Square[];
-    movesToGo = movesToGo.concat(this.movesOnEmptyBoard(position));
-    // TODO: usuń pola zajęte
-    movesToGo = this.removeImpossibleSquares(movesToGo, board);
-    return movesToGo;
+    return this.removeSquaresWithAllyPieces(this.movesOnEmptyBoard(position), board);
   }
 
   private movesOnEmptyBoard(position: Square): Square[] {
@@ -54,7 +50,7 @@ export class Knight extends Piece implements PieceMovement {
     return checkedColumnNumber < BOARDSIZE && checkedColumnNumber >= 0 && checkedRowNumber <= BOARDSIZE && checkedRowNumber > 0;
   }
 
-  private removeImpossibleSquares(movesToGoOnEmptyBoard: Square[], board: Board): Square[] {
+  private removeSquaresWithAllyPieces(movesToGoOnEmptyBoard: Square[], board: Board): Square[] {
     const movesToGo = movesToGoOnEmptyBoard.filter((checkedPosition) => {
       return board.onPositionPiece(checkedPosition)?.side !== this.side;
     });
