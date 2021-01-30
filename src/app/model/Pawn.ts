@@ -14,10 +14,6 @@ export class Pawn extends Piece implements PieceMovement {
     super('uselessId', side);
   }
 
-  private nextRowDifference(): RowDifference {
-    return NEXT_ROW_DIFFERENCE[this.side];
-  }
-
   possibleMoves(position: Square, board: Board): Square[] {
     return this.goAhead(position, board).concat(this.goDoubleAhead(position, board)).concat(this.goDiagonalAhead(position, board));
   }
@@ -26,6 +22,10 @@ export class Pawn extends Piece implements PieceMovement {
     const aheadSquare = { column: position.column, row: (position.row + 1 * this.nextRowDifference()) as Row };
     const isPieceOnAheadSquare = board.onPositionPiece(aheadSquare);
     return !isPieceOnAheadSquare ? [aheadSquare] : [];
+  }
+
+  private nextRowDifference(): RowDifference {
+    return NEXT_ROW_DIFFERENCE[this.side];
   }
 
   private goDoubleAhead(position: Square, board: Board): Square[] {
