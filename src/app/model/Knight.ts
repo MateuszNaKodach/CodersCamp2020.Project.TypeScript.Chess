@@ -22,31 +22,37 @@ export class Knight extends Piece implements PieceMovement {
     const currentColumnNumber = columns.indexOf(position.column);
     const currentRowNumber = position.row;
 
-    if (currentColumnNumber + 2 < BOARDSIZE && currentRowNumber + 1 < BOARDSIZE) {
+    if (this.isWithinChessboardBorders(currentColumnNumber + 2, currentRowNumber + 1)) {
       movesToGo.push({ column: columns[currentColumnNumber + 2], row: (currentRowNumber + 1) as Row });
     }
-    if (currentColumnNumber + 2 < BOARDSIZE && currentRowNumber - 1 < BOARDSIZE) {
+    if (this.isWithinChessboardBorders(currentColumnNumber + 2, currentRowNumber - 1)) {
       movesToGo.push({ column: columns[currentColumnNumber + 2], row: (currentRowNumber - 1) as Row });
     }
-    if (currentColumnNumber + 1 < BOARDSIZE && currentRowNumber + 2 < BOARDSIZE) {
+    if (this.isWithinChessboardBorders(currentColumnNumber + 1, currentRowNumber + 2)) {
       movesToGo.push({ column: columns[currentColumnNumber + 1], row: (currentRowNumber + 2) as Row });
     }
-    if (currentColumnNumber + 1 < BOARDSIZE && currentRowNumber - 2 < BOARDSIZE) {
+    if (this.isWithinChessboardBorders(currentColumnNumber + 1, currentRowNumber - 2)) {
       movesToGo.push({ column: columns[currentColumnNumber + 1], row: (currentRowNumber - 2) as Row });
     }
-    if (currentColumnNumber - 1 < BOARDSIZE && currentRowNumber + 2 < BOARDSIZE) {
+    if (this.isWithinChessboardBorders(currentColumnNumber - 1, currentRowNumber + 2)) {
       movesToGo.push({ column: columns[currentColumnNumber - 1], row: (currentRowNumber + 2) as Row });
     }
-    if (currentColumnNumber - 1 < BOARDSIZE && currentRowNumber - 2 < BOARDSIZE) {
+    if (this.isWithinChessboardBorders(currentColumnNumber - 1, currentRowNumber - 2)) {
       movesToGo.push({ column: columns[currentColumnNumber - 1], row: (currentRowNumber - 2) as Row });
     }
-    if (currentColumnNumber - 2 < BOARDSIZE && currentRowNumber + 1 < BOARDSIZE) {
+    if (this.isWithinChessboardBorders(currentColumnNumber - 2, currentRowNumber + 1)) {
       movesToGo.push({ column: columns[currentColumnNumber - 2], row: (currentRowNumber + 1) as Row });
     }
-    if (currentColumnNumber - 2 < BOARDSIZE && currentRowNumber - 1 < BOARDSIZE) {
+    if (this.isWithinChessboardBorders(currentColumnNumber - 2, currentRowNumber - 1)) {
       movesToGo.push({ column: columns[currentColumnNumber - 2], row: (currentRowNumber - 1) as Row });
     }
 
     return movesToGo;
   }
+
+  private isWithinChessboardBorders(checkedColumnNumber: number, checkedRowNumber: number): boolean {
+    return checkedColumnNumber < BOARDSIZE && checkedColumnNumber >= 0 && checkedRowNumber <= BOARDSIZE && checkedRowNumber > 0;
+  }
 }
+
+// Fix possible moves on empty chessboard. Add check function of chessboard borders
