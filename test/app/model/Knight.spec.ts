@@ -11,14 +11,14 @@ describe('Knight movement', () => {
     const testPiecePossibleMoves = testPiece.possibleMoves(testPiecePosition, emptyBoard);
 
     const expectedPossibleMoves = [
-      { column: 'E', row: 5 },
-      { column: 'G', row: 5 },
-      { column: 'C', row: 4 },
-      { column: 'H', row: 4 },
-      { column: 'C', row: 2 },
-      { column: 'H', row: 2 },
+      { column: 'D', row: 2 },
+      { column: 'D', row: 4 },
       { column: 'E', row: 1 },
+      { column: 'E', row: 5 },
       { column: 'G', row: 1 },
+      { column: 'G', row: 5 },
+      { column: 'H', row: 2 },
+      { column: 'H', row: 4 },
     ];
     expect(testPiecePossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
   });
@@ -47,10 +47,10 @@ describe('Knight movement', () => {
     const testPiecePossibleMoves = testPiece.possibleMoves(testPiecePosition, emptyBoard);
 
     const expectedPossibleMoves = [
-      { column: 'D', row: 1 },
-      { column: 'D', row: 3 },
       { column: 'A', row: 4 },
       { column: 'C', row: 4 },
+      { column: 'D', row: 1 },
+      { column: 'D', row: 3 },
     ];
     expect(testPiecePossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
   });
@@ -70,14 +70,14 @@ describe('Knight movement', () => {
     const testPiecePossibleMoves = testPiece.possibleMoves(testPiecePosition, testBoard);
 
     const expectedPossibleMoves = [
-      { column: 'E', row: 5 },
-      { column: 'G', row: 5 },
-      { column: 'C', row: 4 },
-      { column: 'H', row: 4 },
       { column: 'C', row: 2 },
-      { column: 'H', row: 2 },
+      { column: 'C', row: 4 },
+      { column: 'E', row: 5 },
       { column: 'E', row: 1 },
+      { column: 'G', row: 5 },
       { column: 'G', row: 1 },
+      { column: 'H', row: 4 },
+      { column: 'H', row: 2 },
     ];
     expect(testPiecePossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
   });
