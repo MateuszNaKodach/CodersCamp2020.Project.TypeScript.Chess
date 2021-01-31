@@ -11,7 +11,11 @@ export class ChessBoard implements PieceMoves, PiecePositions {
   }
 
   movePiece(squareFrom: Square, squareTo: Square): void {
-    if (this.boardWithPieces[`${squareFrom.column}${squareFrom.row}`]) {
+    // this.onPositionPiece(squareFrom ?
+    //   this.boardWithPieces[`${squareFrom.column}${squareFrom.row}`] = this.boardWithPieces[`${squareTo.column}${squareTo.row}`] :
+    //   () => {throw Error(`There is no Piece on square!`)}();
+
+    if (this.onPositionPiece(squareFrom)) {
       this.boardWithPieces[`${squareFrom.column}${squareFrom.row}`] = this.boardWithPieces[`${squareTo.column}${squareTo.row}`];
     } else {
       throw new Error(`There is no Piece on square!`);
