@@ -1,12 +1,11 @@
 import { Pawn } from '../../../src/app/model/Pawn';
-import { Square, Side } from '../../../src/app/model/Types';
+import { Square } from '../../../src/app/model/Types';
 import 'jest-extended';
 import { boardWithPieces, emptyBoard } from './BoardFixture';
 
 describe('Pawn movement', () => {
-  const whitePawn = new Pawn(Side.WHITE);
-
   it("Check possible squares to go, when White Pawn is on D4 and there is no pieces on Pawn's way", () => {
+    const whitePawn = new Pawn('testId', 'WHITE');
     const whitePawnPosition: Square = { column: 'D', row: 4 };
 
     const whitePawnPossibleMoves = whitePawn.possibleMoves(whitePawnPosition, emptyBoard);
@@ -16,6 +15,7 @@ describe('Pawn movement', () => {
   });
 
   it("Check possible squares to go, when White Pawn is on D7 and there is no pieces on Pawn's way", () => {
+    const whitePawn = new Pawn('testId', 'WHITE');
     const whitePawnPosition: Square = { column: 'D', row: 7 };
 
     const whitePawnPossibleMoves = whitePawn.possibleMoves(whitePawnPosition, emptyBoard);
@@ -26,8 +26,9 @@ describe('Pawn movement', () => {
 
   it("Check possible squares to go, when White Pawn is on B4 and there is no pieces on Pawn's way and it's black piece on A5", () => {
     const testBoard = boardWithPieces({
-      A5: new Pawn(Side.BLACK),
+      A5: { id: 'testId', side: 'BLACK' },
     });
+    const whitePawn = new Pawn('testId', 'WHITE');
     const whitePawnPosition: Square = { column: 'B', row: 4 };
 
     const whitePawnPossibleMoves = whitePawn.possibleMoves(whitePawnPosition, testBoard);
@@ -41,9 +42,10 @@ describe('Pawn movement', () => {
 
   it("Check possible squares to go, when White Pawn is on B4 and there is no pieces on Pawn's way and it's black piece on A5 and it's white piece on C5", () => {
     const testBoard = boardWithPieces({
-      A5: new Pawn(Side.BLACK),
-      C5: new Pawn(Side.WHITE),
+      A5: { id: 'testId', side: 'BLACK' },
+      C5: { id: 'testId', side: 'WHITE' },
     });
+    const whitePawn = new Pawn('testId', 'WHITE');
     const whitePawnPosition: Square = { column: 'B', row: 4 };
 
     const whitePawnPossibleMoves = whitePawn.possibleMoves(whitePawnPosition, testBoard);
@@ -56,7 +58,9 @@ describe('Pawn movement', () => {
   });
 
   it("Check possible squares to go, when White Pawn is on E2 and there is no pieces on Pawn's way", () => {
+    const whitePawn = new Pawn('testId', 'WHITE');
     const whitePawnPosition: Square = { column: 'E', row: 2 };
+
     const whitePawnPossibleMoves = whitePawn.possibleMoves(whitePawnPosition, emptyBoard);
 
     const expectedPossibleMoves = [
@@ -68,8 +72,9 @@ describe('Pawn movement', () => {
 
   it('Check possible squares to go, when White Pawn is on E2 and there is black piece on E3', () => {
     const testBoard = boardWithPieces({
-      E3: new Pawn(Side.BLACK),
+      E3: { id: 'testId', side: 'BLACK' },
     });
+    const whitePawn = new Pawn('testId', 'WHITE');
     const whitePawnPosition: Square = { column: 'E', row: 2 };
 
     const whitePawnPossibleMoves = whitePawn.possibleMoves(whitePawnPosition, testBoard);
@@ -80,8 +85,9 @@ describe('Pawn movement', () => {
 
   it('Check possible squares to go, when White Pawn is on E2 and there is black piece on E4', () => {
     const testBoard = boardWithPieces({
-      E4: new Pawn(Side.BLACK),
+      E4: { id: 'testId', side: 'BLACK' },
     });
+    const whitePawn = new Pawn('testId', 'WHITE');
     const whitePawnPosition: Square = { column: 'E', row: 2 };
 
     const whitePawnPossibleMoves = whitePawn.possibleMoves(whitePawnPosition, testBoard);
@@ -92,9 +98,10 @@ describe('Pawn movement', () => {
 
   it('Check possible squares to go, when White Pawn is on E2 and there is black pieces on E4 and on C3', () => {
     const testBoard = boardWithPieces({
-      E4: new Pawn(Side.BLACK),
-      C3: new Pawn(Side.BLACK),
+      E4: { id: 'testId', side: 'BLACK' },
+      C3: { id: 'testId', side: 'BLACK' },
     });
+    const whitePawn = new Pawn('testId', 'WHITE');
     const whitePawnPosition: Square = { column: 'E', row: 2 };
 
     const whitePawnPossibleMoves = whitePawn.possibleMoves(whitePawnPosition, testBoard);
@@ -105,9 +112,10 @@ describe('Pawn movement', () => {
 
   it('Check possible squares to go, when White Pawn is on E2 and there is black pieces on E4 and on D3', () => {
     const testBoard = boardWithPieces({
-      E4: new Pawn(Side.BLACK),
-      D3: new Pawn(Side.BLACK),
+      E4: { id: 'testId', side: 'BLACK' },
+      D3: { id: 'testId', side: 'BLACK' },
     });
+    const whitePawn = new Pawn('testId', 'WHITE');
     const whitePawnPosition: Square = { column: 'E', row: 2 };
 
     const whitePawnPossibleMoves = whitePawn.possibleMoves(whitePawnPosition, testBoard);
@@ -121,9 +129,10 @@ describe('Pawn movement', () => {
 
   it('Check possible squares to go, when White Pawn is on E2 and there is black piece on E4 and white piece on D3', () => {
     const testBoard = boardWithPieces({
-      D3: new Pawn(Side.WHITE),
-      E4: new Pawn(Side.BLACK),
+      D3: { id: 'testId', side: 'WHITE' },
+      E4: { id: 'testId', side: 'BLACK' },
     });
+    const whitePawn = new Pawn('testId', 'WHITE');
     const whitePawnPosition: Square = { column: 'E', row: 2 };
 
     const whitePawnPossibleMoves = whitePawn.possibleMoves(whitePawnPosition, testBoard);
@@ -134,9 +143,10 @@ describe('Pawn movement', () => {
 
   it("Check possible squares to go, when BLACK Pawn is on E2 and there is no pieces on Pawn's way", () => {
     const testBoard = emptyBoard;
+    const pawn = new Pawn('testId', 'BLACK');
     const pawnPosition: Square = { column: 'E', row: 2 };
 
-    const pawnPossibleMoves = whitePawn.possibleMoves(pawnPosition, testBoard);
+    const pawnPossibleMoves = pawn.possibleMoves(pawnPosition, testBoard);
 
     const expectedPossibleMoves = [{ column: 'E', row: 1 }];
     expect(pawnPossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
@@ -144,9 +154,10 @@ describe('Pawn movement', () => {
 
   it("Check possible squares to go, when BLACK Pawn is on E7 and there is no pieces on Pawn's way", () => {
     const testBoard = emptyBoard;
+    const pawn = new Pawn('testId', 'BLACK');
     const pawnPosition: Square = { column: 'E', row: 7 };
 
-    const pawnPossibleMoves = whitePawn.possibleMoves(pawnPosition, testBoard);
+    const pawnPossibleMoves = pawn.possibleMoves(pawnPosition, testBoard);
 
     const expectedPossibleMoves = [
       { column: 'E', row: 6 },
@@ -157,11 +168,12 @@ describe('Pawn movement', () => {
 
   it('Check possible squares to go, when BLACK Pawn is on E7 and there is black piece on E6', () => {
     const testBoard = boardWithPieces({
-      E6: new Pawn(Side.BLACK),
+      E6: { id: 'testId', side: 'BLACK' },
     });
+    const pawn = new Pawn('testId', 'BLACK');
     const pawnPosition: Square = { column: 'E', row: 7 };
 
-    const pawnPossibleMoves = whitePawn.possibleMoves(pawnPosition, testBoard);
+    const pawnPossibleMoves = pawn.possibleMoves(pawnPosition, testBoard);
 
     const expectedPossibleMoves = [] as Square[];
     expect(pawnPossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
@@ -169,11 +181,12 @@ describe('Pawn movement', () => {
 
   it('Check possible squares to go, when BLACK Pawn is on E7 and there is black piece on E5', () => {
     const testBoard = boardWithPieces({
-      E5: new Pawn(Side.BLACK),
+      E5: { id: 'testId', side: 'BLACK' },
     });
+    const pawn = new Pawn('testId', 'BLACK');
     const pawnPosition: Square = { column: 'E', row: 7 };
 
-    const pawnPossibleMoves = whitePawn.possibleMoves(pawnPosition, testBoard);
+    const pawnPossibleMoves = pawn.possibleMoves(pawnPosition, testBoard);
 
     const expectedPossibleMoves = [{ column: 'E', row: 6 }];
     expect(pawnPossibleMoves).toIncludeSameMembers(expectedPossibleMoves);
@@ -181,11 +194,12 @@ describe('Pawn movement', () => {
 
   it('Check possible squares to go, when BLACK Pawn is on E7 and there is white piece on D6', () => {
     const testBoard = boardWithPieces({
-      D6: new Pawn(Side.WHITE),
+      D6: { id: 'testId', side: 'WHITE' },
     });
+    const pawn = new Pawn('testId', 'BLACK');
     const pawnPosition: Square = { column: 'E', row: 7 };
 
-    const pawnPossibleMoves = whitePawn.possibleMoves(pawnPosition, testBoard);
+    const pawnPossibleMoves = pawn.possibleMoves(pawnPosition, testBoard);
 
     const expectedPossibleMoves = [
       { column: 'E', row: 6 },
