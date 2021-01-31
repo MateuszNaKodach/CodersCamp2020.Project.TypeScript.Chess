@@ -14,9 +14,9 @@ describe('ChessBoard', () => {
     const boardWithPieces: SquareWithPiece = { A2: piece, A3: rook };
     const chessBoard = new ChessBoard(boardWithPieces);
 
-    expect(chessBoard.onPositionPiece(squareA4)).toBe(undefined);
-    expect(chessBoard.onPositionPiece(squareA3)).toMatchObject(rook);
     expect(chessBoard.onPositionPiece(squareA2)).toMatchObject(piece);
+    expect(chessBoard.onPositionPiece(squareA3)).toMatchObject(rook);
+    expect(chessBoard.onPositionPiece(squareA4)).toBe(undefined);
   });
 
   it('move piece from square where is nothing (A2 is empty)', () => {
@@ -27,7 +27,7 @@ describe('ChessBoard', () => {
       chessBoard.movePiece(squareA2, squareA3);
     }
 
-    expect(testErrorFunction()).toThrowError(`There is no Piece on square!`);
+    expect(testErrorFunction).toThrowError(`There is no Piece on square!`);
   });
 
   it('move piece from A2 --> A4', () => {
