@@ -1,8 +1,7 @@
 import { ChessBoard } from '../../../src/app/model/ChessBoard';
 import { Piece } from '../../../src/app/model/Piece';
 import { Rook } from '../../../src/app/model/Rook';
-import { Square, SquareWithPiece } from '../../../src/app/model/Types';
-import { Side } from '../../../src/app/view/ChessBoardView';
+import { Square, SquareWithPiece, Side } from '../../../src/app/model/Types';
 
 describe('ChessBoard', () => {
   const piece: Piece = { side: Side.WHITE };
