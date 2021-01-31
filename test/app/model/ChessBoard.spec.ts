@@ -23,11 +23,7 @@ describe('ChessBoard', () => {
     const boardWithPieces: SquareWithPiece = { D7: piece, F4: rook };
     const chessBoard = new ChessBoard(boardWithPieces);
 
-    function testErrorFunction() {
-      chessBoard.movePiece(squareA2, squareA3);
-    }
-
-    expect(testErrorFunction).toThrowError(`There is no piece on square!`);
+    expect(() => chessBoard.movePiece(squareA2, squareA3)).toThrowError(`There is no piece on square!`);
   });
 
   it('move piece from A2 --> A4', () => {
