@@ -1,8 +1,7 @@
 import { Rook } from '../../../src/app/model/Rook';
-import { Square } from '../../../src/app/model/Types';
+import { Side, Square } from '../../../src/app/model/Types';
 import 'jest-extended';
 import { boardWithPieces, emptyBoard } from './BoardFixture';
-import { Side } from '../../../src/app/view/ChessBoardView';
 
 describe('Rook movement', () => {
   it("Check possible squares to go, when Rook is on A1 and there is no pieces on Roook's way", () => {
