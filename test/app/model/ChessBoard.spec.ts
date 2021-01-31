@@ -28,7 +28,7 @@ describe('ChessBoard', () => {
       chessBoard.movePiece(squareA2, squareA3);
     }
 
-    expect(testErrorFunction).toThrowError(`There is no Piece on square!`);
+    expect(testErrorFunction).toThrowError(`There is no piece on square!`);
   });
 
   it('move piece from A2 --> A4', () => {
