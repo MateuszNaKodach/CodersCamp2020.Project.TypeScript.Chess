@@ -10,8 +10,8 @@ const NEXT_ROW_DIFFERENCE: { WHITE: RowDifference; BLACK: RowDifference } = {
 };
 
 export class Pawn extends Piece implements PieceMovement {
-  constructor(id: string, side: Side) {
-    super('uselessId', side);
+  constructor(side: Side) {
+    super(side);
   }
 
   possibleMoves(position: Square, board: Board): Square[] {
