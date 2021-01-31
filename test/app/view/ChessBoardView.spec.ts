@@ -1,4 +1,4 @@
-import { Chessboard, Square, SquareColor } from '../../../src/app/view/ChessBoardView';
+import { Chessboard } from '../../../src/app/view/ChessBoardView';
 import '@testing-library/jest-dom';
 
 describe('Component should create a chessboard', () => {
