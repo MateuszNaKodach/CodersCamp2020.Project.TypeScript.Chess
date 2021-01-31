@@ -7,7 +7,7 @@ export class ChessBoard implements PieceMoves, PiecePositions {
   constructor(private boardWithPieces: SquareWithPiece) {}
 
   onPositionPiece(square: Square): Piece | undefined {
-    return this.boardWithPieces[`${square.column}${square.row}`] ? this.boardWithPieces[`${square.column}${square.row}`] : undefined;
+    return this.boardWithPieces[`${square.column}${square.row}`];
   }
 
   movePiece(squareFrom: Square, squareTo: Square): void {
