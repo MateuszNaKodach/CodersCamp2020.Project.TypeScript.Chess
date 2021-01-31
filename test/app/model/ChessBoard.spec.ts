@@ -2,10 +2,11 @@ import { ChessBoard } from '../../../src/app/model/ChessBoard';
 import { Piece } from '../../../src/app/model/Piece';
 import { Rook } from '../../../src/app/model/Rook';
 import { Square, SquareWithPiece } from '../../../src/app/model/Types';
+import { Side } from '../../../src/app/view/ChessBoardView';
 
 describe('ChessBoard', () => {
-  const piece: Piece = { side: 'WHITE' };
-  const rook: Rook = new Rook('WHITE');
+  const piece: Piece = { side: Side.WHITE };
+  const rook: Rook = new Rook(Side.WHITE);
   const squareA2: Square = { column: 'A', row: 2 };
   const squareA3: Square = { column: 'A', row: 3 };
   const squareA4: Square = { column: 'A', row: 4 };

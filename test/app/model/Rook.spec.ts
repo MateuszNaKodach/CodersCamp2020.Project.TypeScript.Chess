@@ -2,6 +2,7 @@ import { Rook } from '../../../src/app/model/Rook';
 import { Square } from '../../../src/app/model/Types';
 import 'jest-extended';
 import { boardWithPieces, emptyBoard } from './BoardFixture';
+import { Side } from '../../../src/app/view/ChessBoardView';
 
 describe('Rook movement', () => {
   it("Check possible squares to go, when Rook is on A1 and there is no pieces on Roook's way", () => {
@@ -21,7 +22,7 @@ describe('Rook movement', () => {
       { column: 'A', row: 7 },
       { column: 'A', row: 8 },
     ];
-    const rook = new Rook('WHITE');
+    const rook = new Rook(Side.WHITE);
     const rookPosition: Square = { column: 'A', row: 1 };
 
     const rockPossibleMoves = rook.possibleMoves(rookPosition, emptyBoard);
@@ -46,7 +47,7 @@ describe('Rook movement', () => {
       { column: 'G', row: 4 },
       { column: 'H', row: 4 },
     ];
-    const rook = new Rook('WHITE');
+    const rook = new Rook(Side.WHITE);
     const rookPosition: Square = { column: 'D', row: 4 };
 
     const rockPossibleMoves = rook.possibleMoves(rookPosition, emptyBoard);
@@ -56,8 +57,8 @@ describe('Rook movement', () => {
 
   it('Check possible squares to go, when Rook is on D4 and there are some pieces on D7 and F4', () => {
     const board = boardWithPieces({
-      D7: new Rook('BLACK'),
-      F4: new Rook('WHITE'),
+      D7: new Rook(Side.BLACK),
+      F4: new Rook(Side.WHITE),
     });
     const possibleMovesWhenRookOnD4 = [
       { column: 'D', row: 7 },
@@ -71,7 +72,7 @@ describe('Rook movement', () => {
       { column: 'C', row: 4 },
       { column: 'E', row: 4 },
     ];
-    const rook = new Rook('WHITE');
+    const rook = new Rook(Side.WHITE);
     const rookPosition: Square = { column: 'D', row: 4 };
 
     const rockPossibleMoves = rook.possibleMoves(rookPosition, board);
