@@ -1,11 +1,11 @@
 import { Knight } from '../../../src/app/model/Knight';
-import { Square } from '../../../src/app/model/Types';
+import { Side, Square } from '../../../src/app/model/Types';
 import 'jest-extended';
 import { boardWithPieces, emptyBoard } from './BoardFixture';
 
 describe('Knight possible moves', () => {
   it("When Knight is on F3 and there is no pieces on Knight's final movement squares", () => {
-    const testPiece = new Knight('testId', 'WHITE');
+    const testPiece = new Knight(Side.WHITE);
     const testPiecePosition: Square = { column: 'F', row: 3 };
 
     const testPiecePossibleMoves = testPiece.possibleMoves(testPiecePosition, emptyBoard);
@@ -24,7 +24,7 @@ describe('Knight possible moves', () => {
   });
 
   it("When Knight is on C2 and there is no pieces on Knight's final movement squares", () => {
-    const testPiece = new Knight('testId', 'WHITE');
+    const testPiece = new Knight(Side.WHITE);
     const testPiecePosition: Square = { column: 'C', row: 2 };
 
     const testPiecePossibleMoves = testPiece.possibleMoves(testPiecePosition, emptyBoard);
@@ -41,7 +41,7 @@ describe('Knight possible moves', () => {
   });
 
   it("When Knight is on G7 and there is no pieces on Knight's final movement squares", () => {
-    const testPiece = new Knight('testId', 'WHITE');
+    const testPiece = new Knight(Side.WHITE);
     const testPiecePosition: Square = { column: 'G', row: 7 };
 
     const testPiecePossibleMoves = testPiece.possibleMoves(testPiecePosition, emptyBoard);
@@ -56,7 +56,7 @@ describe('Knight possible moves', () => {
   });
 
   it("When Knight is on B2 and there is no pieces on Knight's final movement squares", () => {
-    const testPiece = new Knight('testId', 'WHITE');
+    const testPiece = new Knight(Side.WHITE);
     const testPiecePosition: Square = { column: 'B', row: 2 };
 
     const testPiecePossibleMoves = testPiece.possibleMoves(testPiecePosition, emptyBoard);
@@ -72,14 +72,14 @@ describe('Knight possible moves', () => {
 
   it("When Knight is on F3 and there is no pieces on Knight's final movement squares but there are pieces directly around of Knight", () => {
     const testBoard = boardWithPieces({
-      E2: { id: 'testId', side: 'WHITE' },
-      E3: { id: 'testId', side: 'WHITE' },
-      F4: { id: 'testId', side: 'BLACK' },
-      F2: { id: 'testId', side: 'BLACK' },
-      G2: { id: 'testId', side: 'BLACK' },
-      G3: { id: 'testId', side: 'WHITE' },
+      E2: { side: Side.WHITE },
+      E3: { side: Side.WHITE },
+      F4: { side: Side.BLACK },
+      F2: { side: Side.BLACK },
+      G2: { side: Side.BLACK },
+      G3: { side: Side.WHITE },
     });
-    const testPiece = new Knight('testId', 'WHITE');
+    const testPiece = new Knight(Side.WHITE);
     const testPiecePosition: Square = { column: 'F', row: 3 };
 
     const testPiecePossibleMoves = testPiece.possibleMoves(testPiecePosition, testBoard);
@@ -99,9 +99,9 @@ describe('Knight possible moves', () => {
 
   it("When WHITE Knight is on F3 and there is WHITE piece on Knight's final movement square on D2", () => {
     const testBoard = boardWithPieces({
-      D2: { id: 'testId', side: 'WHITE' },
+      D2: { side: Side.WHITE },
     });
-    const testPiece = new Knight('testId', 'WHITE');
+    const testPiece = new Knight(Side.WHITE);
     const testPiecePosition: Square = { column: 'F', row: 3 };
 
     const testPiecePossibleMoves = testPiece.possibleMoves(testPiecePosition, testBoard);
@@ -120,9 +120,9 @@ describe('Knight possible moves', () => {
 
   it("When WHITE Knight is on F3 and there is BLACK piece on Knight's final movement square on D2", () => {
     const testBoard = boardWithPieces({
-      D2: { id: 'testId', side: 'BLACK' },
+      D2: { side: Side.BLACK },
     });
-    const testPiece = new Knight('testId', 'WHITE');
+    const testPiece = new Knight(Side.WHITE);
     const testPiecePosition: Square = { column: 'F', row: 3 };
 
     const testPiecePossibleMoves = testPiece.possibleMoves(testPiecePosition, testBoard);
@@ -142,9 +142,9 @@ describe('Knight possible moves', () => {
 
   it("When BLACK Knight is on F3 and there is WHITE piece on Knight's final movement square on D2", () => {
     const testBoard = boardWithPieces({
-      D2: { id: 'testId', side: 'WHITE' },
+      D2: { side: Side.WHITE },
     });
-    const testPiece = new Knight('testId', 'BLACK');
+    const testPiece = new Knight(Side.BLACK);
     const testPiecePosition: Square = { column: 'F', row: 3 };
 
     const testPiecePossibleMoves = testPiece.possibleMoves(testPiecePosition, testBoard);
@@ -164,13 +164,13 @@ describe('Knight possible moves', () => {
 
   it("When BLACK Knight is on F3 and there is WHITE piece on Knight's final movement square on G6 and there are BLACK pieces on F6, F7, F8, H7", () => {
     const testBoard = boardWithPieces({
-      G6: { id: 'testId', side: 'WHITE' },
-      F6: { id: 'testId', side: 'BLACK' },
-      F7: { id: 'testId', side: 'BLACK' },
-      F8: { id: 'testId', side: 'BLACK' },
-      H7: { id: 'testId', side: 'BLACK' },
+      G6: { side: Side.WHITE },
+      F6: { side: Side.BLACK },
+      F7: { side: Side.BLACK },
+      F8: { side: Side.BLACK },
+      H7: { side: Side.BLACK },
     });
-    const testPiece = new Knight('testId', 'BLACK');
+    const testPiece = new Knight(Side.BLACK);
     const testPiecePosition: Square = { column: 'H', row: 8 };
 
     const testPiecePossibleMoves = testPiece.possibleMoves(testPiecePosition, testBoard);
@@ -181,10 +181,10 @@ describe('Knight possible moves', () => {
 
   it("When BLACK Knight is on H8 and there is BLACK pieces on Knight's final movement squares on G6 and F7 - no movement", () => {
     const testBoard = boardWithPieces({
-      G6: { id: 'testId', side: 'BLACK' },
-      F7: { id: 'testId', side: 'BLACK' },
+      G6: { side: Side.BLACK },
+      F7: { side: Side.BLACK },
     });
-    const testPiece = new Knight('testId', 'BLACK');
+    const testPiece = new Knight(Side.BLACK);
     const testPiecePosition: Square = { column: 'H', row: 8 };
 
     const testPiecePossibleMoves = testPiece.possibleMoves(testPiecePosition, testBoard);
