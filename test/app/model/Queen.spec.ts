@@ -102,4 +102,26 @@ describe('Queen possible moves', () => {
     expect(queenPossibleMoves).toIncludeAllMembers(expectedQueenPossibleMoves);
     expect(queenPossibleMoves).not.toIncludeAllMembers(invalidMove);
   });
+  it('When white Queen is on starting position D1 and other pieces are not blocking her diagonal moves', () => {
+    const testBoard = boardWithPieces({
+      D2: { id: '', side: 'WHITE' },
+      C1: { id: '', side: 'WHITE' },
+      E1: { id: '', side: 'WHITE' },
+    });
+    const whiteQueen = new Queen('useless', 'WHITE');
+    const whiteQueenPosition: Square = { column: 'D', row: 1 };
+    const expectedQueenPossibleMoves = [
+      { column: 'A', row: 4 },
+      { column: 'B', row: 3 },
+      { column: 'C', row: 2 },
+      { column: 'E', row: 2 },
+      { column: 'F', row: 3 },
+      { column: 'G', row: 4 },
+      { column: 'H', row: 5 },
+    ];
+
+    const queenPossibleMoves = whiteQueen.possibleMoves(whiteQueenPosition, testBoard);
+
+    expect(queenPossibleMoves).toIncludeAllMembers(expectedQueenPossibleMoves);
+  });
 });
