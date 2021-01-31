@@ -143,7 +143,7 @@ describe('Pawn movement', () => {
 
   it("Check possible squares to go, when BLACK Pawn is on E2 and there is no pieces on Pawn's way", () => {
     const testBoard = emptyBoard;
-    const pawn = new Pawn(Side.WHITE);
+    const pawn = new Pawn(Side.BLACK);
     const pawnPosition: Square = { column: 'E', row: 2 };
 
     const pawnPossibleMoves = pawn.possibleMoves(pawnPosition, testBoard);
@@ -154,7 +154,7 @@ describe('Pawn movement', () => {
 
   it("Check possible squares to go, when BLACK Pawn is on E7 and there is no pieces on Pawn's way", () => {
     const testBoard = emptyBoard;
-    const pawn = new Pawn(Side.WHITE);
+    const pawn = new Pawn(Side.BLACK);
     const pawnPosition: Square = { column: 'E', row: 7 };
 
     const pawnPossibleMoves = pawn.possibleMoves(pawnPosition, testBoard);
@@ -170,7 +170,7 @@ describe('Pawn movement', () => {
     const testBoard = boardWithPieces({
       E6: { side: Side.BLACK },
     });
-    const pawn = new Pawn(Side.WHITE);
+    const pawn = new Pawn(Side.BLACK);
     const pawnPosition: Square = { column: 'E', row: 7 };
 
     const pawnPossibleMoves = pawn.possibleMoves(pawnPosition, testBoard);
@@ -183,7 +183,7 @@ describe('Pawn movement', () => {
     const testBoard = boardWithPieces({
       E5: { side: Side.BLACK },
     });
-    const pawn = new Pawn(Side.WHITE);
+    const pawn = new Pawn(Side.BLACK);
     const pawnPosition: Square = { column: 'E', row: 7 };
 
     const pawnPossibleMoves = pawn.possibleMoves(pawnPosition, testBoard);
@@ -196,7 +196,7 @@ describe('Pawn movement', () => {
     const testBoard = boardWithPieces({
       D6: { side: Side.WHITE },
     });
-    const pawn = new Pawn(Side.WHITE);
+    const pawn = new Pawn(Side.BLACK);
     const pawnPosition: Square = { column: 'E', row: 7 };
 
     const pawnPossibleMoves = pawn.possibleMoves(pawnPosition, testBoard);

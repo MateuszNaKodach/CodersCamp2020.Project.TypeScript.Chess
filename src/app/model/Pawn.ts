@@ -35,7 +35,7 @@ export class Pawn extends Piece implements PiecePossibleMoves {
   }
 
   private isOnStartingPosition(position: Square) {
-    return (position.row === 2 && this.side === 'WHITE') || (position.row === 7 && this.side === 'BLACK');
+    return (position.row === 2 && this.side === Side.WHITE) || (position.row === 7 && this.side === Side.BLACK);
   }
 
   private captureMoves(position: Square, board: PiecePositions): Square[] {
