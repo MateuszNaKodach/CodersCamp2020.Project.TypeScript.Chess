@@ -2,9 +2,8 @@ export class Square {
   constructor(private position_x: number, private position_y: number, private color: SquareColor) {}
 
   setHtmlElement(): HTMLElement {
-    const position = this.mapSquarePosition();
     const squareElement = document.createElement('div');
-    squareElement.id = position;
+    squareElement.id = this.mapSquarePosition();
     squareElement.classList.add('square');
     squareElement.classList.add(`square--${this.color}`);
     return squareElement;
