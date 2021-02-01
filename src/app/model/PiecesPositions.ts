@@ -1,6 +1,6 @@
 import { Piece } from './Piece';
 import { Square } from './Types';
 
-export interface Board {
+export interface PiecePositions {
   onPositionPiece(sqaure: Square): Piece | undefined;
 }

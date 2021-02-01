@@ -1,5 +1,5 @@
 import { Rook } from '../../../src/app/model/Rook';
-import { Square } from '../../../src/app/model/Types';
+import { Side, Square } from '../../../src/app/model/Types';
 import 'jest-extended';
 import { boardWithPieces, emptyBoard } from './BoardFixture';
 
@@ -21,10 +21,10 @@ describe('Rook movement', () => {
       { column: 'A', row: 7 },
       { column: 'A', row: 8 },
     ];
-    const rook = new Rook('1', 'WHITE');
-    const rockPosition: Square = { column: 'A', row: 1 };
+    const rook = new Rook(Side.WHITE);
+    const rookPosition: Square = { column: 'A', row: 1 };
 
-    const rockPossibleMoves = rook.possibleMoves(rockPosition, emptyBoard);
+    const rockPossibleMoves = rook.possibleMoves(rookPosition, emptyBoard);
 
     expect(rockPossibleMoves).toIncludeSameMembers(possibleMovesWhenRookOnA1);
   });
@@ -46,18 +46,18 @@ describe('Rook movement', () => {
       { column: 'G', row: 4 },
       { column: 'H', row: 4 },
     ];
-    const rook = new Rook('1', 'WHITE');
-    const rockPosition: Square = { column: 'D', row: 4 };
+    const rook = new Rook(Side.WHITE);
+    const rookPosition: Square = { column: 'D', row: 4 };
 
-    const rockPossibleMoves = rook.possibleMoves(rockPosition, emptyBoard);
+    const rockPossibleMoves = rook.possibleMoves(rookPosition, emptyBoard);
 
     expect(rockPossibleMoves).toIncludeSameMembers(possibleMovesWhenRookOnD4);
   });
 
   it('Check possible squares to go, when Rook is on D4 and there are some pieces on D7 and F4', () => {
     const board = boardWithPieces({
-      D7: { id: '10', side: 'BLACK' },
-      F4: { id: '11', side: 'WHITE' },
+      D7: new Rook(Side.BLACK),
+      F4: new Rook(Side.WHITE),
     });
     const possibleMovesWhenRookOnD4 = [
       { column: 'D', row: 7 },
@@ -71,10 +71,10 @@ describe('Rook movement', () => {
       { column: 'C', row: 4 },
       { column: 'E', row: 4 },
     ];
-    const rook = new Rook('1', 'WHITE');
-    const rockPosition: Square = { column: 'D', row: 4 };
+    const rook = new Rook(Side.WHITE);
+    const rookPosition: Square = { column: 'D', row: 4 };
 
-    const rockPossibleMoves = rook.possibleMoves(rockPosition, board);
+    const rockPossibleMoves = rook.possibleMoves(rookPosition, board);
 
     expect(rockPossibleMoves).toIncludeSameMembers(possibleMovesWhenRookOnD4);
   });
