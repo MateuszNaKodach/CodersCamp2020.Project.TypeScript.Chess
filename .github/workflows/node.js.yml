@@ -25,15 +25,13 @@ jobs:
       - run: npm run test:ci
       - uses: actions/upload-artifact@v1
         name: Upload build as artifact
-        if: always()
         with:
           name: chess-dist
           path: ./dist
-
       - name: Upload test coverage report to Codecov
         uses: codecov/codecov-action@v1
         with:
-          flags: chess,coderscamp,coderscamp202,typescript
+          flags: typescript-project-chess
 
   deploy-on-github-pages:
     name: 'Deploy app to GitHub Pages from develop branch source code'
