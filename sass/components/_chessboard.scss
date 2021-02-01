@@ -6,19 +6,15 @@
   grid-template-columns: repeat(8, auto);
 }
 
-.squares {
-  height: 12.5%;
-  width: 12.5%;
+.square {
+  background-repeat: no-repeat;
+  background-size: cover;
 
   &--light {
-    background-image: url('../../static/img/board/light.png');
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-image: url('../static/img/board/light.png');
   }
 
   &--dark {
-    background-image: url('../../static/img/board/dark.png');
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-image: url('../static/img/board/dark.png');
   }
 }
