@@ -1,15 +1,15 @@
-import { Board } from './Board';
+import { PiecePositions } from './PiecesPositions';
 import { BOARDSIZE } from './Constances';
 import { Piece } from './Piece';
-import { PieceMovement } from './PieceMovement';
 import { columns, Row, Side, Square } from './Types';
+import { PiecePossibleMoves } from './PiecePossibleMoves';
 
-export class Queen extends Piece implements PieceMovement {
-  constructor(id: string, side: Side) {
-    super('uselessId', side);
+export class Queen extends Piece implements PiecePossibleMoves {
+  constructor(side: Side) {
+    super(side);
   }
 
-  possibleMoves(position: Square, board: Board): Square[] {
+  possibleMoves(position: Square, board: PiecePositions): Square[] {
     return this.squaresUp(position, board).concat(
       this.squaresDown(position, board),
       this.squaresLeft(position, board),
@@ -21,7 +21,7 @@ export class Queen extends Piece implements PieceMovement {
     );
   }
 
-  private squaresUp(position: Square, board: Board): Square[] {
+  private squaresUp(position: Square, board: PiecePositions): Square[] {
     const squaresToGo: Square[] = [];
 
     for (let i = position.row + 1; i <= BOARDSIZE; i++) {
@@ -39,7 +39,7 @@ export class Queen extends Piece implements PieceMovement {
     return squaresToGo;
   }
 
-  private squaresDown(position: Square, board: Board): Square[] {
+  private squaresDown(position: Square, board: PiecePositions): Square[] {
     const squaresToGo: Square[] = [];
 
     for (let i = position.row - 1; i >= 1; i--) {
@@ -57,7 +57,7 @@ export class Queen extends Piece implements PieceMovement {
     return squaresToGo;
   }
 
-  private squaresLeft(position: Square, board: Board): Square[] {
+  private squaresLeft(position: Square, board: PiecePositions): Square[] {
     const squaresToGo: Square[] = [];
 
     for (let i = columns.indexOf(position.column) - 1; i >= 0; i--) {
@@ -75,7 +75,7 @@ export class Queen extends Piece implements PieceMovement {
     return squaresToGo;
   }
 
-  private squaresRight(position: Square, board: Board): Square[] {
+  private squaresRight(position: Square, board: PiecePositions): Square[] {
     const squaresToGo: Square[] = [];
 
     for (let i = columns.indexOf(position.column) + 1; i < BOARDSIZE; i++) {
@@ -93,7 +93,7 @@ export class Queen extends Piece implements PieceMovement {
     return squaresToGo;
   }
 
-  private squaresLeftUpDiagonal(position: Square, board: Board): Square[] {
+  private squaresLeftUpDiagonal(position: Square, board: PiecePositions): Square[] {
     const squaresToGo: Square[] = [];
     const upLeftDiagonalSquares: Square[] = this.findUpLeftDiagonalSquares(position);
 
@@ -114,7 +114,7 @@ export class Queen extends Piece implements PieceMovement {
     return squaresToGo;
   }
 
-  private squaresRightUpDiagonal(position: Square, board: Board): Square[] {
+  private squaresRightUpDiagonal(position: Square, board: PiecePositions): Square[] {
     const squaresToGo: Square[] = [];
     const upRightDiagonalSquares: Square[] = this.findUpRightDiagonalSquares(position);
 
@@ -135,7 +135,7 @@ export class Queen extends Piece implements PieceMovement {
     return squaresToGo;
   }
 
-  private squaresLeftDownDiagonal(position: Square, board: Board): Square[] {
+  private squaresLeftDownDiagonal(position: Square, board: PiecePositions): Square[] {
     const squaresToGo: Square[] = [];
     const downLeftDiagonalSquares: Square[] = this.findDownLeftDiagonalSquares(position);
 
@@ -156,7 +156,7 @@ export class Queen extends Piece implements PieceMovement {
     return squaresToGo;
   }
 
-  private squaresRightDownDiagonal(position: Square, board: Board): Square[] {
+  private squaresRightDownDiagonal(position: Square, board: PiecePositions): Square[] {
     const squaresToGo: Square[] = [];
     const downRightDiagonalSquares: Square[] = this.findDownRightDiagonalSquares(position);
 
@@ -245,7 +245,7 @@ export class Queen extends Piece implements PieceMovement {
     return diagonalSquares;
   }
 
-  private checkIfOponent(position: Square, board: Board): boolean {
+  private checkIfOponent(position: Square, board: PiecePositions): boolean {
     return board.onPositionPiece(position)?.side !== this.side;
   }
 }

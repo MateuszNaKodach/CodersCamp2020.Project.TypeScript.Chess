@@ -1,11 +1,11 @@
 import 'jest-extended';
 import { boardWithPieces, emptyBoard } from './BoardFixture';
-import { Square } from '../../../src/app/model/Types';
+import { Side, Square } from '../../../src/app/model/Types';
 import { Queen } from '../../../src/app/model/Queen';
 
 describe('Queen possible moves', () => {
   it('When Queen is on D4 and there is no pieces on Queens way', () => {
-    const whiteQueen = new Queen('useless', 'WHITE');
+    const whiteQueen = new Queen(Side.WHITE);
     const whiteQueenPosition: Square = { column: 'D', row: 4 };
     const expectedQueenPossibleMoves = [
       { column: 'D', row: 1 },
@@ -43,13 +43,13 @@ describe('Queen possible moves', () => {
   });
   it('When white Queen is on starting position D1 and there are pieces all around', () => {
     const testBoard = boardWithPieces({
-      C1: { id: '', side: 'WHITE' },
-      C2: { id: '', side: 'WHITE' },
-      D2: { id: '', side: 'WHITE' },
-      E1: { id: '', side: 'WHITE' },
-      E2: { id: '', side: 'WHITE' },
+      C1: { side: Side.WHITE },
+      C2: { side: Side.WHITE },
+      D2: { side: Side.WHITE },
+      E1: { side: Side.WHITE },
+      E2: { side: Side.WHITE },
     });
-    const whiteQueen = new Queen('useless', 'WHITE');
+    const whiteQueen = new Queen(Side.WHITE);
     const whiteQueenPosition: Square = { column: 'D', row: 1 };
 
     const queenPossibleMoves = whiteQueen.possibleMoves(whiteQueenPosition, testBoard);
@@ -58,16 +58,16 @@ describe('Queen possible moves', () => {
   });
   it('When white Queen is on D4 on given test board', () => {
     const testBoard = boardWithPieces({
-      C3: { id: '', side: 'WHITE' },
-      B4: { id: '', side: 'WHITE' },
-      C5: { id: '', side: 'WHITE' },
-      D6: { id: '', side: 'WHITE' },
-      E5: { id: '', side: 'BLACK' },
-      F4: { id: '', side: 'BLACK' },
-      E3: { id: '', side: 'BLACK' },
-      D2: { id: '', side: 'BLACK' },
+      C3: { side: Side.WHITE },
+      B4: { side: Side.WHITE },
+      C5: { side: Side.WHITE },
+      D6: { side: Side.WHITE },
+      E5: { side: Side.BLACK },
+      F4: { side: Side.BLACK },
+      E3: { side: Side.BLACK },
+      D2: { side: Side.BLACK },
     });
-    const whiteQueen = new Queen('useless', 'WHITE');
+    const whiteQueen = new Queen(Side.WHITE);
     const whiteQueenPosition: Square = { column: 'D', row: 4 };
     const expectedQueenPossibleMoves = [
       { column: 'C', row: 4 },
@@ -86,10 +86,10 @@ describe('Queen possible moves', () => {
   });
   it('When white Queen is on D5 and there are black pieces on D7 and D8', () => {
     const testBoard = boardWithPieces({
-      D7: { id: '', side: 'BLACK' },
-      D8: { id: '', side: 'BLACK' },
+      D7: { side: Side.BLACK },
+      D8: { side: Side.BLACK },
     });
-    const whiteQueen = new Queen('useless', 'WHITE');
+    const whiteQueen = new Queen(Side.WHITE);
     const whiteQueenPosition: Square = { column: 'D', row: 5 };
     const expectedQueenPossibleMoves = [
       { column: 'D', row: 6 },
@@ -104,11 +104,11 @@ describe('Queen possible moves', () => {
   });
   it('When white Queen is on starting position D1 and other pieces are not blocking her diagonal moves', () => {
     const testBoard = boardWithPieces({
-      D2: { id: '', side: 'WHITE' },
-      C1: { id: '', side: 'WHITE' },
-      E1: { id: '', side: 'WHITE' },
+      D2: { side: Side.WHITE },
+      C1: { side: Side.WHITE },
+      E1: { side: Side.WHITE },
     });
-    const whiteQueen = new Queen('useless', 'WHITE');
+    const whiteQueen = new Queen(Side.WHITE);
     const whiteQueenPosition: Square = { column: 'D', row: 1 };
     const expectedQueenPossibleMoves = [
       { column: 'A', row: 4 },
@@ -126,12 +126,12 @@ describe('Queen possible moves', () => {
   });
   it('When white Queen is on starting position D1 and other pieces are not blocking her left diagonal moves', () => {
     const testBoard = boardWithPieces({
-      D2: { id: '', side: 'WHITE' },
-      C1: { id: '', side: 'WHITE' },
-      E1: { id: '', side: 'WHITE' },
-      E2: { id: '', side: 'WHITE' },
+      D2: { side: Side.WHITE },
+      C1: { side: Side.WHITE },
+      E1: { side: Side.WHITE },
+      E2: { side: Side.WHITE },
     });
-    const whiteQueen = new Queen('useless', 'WHITE');
+    const whiteQueen = new Queen(Side.WHITE);
     const whiteQueenPosition: Square = { column: 'D', row: 1 };
     const expectedQueenPossibleMoves = [
       { column: 'A', row: 4 },
