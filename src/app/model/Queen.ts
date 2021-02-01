@@ -4,22 +4,24 @@ import { Piece } from './Piece';
 import { columns, Row, Side, Square } from './Types';
 import { PiecePossibleMoves } from './PiecePossibleMoves';
 
+type Vector = { col: number; row: number };
+
 export class Queen extends Piece implements PiecePossibleMoves {
   constructor(side: Side) {
     super(side);
   }
 
-  possibleMoves(position: Square, board: PiecePositions): Square[] {
-    return this.squaresUp(position, board).concat(
-      this.squaresDown(position, board),
-      this.squaresLeft(position, board),
-      this.squaresRight(position, board),
-      this.squaresLeftUpDiagonal(position, board),
-      this.squaresRightUpDiagonal(position, board),
-      this.squaresLeftDownDiagonal(position, board),
-      this.squaresRightDownDiagonal(position, board),
-    );
-  }
+  // possibleMoves(position: Square, board: PiecePositions): Square[] {
+  //   return this.squaresUp(position, board).concat(
+  //     this.squaresDown(position, board),
+  //     this.squaresLeft(position, board),
+  //     this.squaresRight(position, board),
+  //     this.squaresLeftUpDiagonal(position, board),
+  //     this.squaresRightUpDiagonal(position, board),
+  //     this.squaresLeftDownDiagonal(position, board),
+  //     this.squaresRightDownDiagonal(position, board),
+  //   );
+  // }
 
   private squaresUp(position: Square, board: PiecePositions): Square[] {
     const squaresToGo: Square[] = [];
@@ -35,8 +37,55 @@ export class Queen extends Piece implements PiecePossibleMoves {
         } else break;
       }
     }
-
     return squaresToGo;
+  }
+
+  possibleMoves(position: Square, board: PiecePositions): Square[] {
+    return [
+      ...this.lineMoves(board, position, { col: 0, row: -1 }),
+      ...this.lineMoves(board, position, { col: 0, row: 1 }),
+      ...this.lineMoves(board, position, { col: -1, row: 0 }),
+      ...this.lineMoves(board, position, { col: 1, row: 0 }),
+      ...this.lineMoves(board, position, { row: -1, col: -1 }),
+      ...this.lineMoves(board, position, { row: -1, col: 1 }),
+      ...this.lineMoves(board, position, { row: 1, col: 1 }),
+      ...this.lineMoves(board, position, { row: 1, col: -1 }),
+    ];
+  }
+
+  private lineMoves(board: PiecePositions, actualPosition: Square, vector: Vector): Square[] {
+    const nextSquare: Square = {
+      column: columns[columns.indexOf(actualPosition.column) + vector.col],
+      row: (actualPosition.row + vector.row) as Row,
+    };
+
+    const isWithinChessBoard = Queen.isWithinChessboardBorders(nextSquare);
+    if (isWithinChessBoard) {
+      const isSquareOccupied = board.onPositionPiece(nextSquare);
+      if (isSquareOccupied) {
+        const isOponent = this.checkIfOponent(nextSquare, board);
+        if (isOponent) {
+          return [nextSquare];
+        } else {
+          return [];
+        }
+      } else {
+        const squaresToGo: Square[] = [];
+        squaresToGo.push(nextSquare);
+        const otherMoves = this.lineMoves(board, nextSquare, vector);
+        return squaresToGo.concat(otherMoves);
+      }
+    }
+    return [];
+
+    // const [nextMove, ...otherMoves] = aheadMoves;
+    // const isPieceOnNextSquare = board.onPositionPiece(nextMove) !== undefined;
+    // return isPieceOnNextSquare ? [] : [nextMove, ...this.lineMoves(board, otherMoves, vector)];
+  }
+
+  private static isWithinChessboardBorders(position: Square): boolean {
+    const columnNumber = columns.indexOf(position.column);
+    return columnNumber < BOARDSIZE && columnNumber >= 0 && position.row <= BOARDSIZE && position.row > 0;
   }
 
   private squaresDown(position: Square, board: PiecePositions): Square[] {
