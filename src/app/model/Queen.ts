@@ -27,25 +27,16 @@ export class Queen extends Piece implements PiecePossibleMoves {
       column: columns[columns.indexOf(actualPosition.column) + vector.col],
       row: (actualPosition.row + vector.row) as Row,
     };
-
-    const isWithinChessBoard = Queen.isWithinChessboardBorders(nextSquare);
-    if (isWithinChessBoard) {
-      const isSquareOccupied = board.onPositionPiece(nextSquare);
-      if (isSquareOccupied) {
-        const isOponent = this.checkIfOponent(nextSquare, board);
-        if (isOponent) {
-          return [nextSquare];
-        } else {
-          return [];
-        }
-      } else {
-        const squaresToGo: Square[] = [];
-        squaresToGo.push(nextSquare);
-        const otherMoves = this.lineMoves(board, nextSquare, vector);
-        return squaresToGo.concat(otherMoves);
-      }
+    const isWithinChessboard = Queen.isWithinChessboardBorders(nextSquare);
+    if (!isWithinChessboard) {
+      return [];
     }
-    return [];
+    const isSquareOccupied = board.onPositionPiece(nextSquare);
+    if (isSquareOccupied) {
+      return this.checkIfOponent(nextSquare, board) ? [nextSquare] : [];
+    } else {
+      return [nextSquare].concat(this.lineMoves(board, nextSquare, vector));
+    }
   }
 
   private static isWithinChessboardBorders(position: Square): boolean {
