@@ -68,7 +68,7 @@ describe('Queen possible moves', () => {
       D2: { id: '', side: 'BLACK' },
     });
     const whiteQueen = new Queen('useless', 'WHITE');
-    const whiteQueenPosition: Square = { column: 'D', row: 1 };
+    const whiteQueenPosition: Square = { column: 'D', row: 4 };
     const expectedQueenPossibleMoves = [
       { column: 'C', row: 4 },
       { column: 'D', row: 5 },
@@ -122,6 +122,25 @@ describe('Queen possible moves', () => {
 
     const queenPossibleMoves = whiteQueen.possibleMoves(whiteQueenPosition, testBoard);
 
-    expect(queenPossibleMoves).toIncludeAllMembers(expectedQueenPossibleMoves);
+    expect(queenPossibleMoves).toIncludeSameMembers(expectedQueenPossibleMoves);
+  });
+  it('When white Queen is on starting position D1 and other pieces are not blocking her left diagonal moves', () => {
+    const testBoard = boardWithPieces({
+      D2: { id: '', side: 'WHITE' },
+      C1: { id: '', side: 'WHITE' },
+      E1: { id: '', side: 'WHITE' },
+      E2: { id: '', side: 'WHITE' },
+    });
+    const whiteQueen = new Queen('useless', 'WHITE');
+    const whiteQueenPosition: Square = { column: 'D', row: 1 };
+    const expectedQueenPossibleMoves = [
+      { column: 'A', row: 4 },
+      { column: 'B', row: 3 },
+      { column: 'C', row: 2 },
+    ];
+
+    const queenPossibleMoves = whiteQueen.possibleMoves(whiteQueenPosition, testBoard);
+
+    expect(queenPossibleMoves).toIncludeSameMembers(expectedQueenPossibleMoves);
   });
 });

@@ -14,8 +14,10 @@ export class Queen extends Piece implements PieceMovement {
       this.squaresDown(position, board),
       this.squaresLeft(position, board),
       this.squaresRight(position, board),
-      this.squaresDiagonalLeftUp(position, board),
-      this.squaresDiagonalRightUp(position, board),
+      this.squaresLeftUpDiagonal(position, board),
+      this.squaresRightUpDiagonal(position, board),
+      this.squaresLeftDownDiagonal(position, board),
+      this.squaresRightDownDiagonal(position, board),
     );
   }
 
@@ -91,17 +93,15 @@ export class Queen extends Piece implements PieceMovement {
     return squaresToGo;
   }
 
-  private squaresDiagonalLeftUp(position: Square, board: Board): Square[] {
+  private squaresLeftUpDiagonal(position: Square, board: Board): Square[] {
     const squaresToGo: Square[] = [];
-    const numberOfIterations = columns.indexOf(position.column);
-    let rowIncrementor = 1;
+    const upLeftDiagonalSquares: Square[] = this.findUpLeftDiagonalSquares(position);
 
-    for (let i = numberOfIterations; i > 0; i--) {
+    for (let i = 0; i < upLeftDiagonalSquares.length; i++) {
       const leftDiagonal: Square = {
-        column: columns[i - 1],
-        row: (position.row + rowIncrementor) as Row,
+        column: upLeftDiagonalSquares[i].column,
+        row: upLeftDiagonalSquares[i].row as Row,
       };
-      rowIncrementor++;
       if (!board.onPositionPiece(leftDiagonal)) {
         squaresToGo.push(leftDiagonal);
       } else {
@@ -114,18 +114,15 @@ export class Queen extends Piece implements PieceMovement {
     return squaresToGo;
   }
 
-  private squaresDiagonalRightUp(position: Square, board: Board): Square[] {
+  private squaresRightUpDiagonal(position: Square, board: Board): Square[] {
     const squaresToGo: Square[] = [];
-    const currentColumn = columns.indexOf(position.column);
-    const numberOfIterations = BOARDSIZE - columns.indexOf(position.column) + 1;
-    let rowIncrementor = 1;
+    const upRightDiagonalSquares: Square[] = this.findUpRightDiagonalSquares(position);
 
-    for (let i = currentColumn; i <= numberOfIterations; i++) {
+    for (let i = 0; i < upRightDiagonalSquares.length; i++) {
       const rightDiagonal: Square = {
-        column: columns[i + 1],
-        row: (position.row + rowIncrementor) as Row,
+        column: upRightDiagonalSquares[i].column,
+        row: upRightDiagonalSquares[i].row as Row,
       };
-      rowIncrementor++;
       if (!board.onPositionPiece(rightDiagonal)) {
         squaresToGo.push(rightDiagonal);
       } else {
@@ -136,6 +133,116 @@ export class Queen extends Piece implements PieceMovement {
       }
     }
     return squaresToGo;
+  }
+
+  private squaresLeftDownDiagonal(position: Square, board: Board): Square[] {
+    const squaresToGo: Square[] = [];
+    const downLeftDiagonalSquares: Square[] = this.findDownLeftDiagonalSquares(position);
+
+    for (let i = 0; i < downLeftDiagonalSquares.length; i++) {
+      const leftDiagonal: Square = {
+        column: downLeftDiagonalSquares[i].column,
+        row: downLeftDiagonalSquares[i].row as Row,
+      };
+      if (!board.onPositionPiece(leftDiagonal)) {
+        squaresToGo.push(leftDiagonal);
+      } else {
+        if (this.checkIfOponent(leftDiagonal, board)) {
+          squaresToGo.push(leftDiagonal);
+          break;
+        } else break;
+      }
+    }
+    return squaresToGo;
+  }
+
+  private squaresRightDownDiagonal(position: Square, board: Board): Square[] {
+    const squaresToGo: Square[] = [];
+    const downRightDiagonalSquares: Square[] = this.findDownRightDiagonalSquares(position);
+
+    for (let i = 0; i < downRightDiagonalSquares.length; i++) {
+      const rightDiagonal: Square = {
+        column: downRightDiagonalSquares[i].column,
+        row: downRightDiagonalSquares[i].row as Row,
+      };
+      if (!board.onPositionPiece(rightDiagonal)) {
+        squaresToGo.push(rightDiagonal);
+      } else {
+        if (this.checkIfOponent(rightDiagonal, board)) {
+          squaresToGo.push(rightDiagonal);
+          break;
+        } else break;
+      }
+    }
+    return squaresToGo;
+  }
+
+  private findUpLeftDiagonalSquares(position: Square): Square[] {
+    const diagonalSquares: Square[] = [];
+    let nextSquareColumn = columns.indexOf(position.column) - 1;
+    let nextSquareRow = (position.row + 1) as Row;
+
+    while (nextSquareColumn >= 0 && nextSquareRow <= BOARDSIZE) {
+      const upLeftDiagonal: Square = {
+        column: columns[nextSquareColumn],
+        row: nextSquareRow,
+      };
+      nextSquareColumn--;
+      nextSquareRow++;
+      diagonalSquares.push(upLeftDiagonal);
+    }
+    return diagonalSquares;
+  }
+
+  private findUpRightDiagonalSquares(position: Square): Square[] {
+    const diagonalSquares: Square[] = [];
+    let nextSquareColumn = columns.indexOf(position.column) + 1;
+    let nextSquareRow = (position.row + 1) as Row;
+
+    while (nextSquareColumn < BOARDSIZE && nextSquareRow <= BOARDSIZE) {
+      const upLeftDiagonal: Square = {
+        column: columns[nextSquareColumn],
+        row: nextSquareRow,
+      };
+      nextSquareColumn++;
+      nextSquareRow++;
+      diagonalSquares.push(upLeftDiagonal);
+    }
+    return diagonalSquares;
+  }
+
+  private findDownLeftDiagonalSquares(position: Square): Square[] {
+    const diagonalSquares: Square[] = [];
+    let nextSquareColumn = columns.indexOf(position.column) - 1;
+    let nextSquareRow = (position.row - 1) as Row;
+
+    while (nextSquareColumn >= 0 && nextSquareRow > 0) {
+      const upLeftDiagonal: Square = {
+        column: columns[nextSquareColumn],
+        row: nextSquareRow,
+      };
+      nextSquareColumn--;
+      nextSquareRow--;
+      diagonalSquares.push(upLeftDiagonal);
+    }
+    return diagonalSquares;
+  }
+
+  private findDownRightDiagonalSquares(position: Square): Square[] {
+    const diagonalSquares: Square[] = [];
+    let nextSquareColumn = columns.indexOf(position.column) + 1;
+    let nextSquareRow = (position.row - 1) as Row;
+
+    while (nextSquareColumn < BOARDSIZE && nextSquareRow > 0) {
+      const upLeftDiagonal: Square = {
+        column: columns[nextSquareColumn],
+        row: nextSquareRow,
+      };
+      nextSquareColumn++;
+      nextSquareRow--;
+      diagonalSquares.push(upLeftDiagonal);
+    }
+    return diagonalSquares;
   }
 
   private checkIfOponent(position: Square, board: Board): boolean {
