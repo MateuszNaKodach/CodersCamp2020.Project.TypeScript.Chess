@@ -4,7 +4,7 @@ enum Size {
 }
 
 export class Button {
-  private constructor(private id: string, private size: Size, private btnText: string = '', private onClickFn: any = () => {}) {} // dalej nie wiem jak ugryźć temat typu onclick function
+  constructor(private id: string, private size: Size, private btnText: string = '', private onClickFn: any = () => {}) {}
 
   static fromHtml(element: HTMLElement): Button {
     const size = element.classList.contains('button--small') ? Size.SMALL : Size.LARGE;
@@ -40,7 +40,7 @@ export class Button {
     this.toHtml(buttonDomElement);
   }
 
-  toHtml(element?: HTMLButtonElement): HTMLElement {
+  toHtml(element?: HTMLButtonElement): HTMLButtonElement {
     const buttonDomElement: HTMLButtonElement = element ?? document.createElement('button');
     buttonDomElement.id = this.id;
     buttonDomElement.innerText = this.btnText;
@@ -53,10 +53,7 @@ export class Button {
       buttonDomElement.classList.remove('button--small');
       buttonDomElement.classList.add('button--large');
     }
-    buttonDomElement.addEventListener('click', this.onClickFn);
-
-    //patrząc na kod, szczególnie metodę fromHtml(), powinniśmy ustawiać funkcję onclick w ten sposób, aby można ją było poźniej nadpisać. niestety nie wiem jak zagwarantować, żeby buttonDomElement nie był nullem
-    //buttonDomElement.onclick(this.onClickFn);
+    buttonDomElement.onclick = this.onClickFn;
 
     return buttonDomElement;
   }

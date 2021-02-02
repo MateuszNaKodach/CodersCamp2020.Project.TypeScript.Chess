@@ -19,7 +19,6 @@ export const App = () => {
   const buttonHtml = button.toHtml();
   document.body.appendChild(buttonHtml);
 
-  //tutaj mały teścik - wywołując fromHtml i później onClick na buttonie okazuje się, że pierwtona funkcja na klik nie zostaje ndapisana, a tylko dopisujemy nową funkcję ale do właściwości onclick elementu
   Button.fromHtml(buttonHtml).withText("I'm small").onClick(myOnClickFn).updateHtml();
   //Koniec testu ^^^
 };
