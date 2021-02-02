@@ -1,6 +1,8 @@
 .chessboard {
-  height: 100vw;
-  width: 100vw;
+  height: $chessboard-size--portrait;
+  width: $chessboard-size--portrait;
+  max-height: 100%;
+  max-width: 100%;
   display: grid;
   grid-gap: 0;
   grid-template-columns: repeat(8, auto);
@@ -15,13 +17,15 @@
   }
 
   &--dark {
-    background-image: url('../static/img/board/dark.png');
+    background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), url('../static/img/board/dark.png');
   }
 }
 
 @media (orientation: landscape) {
   .chessboard {
-    height: 100vh;
-    width: 100vh;
+    height: $chessboard-size--landscape;
+    width: $chessboard-size--landscape;
+    max-height: 100%;
+    max-width: 100%;
   }
 }
