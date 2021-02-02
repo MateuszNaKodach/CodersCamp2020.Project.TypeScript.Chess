@@ -4,7 +4,7 @@ import { Rook } from '../../../src/app/model/Rook';
 import { Square, SquareWithPiece, Side } from '../../../src/app/model/Types';
 
 describe('ChessBoard', () => {
-  const piece: Piece = { side: Side.WHITE };
+  const piece: Piece = { side: Side.WHITE } as Piece;
   const rook: Rook = new Rook(Side.WHITE);
   const squareA2: Square = { column: 'A', row: 2 };
   const squareA3: Square = { column: 'A', row: 3 };

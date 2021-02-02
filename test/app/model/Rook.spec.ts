@@ -2,6 +2,7 @@ import { Rook } from '../../../src/app/model/Rook';
 import { Side, Square } from '../../../src/app/model/Types';
 import 'jest-extended';
 import { boardWithPieces, emptyBoard } from './BoardFixture';
+import { Piece } from '../../../src/app/model/Piece';
 
 describe('Rook movement', () => {
   it("Check possible squares to go, when Rook is on A1 and there is no pieces on Roook's way", () => {
@@ -56,8 +57,8 @@ describe('Rook movement', () => {
 
   it('Check possible squares to go, when Rook is on D4 and there are some pieces on D7 and F4', () => {
     const board = boardWithPieces({
-      D7: new Rook(Side.BLACK),
-      F4: new Rook(Side.WHITE),
+      D7: { side: Side.BLACK } as Piece,
+      F4: { side: Side.WHITE } as Piece,
     });
     const possibleMovesWhenRookOnD4 = [
       { column: 'D', row: 7 },

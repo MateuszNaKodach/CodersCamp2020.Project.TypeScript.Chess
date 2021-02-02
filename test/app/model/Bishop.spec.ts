@@ -2,6 +2,7 @@ import 'jest-extended';
 import { boardWithPieces, emptyBoard } from './BoardFixture';
 import { Side, Square } from '../../../src/app/model/Types';
 import { Bishop } from '../../../src/app/model/Bishop';
+import { Piece } from '../../../src/app/model/Piece';
 
 describe('Bishop possible moves', () => {
   it('When Bishop is on D4 and there is no pieces on its way', () => {
@@ -29,11 +30,11 @@ describe('Bishop possible moves', () => {
   });
   it('When white Bishop is on starting position C1 and there are pieces all around', () => {
     const testBoard = boardWithPieces({
-      B1: { side: Side.WHITE },
-      B2: { side: Side.WHITE },
-      C2: { side: Side.WHITE },
-      D1: { side: Side.WHITE },
-      D2: { side: Side.WHITE },
+      B1: { side: Side.WHITE } as Piece,
+      B2: { side: Side.WHITE } as Piece,
+      C2: { side: Side.WHITE } as Piece,
+      D1: { side: Side.WHITE } as Piece,
+      D2: { side: Side.WHITE } as Piece,
     });
     const whiteBishopPosition: Square = { column: 'C', row: 1 };
     const whiteBishop = new Bishop(Side.WHITE);
@@ -43,9 +44,9 @@ describe('Bishop possible moves', () => {
   });
   it('When white Bishop is on D4 on given test board', () => {
     const testBoard = boardWithPieces({
-      B2: { side: Side.WHITE },
-      C5: { side: Side.WHITE },
-      G7: { side: Side.BLACK },
+      B2: { side: Side.WHITE } as Piece,
+      C5: { side: Side.WHITE } as Piece,
+      G7: { side: Side.BLACK } as Piece,
     });
     const whiteBishop = new Bishop(Side.WHITE);
     const whiteBishopPosition: Square = { column: 'D', row: 4 };
@@ -66,9 +67,9 @@ describe('Bishop possible moves', () => {
 
   it('When white Bishop is on starting position C1 and other pieces are not blocking his diagonal moves', () => {
     const testBoard = boardWithPieces({
-      B1: { side: Side.WHITE },
-      C2: { side: Side.WHITE },
-      D1: { side: Side.WHITE },
+      B1: { side: Side.WHITE } as Piece,
+      C2: { side: Side.WHITE } as Piece,
+      D1: { side: Side.WHITE } as Piece,
     });
     const whiteBishop = new Bishop(Side.WHITE);
     const whiteBishopPosition: Square = { column: 'C', row: 1 };
@@ -88,7 +89,7 @@ describe('Bishop possible moves', () => {
   });
   it('When white Bishop is on starting position C1 and other pieces are not blocking his left diagonal moves', () => {
     const testBoard = boardWithPieces({
-      D2: { side: Side.WHITE },
+      D2: { side: Side.WHITE } as Piece,
     });
     const whiteBishop = new Bishop(Side.WHITE);
     const whiteBishopPosition: Square = { column: 'C', row: 1 };
