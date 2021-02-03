@@ -26,7 +26,7 @@ describe('Pawn movement', () => {
 
   it("Check possible squares to go, when White Pawn is on B4 and there is no pieces on Pawn's way and it's black piece on A5", () => {
     const testBoard = boardWithPieces({
-      A5: { side: Side.BLACK },
+      A5: new Pawn(Side.BLACK),
     });
     const pawn = new Pawn(Side.WHITE);
     const pawnPosition: Square = { column: 'B', row: 4 };
@@ -42,8 +42,8 @@ describe('Pawn movement', () => {
 
   it("Check possible squares to go, when White Pawn is on B4 and there is no pieces on Pawn's way and it's black piece on A5 and it's white piece on C5", () => {
     const testBoard = boardWithPieces({
-      A5: { side: Side.BLACK },
-      C5: { side: Side.WHITE },
+      A5: new Pawn(Side.BLACK),
+      C5: new Pawn(Side.WHITE),
     });
     const pawn = new Pawn(Side.WHITE);
     const pawnPosition: Square = { column: 'B', row: 4 };
@@ -72,7 +72,7 @@ describe('Pawn movement', () => {
 
   it('Check possible squares to go, when White Pawn is on E2 and there is black piece on E3', () => {
     const testBoard = boardWithPieces({
-      E3: { side: Side.BLACK },
+      E3: new Pawn(Side.BLACK),
     });
     const pawn = new Pawn(Side.WHITE);
     const pawnPosition: Square = { column: 'E', row: 2 };
@@ -85,7 +85,7 @@ describe('Pawn movement', () => {
 
   it('Check possible squares to go, when White Pawn is on E2 and there is black piece on E4', () => {
     const testBoard = boardWithPieces({
-      E4: { side: Side.BLACK },
+      E4: new Pawn(Side.BLACK),
     });
     const pawn = new Pawn(Side.WHITE);
     const pawnPosition: Square = { column: 'E', row: 2 };
@@ -98,8 +98,8 @@ describe('Pawn movement', () => {
 
   it('Check possible squares to go, when White Pawn is on E2 and there is black pieces on E4 and on C3', () => {
     const testBoard = boardWithPieces({
-      E4: { side: Side.BLACK },
-      C3: { side: Side.BLACK },
+      E4: new Pawn(Side.BLACK),
+      C3: new Pawn(Side.BLACK),
     });
     const pawn = new Pawn(Side.WHITE);
     const pawnPosition: Square = { column: 'E', row: 2 };
@@ -112,8 +112,8 @@ describe('Pawn movement', () => {
 
   it('Check possible squares to go, when White Pawn is on E2 and there is black pieces on E4 and on D3', () => {
     const testBoard = boardWithPieces({
-      E4: { side: Side.BLACK },
-      D3: { side: Side.BLACK },
+      E4: new Pawn(Side.BLACK),
+      D3: new Pawn(Side.BLACK),
     });
     const pawn = new Pawn(Side.WHITE);
     const pawnPosition: Square = { column: 'E', row: 2 };
@@ -129,8 +129,8 @@ describe('Pawn movement', () => {
 
   it('Check possible squares to go, when White Pawn is on E2 and there is black piece on E4 and white piece on D3', () => {
     const testBoard = boardWithPieces({
-      D3: { side: Side.WHITE },
-      E4: { side: Side.BLACK },
+      D3: new Pawn(Side.WHITE),
+      E4: new Pawn(Side.BLACK),
     });
     const pawn = new Pawn(Side.WHITE);
     const pawnPosition: Square = { column: 'E', row: 2 };
@@ -168,7 +168,7 @@ describe('Pawn movement', () => {
 
   it('Check possible squares to go, when BLACK Pawn is on E7 and there is black piece on E6', () => {
     const testBoard = boardWithPieces({
-      E6: { side: Side.BLACK },
+      E6: new Pawn(Side.BLACK),
     });
     const pawn = new Pawn(Side.BLACK);
     const pawnPosition: Square = { column: 'E', row: 7 };
@@ -181,7 +181,7 @@ describe('Pawn movement', () => {
 
   it('Check possible squares to go, when BLACK Pawn is on E7 and there is black piece on E5', () => {
     const testBoard = boardWithPieces({
-      E5: { side: Side.BLACK },
+      E5: new Pawn(Side.BLACK),
     });
     const pawn = new Pawn(Side.BLACK);
     const pawnPosition: Square = { column: 'E', row: 7 };
@@ -194,7 +194,7 @@ describe('Pawn movement', () => {
 
   it('Check possible squares to go, when BLACK Pawn is on E7 and there is white piece on D6', () => {
     const testBoard = boardWithPieces({
-      D6: { side: Side.WHITE },
+      D6: new Pawn(Side.WHITE),
     });
     const pawn = new Pawn(Side.BLACK);
     const pawnPosition: Square = { column: 'E', row: 7 };
