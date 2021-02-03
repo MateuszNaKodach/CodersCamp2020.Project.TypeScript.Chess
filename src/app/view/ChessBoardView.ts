@@ -1,21 +1,42 @@
-//Nie przywiazujcie sie do tego kodu. Mozecie sprobowac wszystko pozmieniac / zrobic inaczej.
+export class Square {
+  constructor(private position_x: number, private position_y: number, private color: SquareColor) {}
 
-export type Square = {
-  id: string;
-};
+  setHtmlElement(): HTMLElement {
+    const squareElement = document.createElement('div');
+    squareElement.id = this.mapSquarePosition();
+    squareElement.classList.add('square');
+    squareElement.classList.add(`square--${this.color}`);
+    return squareElement;
+  }
 
-export enum Side {
-  WHITE = 'WHITE',
-  BLACK = 'BLACK',
+  mapSquarePosition(): string {
+    const columns = 'abcdefgh'.split('').reverse();
+    const rows = '12345678'.split('');
+    return `${columns[this.position_x]}${rows[this.position_y]}`;
+  }
 }
 
-export type Piece = { name: string; side: Side };
+export type SquareColor = 'light' | 'dark';
+export class Chessboard {
+  constructor(private id: string = 'chessboard', private className: string = 'chessboard') {}
 
-export interface ChessBoardView {
-  showPieceOn(square: Square, piece: Piece): void;
+  private setHtmlElement(): HTMLElement {
+    const boardElement = document.createElement('div');
+    boardElement.id = this.id;
+    boardElement.classList.add(this.className);
+    return boardElement;
+  }
 
-  removePieceFrom(square: Square): void;
-
-  //showAvailableMoves
-  //showSelectedPiece
+  createBoard(): HTMLElement {
+    const boardHtml = this.setHtmlElement();
+    for (let y = 7; y >= 0; y--) {
+      for (let x = 7; x >= 0; x--) {
+        const squareColor: SquareColor = (x + y) % 2 ? 'dark' : 'light';
+        const square = new Square(x, y, squareColor);
+        const squareHtml = square.setHtmlElement();
+        boardHtml.appendChild(squareHtml);
+      }
+    }
+    return boardHtml;
+  }
 }
