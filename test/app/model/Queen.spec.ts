@@ -2,7 +2,7 @@ import 'jest-extended';
 import { boardWithPieces, emptyBoard } from './BoardFixture';
 import { Side, Square } from '../../../src/app/model/Types';
 import { Queen } from '../../../src/app/model/Queen';
-import { Piece } from '../../../src/app/model/Piece';
+import { Pawn } from '../../../src/app/model/Pawn';
 
 describe('Queen possible moves', () => {
   it('When Queen is on D4 and there is no pieces on Queens way', () => {
@@ -44,11 +44,11 @@ describe('Queen possible moves', () => {
   });
   it('When white Queen is on starting position D1 and there are pieces all around', () => {
     const testBoard = boardWithPieces({
-      C1: { side: Side.WHITE } as Piece,
-      C2: { side: Side.WHITE } as Piece,
-      D2: { side: Side.WHITE } as Piece,
-      E1: { side: Side.WHITE } as Piece,
-      E2: { side: Side.WHITE } as Piece,
+      C1: new Pawn(Side.WHITE),
+      C2: new Pawn(Side.WHITE),
+      D2: new Pawn(Side.WHITE),
+      E1: new Pawn(Side.WHITE),
+      E2: new Pawn(Side.WHITE),
     });
     const whiteQueen = new Queen(Side.WHITE);
     const whiteQueenPosition: Square = { column: 'D', row: 1 };
@@ -59,14 +59,14 @@ describe('Queen possible moves', () => {
   });
   it('When white Queen is on D4 on given test board', () => {
     const testBoard = boardWithPieces({
-      C3: { side: Side.WHITE } as Piece,
-      B4: { side: Side.WHITE } as Piece,
-      C5: { side: Side.WHITE } as Piece,
-      D6: { side: Side.WHITE } as Piece,
-      E5: { side: Side.BLACK } as Piece,
-      F4: { side: Side.BLACK } as Piece,
-      E3: { side: Side.BLACK } as Piece,
-      D2: { side: Side.BLACK } as Piece,
+      C3: new Pawn(Side.WHITE),
+      B4: new Pawn(Side.WHITE),
+      C5: new Pawn(Side.WHITE),
+      D6: new Pawn(Side.WHITE),
+      E5: new Pawn(Side.BLACK),
+      F4: new Pawn(Side.BLACK),
+      E3: new Pawn(Side.BLACK),
+      D2: new Pawn(Side.BLACK),
     });
     const whiteQueen = new Queen(Side.WHITE);
     const whiteQueenPosition: Square = { column: 'D', row: 4 };
@@ -87,8 +87,8 @@ describe('Queen possible moves', () => {
   });
   it('When white Queen is on D5 and there are black pieces on D7 and D8', () => {
     const testBoard = boardWithPieces({
-      D7: { side: Side.BLACK } as Piece,
-      D8: { side: Side.BLACK } as Piece,
+      D7: new Pawn(Side.BLACK),
+      D8: new Pawn(Side.BLACK),
     });
     const whiteQueen = new Queen(Side.WHITE);
     const whiteQueenPosition: Square = { column: 'D', row: 5 };
@@ -105,9 +105,9 @@ describe('Queen possible moves', () => {
   });
   it('When white Queen is on starting position D1 and other pieces are not blocking her diagonal moves', () => {
     const testBoard = boardWithPieces({
-      D2: { side: Side.WHITE } as Piece,
-      C1: { side: Side.WHITE } as Piece,
-      E1: { side: Side.WHITE } as Piece,
+      D2: new Pawn(Side.WHITE),
+      C1: new Pawn(Side.WHITE),
+      E1: new Pawn(Side.WHITE),
     });
     const whiteQueen = new Queen(Side.WHITE);
     const whiteQueenPosition: Square = { column: 'D', row: 1 };
@@ -127,10 +127,10 @@ describe('Queen possible moves', () => {
   });
   it('When white Queen is on starting position D1 and other pieces are not blocking her left diagonal moves', () => {
     const testBoard = boardWithPieces({
-      D2: { side: Side.WHITE } as Piece,
-      C1: { side: Side.WHITE } as Piece,
-      E1: { side: Side.WHITE } as Piece,
-      E2: { side: Side.WHITE } as Piece,
+      D2: new Pawn(Side.WHITE),
+      C1: new Pawn(Side.WHITE),
+      E1: new Pawn(Side.WHITE),
+      E2: new Pawn(Side.WHITE),
     });
     const whiteQueen = new Queen(Side.WHITE);
     const whiteQueenPosition: Square = { column: 'D', row: 1 };
