@@ -3,16 +3,16 @@ import { ChessBoardView } from '../ChessBoardView';
 
 type OnSquareSelectedFn = (position: { x: number; y: number }) => void;
 
-export class WebChessBoardView implements ChessBoardView {
+export class WebChessView implements ChessBoardView {
   private readonly onSquareSelectedListeners: OnSquareSelectedFn[] = [];
 
-  constructor() {}
+  constructor(private readonly parent: HTMLElement = document.body) {}
 
   showChessBoard(): void {
     const chessboard: Chessboard = new Chessboard('chessBordId', 'chessboard', (position) => {
       this.onSquareSelectedListeners.forEach((listener) => listener(position));
     });
-    document.body.appendChild(chessboard.createBoard());
+    this.parent.appendChild(chessboard.createBoard());
   }
 
   onSquareSelected(listener: OnSquareSelectedFn): void {
