@@ -1,3 +1,5 @@
+import { selectedSquare } from './../presenter/SelectedSquare';
+
 export class Square {
   constructor(private position_x: number, private position_y: number, private color: SquareColor) {}
 
@@ -35,6 +37,7 @@ export class Chessboard {
         const square = new Square(x, y, squareColor);
         const squareHtml = square.setHtmlElement();
         boardHtml.appendChild(squareHtml);
+        squareHtml.addEventListener('click', () => selectedSquare({ x: x, y: y }));
       }
     }
     return boardHtml;
