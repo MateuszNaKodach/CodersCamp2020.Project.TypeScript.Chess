@@ -46,7 +46,7 @@ describe('Button view creation', () => {
 
     const testButtonSmallHtml: HTMLElement = testButtonSmall.toHtml();
 
-    document.body.appendChild(testButtonSmallHtml);
+    renderElement(testButtonSmallHtml);
 
     Button.fromHtml(testButtonSmallHtml).large().updateHtml();
 
@@ -58,7 +58,7 @@ describe('Button view creation', () => {
 
     const testButtonLargeHtml: HTMLElement = testButtonLarge.toHtml();
 
-    document.body.appendChild(testButtonLargeHtml);
+    renderElement(testButtonLargeHtml);
 
     Button.fromHtml(testButtonLargeHtml).small().updateHtml();
 
@@ -66,3 +66,7 @@ describe('Button view creation', () => {
     expect(testButtonLargeHtml.classList).toContain('button--small');
   });
 });
+
+function renderElement(element: HTMLElement): void {
+  document.body.appendChild(element);
+}
