@@ -4,11 +4,11 @@ enum Size {
 }
 
 export class Button {
-  constructor(private id: string, private size: Size, private btnText: string = '', private onClickFn: any = () => {}) {}
+  constructor(private id: string, private size: Size, private btnText: string = '', private onClickFn: () => void = () => {}) {}
 
   static fromHtml(element: HTMLElement): Button {
     const size = element.classList.contains('button--small') ? Size.SMALL : Size.LARGE;
-    return new Button(element.id, size, element.innerText, element.onclick);
+    return new Button(element.id, size, element.innerText, () => element.click());
   }
 
   static small(id: string): Button {
@@ -31,7 +31,7 @@ export class Button {
     return new Button(this.id, Size.SMALL, this.btnText, this.onClickFn);
   }
 
-  onClick(clickFn: any): Button {
+  onClick(clickFn: () => void): Button {
     return new Button(this.id, this.size, this.btnText, clickFn);
   }
 
