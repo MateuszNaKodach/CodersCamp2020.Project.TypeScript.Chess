@@ -1,8 +1,8 @@
-import { Chessboard } from '../../../src/app/view/ChessBoardView';
 import '@testing-library/jest-dom';
+import { Chessboard } from '../../../src/app/view/web/Chessboard';
 
 describe('Component should create a chessboard', () => {
-  const chessboard = new Chessboard('board', 'board');
+  const chessboard = new Chessboard('board', 'board', () => {});
   document.body.appendChild(chessboard.createBoard());
 
   it('Chessboard should have 64 squares', () => {
