@@ -43,8 +43,9 @@ export class Button {
   toHtml(element?: HTMLButtonElement): HTMLButtonElement {
     const buttonDomElement: HTMLButtonElement = element ?? document.createElement('button');
     buttonDomElement.id = this.id;
-    buttonDomElement.innerText = this.btnText;
+    buttonDomElement.textContent = this.btnText;
     buttonDomElement.classList.add('button');
+    buttonDomElement.setAttribute('data-testid', this.id);
     if (this.size == Size.SMALL) {
       buttonDomElement.classList.remove('button--large');
       buttonDomElement.classList.add('button--small');

@@ -1,18 +1,24 @@
 import { Button } from '../../../src/app/view/Button';
 import '@testing-library/jest-dom';
 import '@testing-library/user-event';
+import { screen } from '@testing-library/dom';
+import userEvent from '@testing-library/user-event';
 
 describe('Button view creation', () => {
-  it("Should create button with given id and CSS class 'button--small' and default class 'button'", () => {
+  beforeEach(() => {
+    document.body.innerHTML = '';
+  });
+
+  it("Should create button with given id and CSS class 'button--small' and default class 'button'", async () => {
     const testSmallButton: Button = Button.small('smallButton');
 
-    const testSmallButtonHTML: HTMLElement = testSmallButton.toHtml();
+    renderElement(testSmallButton.toHtml());
 
-    expect(testSmallButtonHTML.tagName).toBe('BUTTON');
-    expect(testSmallButtonHTML.id).toBe('smallButton');
-    expect(testSmallButtonHTML.classList).toContain('button');
-    expect(testSmallButtonHTML.classList).toContain('button--small');
+    const renderedButton = await screen.findByRole('button');
+    expect(renderedButton).toHaveClass('button');
+    expect(renderedButton).toHaveClass('button--small');
   });
+
   it("Should create button with given id and CSS class 'button--large' and default class 'button'", () => {
     const testLargeButton: Button = Button.large('largeButton');
 
@@ -23,24 +29,24 @@ describe('Button view creation', () => {
     expect(testLargeButtonHTML.classList).toContain('button');
     expect(testLargeButtonHTML.classList).toContain('button--large');
   });
-  it('Should create button with given id and given inner text', () => {
+
+  it('Should create button with given id and given inner text', async () => {
     const testButtonWithText: Button = Button.small('buttonWithText').withText('Test Button');
 
-    const testButtonWithTextHTML: HTMLElement = testButtonWithText.toHtml();
+    renderElement(testButtonWithText.toHtml());
 
-    expect(testButtonWithTextHTML.id).toBe('buttonWithText');
-    expect(testButtonWithTextHTML.innerText).toBe('Test Button');
+    expect(await screen.findByText('Test Button')).toBeDefined();
   });
-  it('Should create button with given id and given on click function and call this function after user click', () => {
+
+  it('Should create button with given id and given on click function and call this function after user click', async () => {
     const myOnClickFn = jest.fn();
-    const testButtonWithOnClickFn: Button = Button.small('buttonWithText').onClick(myOnClickFn);
+    renderElement(Button.small('buttonWithText').onClick(myOnClickFn).toHtml());
 
-    const testButtonWithOnClickFnHTML: HTMLElement = testButtonWithOnClickFn.toHtml();
-
-    testButtonWithOnClickFnHTML.click();
+    userEvent.click(await screen.findByTestId('buttonWithText'));
 
     expect(myOnClickFn).toBeCalledTimes(1);
   });
+
   it('Should update button and change its size from small to large', () => {
     const testButtonSmall: Button = Button.small('testButtonSmall');
 
@@ -53,6 +59,7 @@ describe('Button view creation', () => {
     expect(testButtonSmallHtml.classList).not.toContain('button--small');
     expect(testButtonSmallHtml.classList).toContain('button--large');
   });
+
   it('Should update button and change its size from large to small', () => {
     const testButtonLarge: Button = Button.large('testButtonLarge');
 
