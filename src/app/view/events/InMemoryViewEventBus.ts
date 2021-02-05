@@ -3,6 +3,13 @@ import { ViewEventBus } from './ViewEventBus';
 
 type EventListener = { readonly eventType: string; readonly reaction: (event: ViewEvent) => void };
 
+/**
+ * Implementacja interfejsu ViewEventBus
+ * Dzięki użyciu tej klasy np. inna klasa A może opublikować jakiś event (poinformować, że coś się u niej stało), np. że nastąpiło kliknięcie na przycisk.
+ * Nie interesuje jej kto na to słucha i nie wywołuje bezpośrednio reakcji.
+ * Klasa B może użyć funkcji listenOn aby nasłuchiwać na opublikowanie zdarzenie. Kiedy ktoś wywoła publish(TypZdarzenia),
+ * zostaną wywołane wszystkie funkcje, które zostały przekazane jako parametr reaction metody listenOn, jeśli typ zdarzenia jest zgodny z oczekiwanym.
+ */
 export class InMemoryViewEventBus implements ViewEventBus {
   private readonly listeners: EventListener[] = [];
 
