@@ -9,7 +9,7 @@ describe('Button view creation', () => {
     document.body.innerHTML = '';
   });
 
-  it("Should create button with given id and CSS class 'button--small' and default class 'button'", async () => {
+  it("Should create button with CSS class 'button--small' and default class 'button'", async () => {
     const testSmallButton: Button = Button.small('smallButton');
 
     renderElement(testSmallButton.toHtml());
@@ -19,15 +19,14 @@ describe('Button view creation', () => {
     expect(renderedButton).toHaveClass('button--small');
   });
 
-  it("Should create button with given id and CSS class 'button--large' and default class 'button'", () => {
+  it("Should create button with CSS class 'button--large' and default class 'button'", async () => {
     const testLargeButton: Button = Button.large('largeButton');
 
-    const testLargeButtonHTML: HTMLElement = testLargeButton.toHtml();
+    renderElement(testLargeButton.toHtml());
 
-    expect(testLargeButtonHTML.tagName).toBe('BUTTON');
-    expect(testLargeButtonHTML.id).toBe('largeButton');
-    expect(testLargeButtonHTML.classList).toContain('button');
-    expect(testLargeButtonHTML.classList).toContain('button--large');
+    const renderButton = await screen.findByRole('button');
+    expect(renderButton).toHaveClass('button');
+    expect(renderButton).toHaveClass('button--large');
   });
 
   it('Should create button with given id and given inner text', async () => {
@@ -47,30 +46,30 @@ describe('Button view creation', () => {
     expect(myOnClickFn).toBeCalledTimes(1);
   });
 
-  it('Should update button and change its size from small to large', () => {
+  it('Should update button and change its size from small to large', async () => {
     const testButtonSmall: Button = Button.small('testButtonSmall');
 
-    const testButtonSmallHtml: HTMLElement = testButtonSmall.toHtml();
+    renderElement(testButtonSmall.toHtml());
 
-    renderElement(testButtonSmallHtml);
+    const renderButton = await screen.findByRole('button');
 
-    Button.fromHtml(testButtonSmallHtml).large().updateHtml();
+    Button.fromHtml(renderButton).large().updateHtml();
 
-    expect(testButtonSmallHtml.classList).not.toContain('button--small');
-    expect(testButtonSmallHtml.classList).toContain('button--large');
+    expect(renderButton).not.toHaveClass('button--small');
+    expect(renderButton).toHaveClass('button--large');
   });
 
-  it('Should update button and change its size from large to small', () => {
+  it('Should update button and change its size from large to small', async () => {
     const testButtonLarge: Button = Button.large('testButtonLarge');
 
-    const testButtonLargeHtml: HTMLElement = testButtonLarge.toHtml();
+    renderElement(testButtonLarge.toHtml());
 
-    renderElement(testButtonLargeHtml);
+    const renderButton = await screen.findByRole('button');
 
-    Button.fromHtml(testButtonLargeHtml).small().updateHtml();
+    Button.fromHtml(renderButton).small().updateHtml();
 
-    expect(testButtonLargeHtml.classList).not.toContain('button--large');
-    expect(testButtonLargeHtml.classList).toContain('button--small');
+    expect(renderButton).not.toHaveClass('button--large');
+    expect(renderButton).toHaveClass('button--small');
   });
 });
 
