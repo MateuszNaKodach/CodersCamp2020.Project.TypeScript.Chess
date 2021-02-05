@@ -7,7 +7,7 @@ import { ViewEvent } from '../../../src/app/view/events/ViewEvent';
 import { SquareWasClicked } from '../../../src/app/view/events/SquareWasClicked';
 import { InMemoryViewEventBus } from '../../../src/app/view/events/InMemoryViewEventBus';
 
-describe('SelectedSquare', () => {
+describe('ChessBoardPresenter', () => {
   const viewEvents: ViewEventBus = new InMemoryViewEventBus();
   const view: ChessBoardView = chessBoardViewMock(viewEvents);
   const model: ChessModel = {};
