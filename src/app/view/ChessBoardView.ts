@@ -1,21 +1,7 @@
-//Nie przywiazujcie sie do tego kodu. Mozecie sprobowac wszystko pozmieniac / zrobic inaczej.
-
-export type Square = {
-  id: string;
-};
-
-export enum Side {
-  WHITE = 'WHITE',
-  BLACK = 'BLACK',
-}
-
-export type Piece = { name: string; side: Side };
-
 export interface ChessBoardView {
-  showPieceOn(square: Square, piece: Piece): void;
+  showChessBoard(/*parametry*/): void;
 
-  removePieceFrom(square: Square): void;
+  onSquareSelected(callback: (position: { x: number; y: number }) => void): void;
 
-  //showAvailableMoves
-  //showSelectedPiece
+  showSelectedPiece(position: { x: number; y: number }): void;
 }

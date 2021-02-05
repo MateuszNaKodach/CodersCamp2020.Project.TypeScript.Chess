@@ -61,8 +61,4 @@ export class Pawn extends Piece implements PiecePossibleMoves {
 
     return movesToGo;
   }
-
-  private checkIfOponent(position: Square, board: PiecePositions): boolean {
-    return board.onPositionPiece(position)?.side !== this.side;
-  }
 }
