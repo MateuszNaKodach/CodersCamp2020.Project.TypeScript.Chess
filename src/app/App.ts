@@ -3,7 +3,7 @@ import { ChessBoardView } from './view/ChessBoardView';
 import { WebChessView } from './view/web/WebChessView';
 import { ChessEngine } from './model/ChessEngine';
 import { ChessModel } from './model/ChessModel';
-import { InMemoryViewEventBus } from './view/events/ViewEventBus';
+import { InMemoryViewEventBus } from './view/events/InMemoryViewEventBus';
 
 export const App = (): void => {
   const viewEventBus = new InMemoryViewEventBus();

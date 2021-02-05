@@ -2,9 +2,10 @@ import '@testing-library/jest-dom';
 import { ChessBoardView } from '../../../src/app/view/ChessBoardView';
 import { ChessModel } from '../../../src/app/model/ChessModel';
 import { ChessBoardPresenter } from '../../../src/app/presenter/ChessBoardPresenter';
-import { InMemoryViewEventBus, ViewEventBus } from '../../../src/app/view/events/ViewEventBus';
+import { ViewEventBus } from '../../../src/app/view/events/ViewEventBus';
 import { ViewEvent } from '../../../src/app/view/events/ViewEvent';
 import { SquareWasClicked } from '../../../src/app/view/events/SquareWasClicked';
+import { InMemoryViewEventBus } from '../../../src/app/view/events/InMemoryViewEventBus';
 
 describe('SelectedSquare', () => {
   const viewEvents: ViewEventBus = new InMemoryViewEventBus();
