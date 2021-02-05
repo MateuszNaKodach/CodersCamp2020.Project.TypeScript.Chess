@@ -6,6 +6,7 @@ export class Square {
   setHtmlElement(): HTMLElement {
     const squareElement = document.createElement('div');
     squareElement.id = this.mapSquarePosition();
+    squareElement.setAttribute('data-testid', squareElement.id);
     squareElement.classList.add('square');
     squareElement.classList.add(`square--${this.color}`);
     return squareElement;
