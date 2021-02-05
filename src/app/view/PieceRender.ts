@@ -1,4 +1,4 @@
-export const pieceRendering = () => {
+export const pieceRendering = (): void => {
   document.body.querySelector('#a1')?.appendChild(createPieceDiv('../../../static/img/pieces/white-rook.svg'));
   document.body.querySelector('#b1')?.appendChild(createPieceDiv('../../../static/img/pieces/white-knight.svg'));
   document.body.querySelector('#c1')?.appendChild(createPieceDiv('../../../static/img/pieces/white-bishop.svg'));
