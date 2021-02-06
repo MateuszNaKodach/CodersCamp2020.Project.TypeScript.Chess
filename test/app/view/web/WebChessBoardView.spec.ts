@@ -16,7 +16,7 @@ describe('Web Chess Board View', () => {
   chessBoardView.showChessBoard();
 
   it('Chessboard should have 64 squares', () => {
-    const board = document.getElementById('chessBordId');
+    const board = document.getElementById('chessBoardId');
     expect(board).not.toBeNull();
     const squareList = board?.getElementsByTagName('div');
 

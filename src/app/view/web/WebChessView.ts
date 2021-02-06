@@ -8,7 +8,7 @@ export class WebChessView implements ChessBoardView {
   constructor(private readonly viewEventBus: ViewEventBus, private readonly parent: HTMLElement = document.body) {}
 
   showChessBoard(): void {
-    const chessboard: Chessboard = new Chessboard('chessBordId', 'chessboard', (position) =>
+    const chessboard: Chessboard = new Chessboard('chessBoardId', 'chessboard', (position) =>
       this.viewEventBus.publish(new SquareWasClicked(position)),
     );
     this.parent.appendChild(chessboard.createBoard());
