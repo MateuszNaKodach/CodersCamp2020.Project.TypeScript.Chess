@@ -3,6 +3,7 @@ import { Side, Square, SquareWithPiece } from '../../../src/app/model/Types';
 import { ChessBoard } from '../../../src/app/model/ChessBoard';
 import { Pawn } from '../../../src/app/model/Pawn';
 import { Player } from '../../../src/app/model/Player';
+import 'jest-extended';
 
 describe('Chess Engine', () => {
   it('Given white piece on A2 and black piece on A4, should move white piece to A3 and return expected list of events', () => {
@@ -15,10 +16,8 @@ describe('Chess Engine', () => {
     const squareFrom: Square = { column: 'A', row: 2 };
     const squareTo: Square = { column: 'A', row: 3 };
 
-    const eventsList: (PieceWasMoved | PieceWasCaptured)[] = engine.move(player, squareFrom, squareTo);
+    const eventsList: (PieceWasMoved | PieceWasCaptured)[] = engine.move(player, squareFrom, squareTo, chessBoard);
 
-    expect(chessBoard.onPositionPiece({ column: 'A', row: 2 })).toBe(undefined);
-    expect(chessBoard.onPositionPiece({ column: 'A', row: 3 })).toMatchObject(whitePiece);
-    expect(eventsList).toContain({ eventType: 'PieceWasMoved', piece: whitePiece, from: squareFrom, to: squareTo });
+    expect(eventsList).toIncludeSameMembers([{ eventType: 'PieceWasMoved', piece: whitePiece, from: squareFrom, to: squareTo }]);
   });
 });
