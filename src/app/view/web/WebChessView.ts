@@ -1,22 +1,21 @@
 import { Chessboard } from './Chessboard';
 import { ChessBoardView } from '../ChessBoardView';
-
-type OnSquareSelectedFn = (position: { x: number; y: number }) => void;
+import { ViewEventBus } from '../events/ViewEventBus';
+import { ViewEvent } from '../events/ViewEvent';
+import { SquareWasClicked } from '../events/SquareWasClicked';
 
 export class WebChessView implements ChessBoardView {
-  private readonly onSquareSelectedListeners: OnSquareSelectedFn[] = [];
-
-  constructor(private readonly parent: HTMLElement = document.body) {}
+  constructor(private readonly viewEventBus: ViewEventBus, private readonly parent: HTMLElement = document.body) {}
 
   showChessBoard(): void {
-    const chessboard: Chessboard = new Chessboard('chessBordId', 'chessboard', (position) => {
-      this.onSquareSelectedListeners.forEach((listener) => listener(position));
-    });
+    const chessboard: Chessboard = new Chessboard('chessBoardId', 'chessboard', (position) =>
+      this.viewEventBus.publish(new SquareWasClicked(position)),
+    );
     this.parent.appendChild(chessboard.createBoard());
   }
 
-  onSquareSelected(listener: OnSquareSelectedFn): void {
-    this.onSquareSelectedListeners.push(listener);
+  listenOn<EventType extends ViewEvent = ViewEvent>(eventType: EventType['eventType'], reaction: (event: EventType) => void): void {
+    this.viewEventBus.listenOn(eventType, reaction);
   }
 
   showSelectedPiece(position: { x: number; y: number }): void {}
