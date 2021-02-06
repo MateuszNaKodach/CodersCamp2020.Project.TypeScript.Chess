@@ -54,3 +54,7 @@ ol,
 ul {
   list-style-type: none;
 }
+
+button {
+  outline: transparent; // dodałem ten reset ze względu na to, że Chrome dodawał mi ramkę kiedy przycisk miał :focus
+}
