@@ -5,6 +5,12 @@ import { BOARDSIZE } from './Constances';
 export abstract class Piece {
   protected constructor(public side: Side) {}
 
+  protected abstract possibleMoves(position: Square, board: PiecePositions): Square[];
+
+  getPossibleMoves(position: Square, board: PiecePositions): Square[] {
+    return this.possibleMoves(position, board);
+  }
+
   protected lineMoves(board: PiecePositions, actualPosition: Square, vector: Vector): Square[] {
     const nextSquare: Square = {
       column: columns[columns.indexOf(actualPosition.column) + vector.col],
