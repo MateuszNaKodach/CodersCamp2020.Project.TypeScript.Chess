@@ -1,5 +1,5 @@
-import { ChessEngine, PieceWasCaptured, PieceWasMoved } from '../../../src/app/model/ChessEngine';
-import { Side, Square, SquareWithPiece } from '../../../src/app/model/Types';
+import { ChessEngine } from '../../../src/app/model/ChessEngine';
+import { PieceWasCaptured, PieceWasMoved, Side, Square, SquareWithPiece } from '../../../src/app/model/Types';
 import { ChessBoard } from '../../../src/app/model/ChessBoard';
 import { Pawn } from '../../../src/app/model/Pawn';
 import { Player } from '../../../src/app/model/Player';
