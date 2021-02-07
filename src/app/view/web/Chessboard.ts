@@ -1,5 +1,6 @@
 import { Square } from './Square';
 import { SquareColor } from './SquareColor';
+import '/sass/components/_chessboard.scss';
 
 export class Chessboard {
   constructor(
