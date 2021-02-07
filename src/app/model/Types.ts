@@ -10,3 +10,15 @@ export enum Side {
 }
 export type SquareWithPiece = { [key: string]: Piece };
 export type Vector = { col: number; row: number };
+export type PieceWasMoved = {
+  eventType: 'PieceWasMoved';
+  piece: Piece;
+  from: Square;
+  to: Square;
+};
+
+export type PieceWasCaptured = {
+  eventType: 'PieceWasCaptured';
+  piece: Piece;
+  onSquare: Square;
+};
