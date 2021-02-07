@@ -11,6 +11,8 @@ export class ChessEngine implements ChessModel, PieceMoves, PiecePositions {
     const moveEventsList: (PieceWasMoved | PieceWasCaptured)[] = [];
     const chosenPiece = board.onPositionPiece(squareFrom) as Piece;
     const possibleMoves = chosenPiece.possibleMoves(squareFrom, board);
+    const isOccupied = board.onPositionPiece(squareTo);
+    const isOponent = isOccupied && isOccupied?.side !== chosenPiece.side;
 
     if (byPlayer.side === chosenPiece.side) {
       if (
@@ -18,15 +20,10 @@ export class ChessEngine implements ChessModel, PieceMoves, PiecePositions {
           return square.column == squareTo.column && square.row == squareTo.row;
         })
       ) {
-        if (board.onPositionPiece(squareTo)?.side !== chosenPiece?.side) {
-          const oponentPiece = board.onPositionPiece(squareTo) as Piece;
-          console.log(oponentPiece);
-          board.movePiece(squareFrom, squareTo);
-          moveEventsList.push({ eventType: 'PieceWasCaptured', piece: oponentPiece, onSquare: squareTo });
-          return moveEventsList;
-        }
         board.movePiece(squareFrom, squareTo);
-        moveEventsList.push({ eventType: 'PieceWasMoved', piece: chosenPiece, from: squareFrom, to: squareTo });
+        if (isOponent) moveEventsList.push({ eventType: 'PieceWasCaptured', piece: isOccupied as Piece, onSquare: squareTo });
+        else moveEventsList.push({ eventType: 'PieceWasMoved', piece: chosenPiece, from: squareFrom, to: squareTo });
+
         return moveEventsList;
       } else throw new Error('Piece can not move to given square.');
     } else throw new Error('Player can not move other players pieces.');
