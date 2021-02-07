@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/nowakprojects/CodersCamp2020.Project.TypeScript.Chess#readme",
   "dependencies": {
+    "components": "^0.1.0",
     "eslint-config-prettier": "^7.2.0",
     "parcel": "^1.12.4",
     "regenerator-runtime": "^0.13.7",
