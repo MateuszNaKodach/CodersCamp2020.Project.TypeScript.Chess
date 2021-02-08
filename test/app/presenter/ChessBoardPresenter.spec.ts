@@ -10,7 +10,7 @@ import { InMemoryViewEventBus } from '../../../src/app/view/events/InMemoryViewE
 describe('ChessBoardPresenter', () => {
   const viewEvents: ViewEventBus = new InMemoryViewEventBus();
   const view: ChessBoardView = chessBoardViewMock(viewEvents);
-  const model: ChessModel = {};
+  const model: ChessModel = { move: jest.fn() };
   const presenter: ChessBoardPresenter = new ChessBoardPresenter(view, model);
 
   it('when square was clicked on the view, then selected piece should be shown', () => {
