@@ -23,7 +23,6 @@ export class ChessEngine implements ChessModel {
     if (byPlayer.side !== chosenPiece.side) {
       throw new Error('Player can not move other players pieces.');
     }
-    // const possibleMoves = chosenPiece.possibleMoves(squareFrom, this.board);
     if (!this.canMoveOnSquare(squareFrom, squareTo)) {
       throw new Error('Piece can not move to given square.');
     }
@@ -53,6 +52,8 @@ export class ChessEngine implements ChessModel {
 
   private canMoveOnSquare(squareFrom: Square, squareTo: Square): boolean {
     const piecePossibleMoves = this.board.onPositionPiece(squareFrom)?.possibleMoves(squareFrom, this.board);
-    return piecePossibleMoves ? piecePossibleMoves.some((el) => el.column === squareTo.column && el.row === squareTo.row) : false;
+    return (
+      piecePossibleMoves?.some((possibleMove) => possibleMove.column === squareTo.column && possibleMove.row === squareTo.row) ?? false
+    );
   }
 }
