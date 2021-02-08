@@ -5,6 +5,8 @@ import { BOARDSIZE } from './Constances';
 export abstract class Piece {
   protected constructor(public side: Side) {}
 
+  abstract possibleMoves(position: Square, board: PiecePositions): Square[];
+
   protected lineMoves(board: PiecePositions, actualPosition: Square, vector: Vector): Square[] {
     const nextSquare: Square = {
       column: columns[columns.indexOf(actualPosition.column) + vector.col],
@@ -29,5 +31,9 @@ export abstract class Piece {
 
   protected checkIfOponent(position: Square, board: PiecePositions): boolean {
     return board.onPositionPiece(position)?.side !== this.side;
+  }
+
+  isOpponentOf(anotherPiece: Piece): boolean {
+    return anotherPiece.side !== this.side;
   }
 }
