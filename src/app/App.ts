@@ -5,11 +5,15 @@ import { ChessEngine } from './model/ChessEngine';
 import { ChessModel } from './model/ChessModel';
 import { pieceRendering } from './view/PieceRender';
 import { InMemoryViewEventBus } from './view/events/InMemoryViewEventBus';
+import { ChessBoard } from './model/ChessBoard';
+import { SquareWithPiece } from './model/Types';
 
 export const App = (): void => {
   const viewEventBus = new InMemoryViewEventBus();
   const chessBoardView: ChessBoardView = new WebChessView(viewEventBus);
-  const chessModel: ChessModel = new ChessEngine();
+  const boardWithPieces: SquareWithPiece = {};
+  const chessBoard: ChessBoard = new ChessBoard(boardWithPieces);
+  const chessModel: ChessModel = new ChessEngine(chessBoard);
   const presenter = new ChessBoardPresenter(chessBoardView, chessModel);
   presenter.startGame();
   pieceRendering();
