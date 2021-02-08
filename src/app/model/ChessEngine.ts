@@ -10,7 +10,7 @@ import { isDefined } from './HelperFunctions';
 export class ChessEngine implements ChessModel {
   private currentSide: Side = Side.BLACK;
 
-  constructor(readonly board: ChessBoard) {}
+  constructor(private readonly board: ChessBoard) {}
 
   move(byPlayer: Player, squareFrom: Square, squareTo: Square): (PieceWasMoved | PieceWasCaptured)[] {
     const chosenPiece = this.board.onPositionPiece(squareFrom);
@@ -23,8 +23,8 @@ export class ChessEngine implements ChessModel {
     if (byPlayer.side !== chosenPiece.side) {
       throw new Error('Player can not move other players pieces.');
     }
-    const possibleMoves = chosenPiece.possibleMoves(squareFrom, this.board);
-    if (!this.canMoveOnSquare(possibleMoves, squareTo)) {
+    // const possibleMoves = chosenPiece.possibleMoves(squareFrom, this.board);
+    if (!this.canMoveOnSquare(squareFrom, squareTo)) {
       throw new Error('Piece can not move to given square.');
     }
 
@@ -51,7 +51,8 @@ export class ChessEngine implements ChessModel {
     this.currentSide = event.piece.side;
   }
 
-  private canMoveOnSquare(array: Square[], square: Square): boolean {
-    return array.some((el) => el.column === square.column && el.row === square.row);
+  private canMoveOnSquare(squareFrom: Square, squareTo: Square): boolean {
+    const piecePossibleMoves = this.board.onPositionPiece(squareFrom)?.possibleMoves(squareFrom, this.board);
+    return piecePossibleMoves ? piecePossibleMoves.some((el) => el.column === squareTo.column && el.row === squareTo.row) : false;
   }
 }
