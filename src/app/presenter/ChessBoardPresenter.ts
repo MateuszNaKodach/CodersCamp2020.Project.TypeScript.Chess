@@ -17,6 +17,6 @@ export class ChessBoardPresenter {
 
   startGame(): void {
     //wezmie z chessModel aktualny uklad
-    this.view.showChessBoard();
+    this.view.showChessBoard(this.chessModel.piecesPositions);
   }
 }
