@@ -10,7 +10,9 @@ describe('SelectedSquare', () => {
     showSelectedPiece: jest.fn(),
   };
 
-  const model: ChessModel = {};
+  const model: ChessModel = {
+    move: jest.fn(),
+  };
   const presenter: ChessBoardPresenter = new ChessBoardPresenter(view, model);
 
   it('when square is selected then selected piece should be shown', () => {
