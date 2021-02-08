@@ -1,7 +1,8 @@
 import { Player } from './Player';
-import { PieceWasCaptured, PieceWasMoved, Square } from './Types';
-import { ChessBoard } from './ChessBoard';
+import { Square } from './Types';
+import { PieceWasMoved } from './PieceWasMoved';
+import { PieceWasCaptured } from './PieceWasCaptured';
 
 export interface ChessModel {
-  move(byPlayer: Player, squareFrom: Square, squareTo: Square, board: ChessBoard): (PieceWasMoved | PieceWasCaptured)[];
+  move(byPlayer: Player, squareFrom: Square, squareTo: Square): (PieceWasMoved | PieceWasCaptured)[];
 }
