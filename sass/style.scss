@@ -4,9 +4,11 @@
 @import 'vars'; // ustawienie zmiennych
 @import 'main'; // opisanie głównych elementów
 @import 'mixins'; // miksins - główne
+@import 'fonts'; // czcionki
 
 // * COMPONENTY
 @import 'components/chessboard';
+@import 'components/button';
 @import 'components/piece';
 
 // * LAYOUTS

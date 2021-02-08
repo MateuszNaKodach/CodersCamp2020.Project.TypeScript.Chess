@@ -1,7 +1,8 @@
-export interface ChessBoardView {
+import { ViewEventSource } from './events/ViewEventBus';
+
+export interface ChessBoardView extends ViewEventSource {
   showChessBoard(/*parametry*/): void;
 
-  onSquareSelected(callback: (position: { x: number; y: number }) => void): void;
-
+  //TODO: Do zmiany, brakuje jaka bierke pokazac
   showSelectedPiece(position: { x: number; y: number }): void;
 }
