@@ -7,7 +7,7 @@ import { PieceWasMoved } from './PieceWasMoved';
 import { PieceWasCaptured } from './PieceWasCaptured';
 
 export class ChessEngine implements ChessModel {
-  currentSide: Side = Side.WHITE;
+  currentSide: Side | undefined;
 
   constructor(readonly board: ChessBoard) {}
 
@@ -17,6 +17,7 @@ export class ChessEngine implements ChessModel {
     const pieceOnSquare = this.board.onPositionPiece(squareTo);
     const isOponent = pieceOnSquare && pieceOnSquare.side !== chosenPiece.side;
 
+    if (byPlayer.side == this.currentSide) throw new Error('balalab');
     if (byPlayer.side !== chosenPiece.side) throw new Error('Player can not move other players pieces.');
     if (
       !possibleMoves.find((square: Square) => {
