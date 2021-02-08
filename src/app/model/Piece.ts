@@ -32,4 +32,8 @@ export abstract class Piece {
   protected checkIfOponent(position: Square, board: PiecePositions): boolean {
     return board.onPositionPiece(position)?.side !== this.side;
   }
+
+  isOpponentOf(anotherPiece: Piece): boolean {
+    return anotherPiece.side !== this.side;
+  }
 }
