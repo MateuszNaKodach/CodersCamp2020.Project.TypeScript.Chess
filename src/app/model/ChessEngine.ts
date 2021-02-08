@@ -37,7 +37,7 @@ export class ChessEngine implements ChessModel {
 
   private pieceWasCaptured(squareTo: Square, chosenPiece: Piece): PieceWasCaptured | undefined {
     const pieceOnSquare = this.board.onPositionPiece(squareTo);
-    return pieceOnSquare?.isOpponentOf(chosenPiece) && isDefined(pieceOnSquare)
+    return isDefined(pieceOnSquare) && pieceOnSquare.isOpponentOf(chosenPiece)
       ? {
           eventType: 'PieceWasCaptured',
           piece: pieceOnSquare,
