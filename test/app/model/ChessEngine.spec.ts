@@ -82,6 +82,19 @@ describe('Chess Engine', () => {
 
     engine.move(player, squareStart, squareMiddle);
 
-    expect(() => engine.move(player, squareMiddle, squareFinish)).toThrowError();
+    expect(() => engine.move(player, squareMiddle, squareFinish)).toThrowError('Player can not move twice in a row.');
+  });
+  it('Should throw an Error if player wants to move already captured piece', () => {
+    const whitePiece = new Queen(Side.WHITE);
+    const blackPiece = new Pawn(Side.BLACK);
+    const boardWithPieces: SquareWithPiece = { A2: whitePiece, A6: blackPiece };
+    const chessBoard = new ChessBoard(boardWithPieces);
+    const engine = new ChessEngine(chessBoard);
+    const playerWhite = new Player(Side.WHITE);
+    const playerBlack = new Player(Side.BLACK);
+
+    engine.move(playerWhite, { column: 'A', row: 2 }, { column: 'A', row: 6 });
+
+    expect(() => engine.move(playerBlack, { column: 'A', row: 6 }, { column: 'A', row: 5 })).toThrowError();
   });
 });

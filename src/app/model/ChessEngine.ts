@@ -7,17 +7,17 @@ import { PieceWasMoved } from './PieceWasMoved';
 import { PieceWasCaptured } from './PieceWasCaptured';
 
 export class ChessEngine implements ChessModel {
-  currentSide: Side | undefined;
+  currentSide: Side = Side.BLACK;
 
   constructor(readonly board: ChessBoard) {}
 
   move(byPlayer: Player, squareFrom: Square, squareTo: Square): (PieceWasMoved | PieceWasCaptured)[] {
-    const chosenPiece = this.board.onPositionPiece(squareFrom) as Piece; // tutaj chyba też powinienem pozbyć się tego as Piece
+    const chosenPiece = this.board.onPositionPiece(squareFrom) as Piece;
     const possibleMoves = chosenPiece.possibleMoves(squareFrom, this.board);
     const pieceOnSquare = this.board.onPositionPiece(squareTo);
     const isOponent = pieceOnSquare && pieceOnSquare.side !== chosenPiece.side;
 
-    if (byPlayer.side == this.currentSide) throw new Error('balalab');
+    if (byPlayer.side == this.currentSide) throw new Error('Player can not move twice in a row.');
     if (byPlayer.side !== chosenPiece.side) throw new Error('Player can not move other players pieces.');
     if (
       !possibleMoves.find((square: Square) => {
@@ -30,7 +30,6 @@ export class ChessEngine implements ChessModel {
     const pieceWasCaptured: PieceWasCaptured | undefined =
       isOponent && isPiece(pieceOnSquare)
         ? {
-            //dodałem unię z undefined bo mi krzyczy
             eventType: 'PieceWasCaptured',
             piece: pieceOnSquare,
             onSquare: squareTo,
@@ -46,5 +45,4 @@ export class ChessEngine implements ChessModel {
   }
 }
 
-//Type Guard for Piece - wyczytałem, że można stworzyć taką funkcję 'pilnującą' albo możemy skorzystać z instanceof
 const isPiece = (varToCheck: unknown): varToCheck is Piece => (varToCheck as Piece) !== undefined;
