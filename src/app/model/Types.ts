@@ -9,4 +9,5 @@ export enum Side {
   BLACK = 'BLACK',
 }
 export type SquareWithPiece = { [key: string]: Piece };
+export type PiecesBoardPositions = { [key: string]: { name: string; side: Side } };
 export type Vector = { col: number; row: number };

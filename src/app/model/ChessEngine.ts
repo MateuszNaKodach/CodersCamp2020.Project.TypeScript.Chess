@@ -1,16 +1,16 @@
 import { ChessModel } from './ChessModel';
-import { Side, Square, SquareWithPiece } from './Types';
+import { PiecesBoardPositions, Side, Square } from './Types';
 import { Piece } from './Piece';
 import { Player } from './Player';
 import { ChessBoard } from './ChessBoard';
 import { PieceWasMoved } from './PieceWasMoved';
 import { PieceWasCaptured } from './PieceWasCaptured';
 import { isDefined } from './HelperFunctions';
-import { PIECE_START_POSITION } from './Constances';
+import { PIECES_START_POSITION } from './Constances';
 
 export class ChessEngine implements ChessModel {
   private currentSide: Side = Side.BLACK;
-  piecesPositions: SquareWithPiece = PIECE_START_POSITION;
+  piecesPositions: PiecesBoardPositions = PIECES_START_POSITION;
 
   constructor(private readonly board: ChessBoard) {}
 
@@ -29,7 +29,12 @@ export class ChessEngine implements ChessModel {
       throw new Error('Piece can not move to given square.');
     }
 
-    const pieceWasMoved: PieceWasMoved = { eventType: 'PieceWasMoved', piece: chosenPiece, from: squareFrom, to: squareTo };
+    const pieceWasMoved: PieceWasMoved = {
+      eventType: 'PieceWasMoved',
+      piece: chosenPiece,
+      from: squareFrom,
+      to: squareTo,
+    };
     const pieceWasCaptured = this.pieceWasCaptured(squareTo, chosenPiece);
 
     this.onPieceWasMoved(pieceWasMoved);

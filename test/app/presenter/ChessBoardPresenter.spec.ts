@@ -6,11 +6,13 @@ import { ViewEventBus } from '../../../src/app/view/events/ViewEventBus';
 import { ViewEvent } from '../../../src/app/view/events/ViewEvent';
 import { SquareWasClicked } from '../../../src/app/view/events/SquareWasClicked';
 import { InMemoryViewEventBus } from '../../../src/app/view/events/InMemoryViewEventBus';
+import { PiecesBoardPositions } from '../../../src/app/model/Types';
 
 describe('ChessBoardPresenter', () => {
   const viewEvents: ViewEventBus = new InMemoryViewEventBus();
   const view: ChessBoardView = chessBoardViewMock(viewEvents);
-  const model: ChessModel = { move: jest.fn() };
+  const piecesPositions: PiecesBoardPositions = {};
+  const model: ChessModel = { piecesPositions, move: jest.fn() };
   const presenter: ChessBoardPresenter = new ChessBoardPresenter(view, model);
 
   it('when square was clicked on the view, then selected piece should be shown', () => {

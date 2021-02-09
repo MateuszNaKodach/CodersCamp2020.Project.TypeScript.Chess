@@ -3,12 +3,12 @@ import { ChessBoardView } from '../ChessBoardView';
 import { ViewEventBus } from '../events/ViewEventBus';
 import { ViewEvent } from '../events/ViewEvent';
 import { SquareWasClicked } from '../events/SquareWasClicked';
-import { SquareWithPiece } from '../../model/Types';
+import { PiecesBoardPositions } from '../../model/Types';
 
 export class WebChessView implements ChessBoardView {
   constructor(private readonly viewEventBus: ViewEventBus, private readonly parent: HTMLElement = document.body) {}
 
-  showChessBoard(piecesPositions: SquareWithPiece): void {
+  showChessBoard(piecesPositions: PiecesBoardPositions): void {
     const chessboard: Chessboard = new Chessboard('chessBoardId', 'chessboard', (position) =>
       this.viewEventBus.publish(new SquareWasClicked(position)),
     );
@@ -23,17 +23,17 @@ export class WebChessView implements ChessBoardView {
 
   showSelectedPiece(position: { x: number; y: number }): void {}
 
-  private renderPiecesOnBoard(piecesPositions: SquareWithPiece) {
+  private renderPiecesOnBoard(piecesPositions: PiecesBoardPositions) {
     let piecesSquareId: string;
     let pieceImage: string;
     let pieceName: string;
     let pieceSide: string;
 
-    for (const elem in piecesPositions) {
-      pieceName = Object.getPrototypeOf(piecesPositions[elem]).constructor.name.toLowerCase();
-      pieceSide = piecesPositions[elem].side.toLowerCase();
+    for (const piece in piecesPositions) {
+      pieceName = piecesPositions[piece].name.toLowerCase();
+      pieceSide = piecesPositions[piece].side.toLowerCase();
 
-      piecesSquareId = `#${elem.toLowerCase()}`;
+      piecesSquareId = `#${piece.toLowerCase()}`;
       pieceImage = `../static/img/pieces/${pieceSide}-${pieceName}.svg`;
 
       this.parent.querySelector(piecesSquareId)?.appendChild(this.createPieceDiv(pieceImage));
