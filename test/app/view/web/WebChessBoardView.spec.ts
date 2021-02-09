@@ -6,14 +6,15 @@ import { WebChessView } from '../../../../src/app/view/web/WebChessView';
 import { ViewEventBus } from '../../../../src/app/view/events/ViewEventBus';
 import { SquareWasClicked } from '../../../../src/app/view/events/SquareWasClicked';
 import { PiecesBoardPositions } from '../../../../src/app/model/Types';
+import { PIECES_START_POSITION } from '../../../../src/app/model/Constances';
 
-describe('Web Chess Board View', () => {
+describe('Web Chess Board View with starting pieces positions', () => {
   const publishViewEventMock = jest.fn();
   const viewEventBus: ViewEventBus = {
     listenOn: jest.fn(),
     publish: publishViewEventMock,
   };
-  const piecesPositions: PiecesBoardPositions = {};
+  const piecesPositions: PiecesBoardPositions = PIECES_START_POSITION;
   const chessBoardView: ChessBoardView = new WebChessView(viewEventBus);
   chessBoardView.showChessBoard(piecesPositions);
 
@@ -44,10 +45,30 @@ describe('Web Chess Board View', () => {
     expect(publishViewEventMock).toBeCalledWith(new SquareWasClicked({ x: 1, y: 2 }));
   });
 
-  it('Square a1 should contain white rook', () => {
-    // const a1Square = await screen.findByTestId('a1');
-    const a1WhiteRook = document.querySelector('#a1-img');
+  it('Square a1 should contain white rook', async () => {
+    const a1Square = await screen.findByTestId('a1');
+    const a1WhiteRook = await screen.findByTestId('a1-img');
 
     expect(a1Square).toContainElement(a1WhiteRook);
+  });
+
+  it('Square e7 should contain black pawn', async () => {
+    const e7Square = await screen.findByTestId('e7');
+    const e7BlackPawn = await screen.findByTestId('e7-img');
+
+    expect(e7Square).toContainElement(e7BlackPawn);
+  });
+
+  it('Square g8 should contain black knight', async () => {
+    const g8Square = await screen.findByTestId('g8');
+    const g8WBlackKnight = await screen.findByTestId('g8-img');
+
+    expect(g8Square).toContainElement(g8WBlackKnight);
+  });
+
+  it('Square e4 should be empty', async () => {
+    const e4Square = await screen.findByTestId('e4');
+
+    expect(e4Square).toBeEmpty();
   });
 });
