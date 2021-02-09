@@ -36,13 +36,15 @@ export class WebChessView implements ChessBoardView {
       piecesSquareId = `#${piece.toLowerCase()}`;
       pieceImage = `../static/img/pieces/${pieceSide}-${pieceName}.svg`;
 
-      this.parent.querySelector(piecesSquareId)?.appendChild(this.createPieceDiv(pieceImage));
+      this.parent.querySelector(piecesSquareId)?.appendChild(this.createPieceDiv(pieceImage, piece.toLowerCase()));
     }
   }
 
-  private createPieceDiv(pieceImage: string): HTMLElement {
+  private createPieceDiv(pieceImage: string, id: string): HTMLElement {
     const newPieceElement = document.createElement('img');
     newPieceElement.classList.add('piece');
+    newPieceElement.setAttribute('id', `${id}-img`);
+    newPieceElement.setAttribute('data-testid', `${id}-img`);
     newPieceElement.src = pieceImage;
     return newPieceElement;
   }

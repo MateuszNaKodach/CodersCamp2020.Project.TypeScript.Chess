@@ -43,4 +43,11 @@ describe('Web Chess Board View', () => {
 
     expect(publishViewEventMock).toBeCalledWith(new SquareWasClicked({ x: 1, y: 2 }));
   });
+
+  it('Square a1 should contain white rook', () => {
+    // const a1Square = await screen.findByTestId('a1');
+    const a1WhiteRook = document.querySelector('#a1-img');
+
+    expect(a1Square).toContainElement(a1WhiteRook);
+  });
 });
