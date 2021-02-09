@@ -48,27 +48,34 @@ describe('Web Chess Board View with starting pieces positions', () => {
   it('Square a1 should contain white rook', async () => {
     const a1Square = await screen.findByTestId('a1');
     const a1WhiteRook = await screen.findByTestId('a1-img');
+    const image = a1WhiteRook.getAttribute('src');
 
     expect(a1Square).toContainElement(a1WhiteRook);
+    expect(image).toBe('../static/img/pieces/white-rook.svg');
   });
 
   it('Square e7 should contain black pawn', async () => {
     const e7Square = await screen.findByTestId('e7');
     const e7BlackPawn = await screen.findByTestId('e7-img');
+    const image = e7BlackPawn.getAttribute('src');
 
     expect(e7Square).toContainElement(e7BlackPawn);
+    expect(image).toBe('../static/img/pieces/black-pawn.svg');
   });
 
   it('Square g8 should contain black knight', async () => {
     const g8Square = await screen.findByTestId('g8');
     const g8WBlackKnight = await screen.findByTestId('g8-img');
+    const image = g8WBlackKnight.getAttribute('src');
 
     expect(g8Square).toContainElement(g8WBlackKnight);
+    expect(image).not.toBe('../static/img/pieces/black-pawn.svg');
+    expect(image).toBe('../static/img/pieces/black-knight.svg');
   });
 
   it('Square e4 should be empty', async () => {
     const e4Square = await screen.findByTestId('e4');
 
-    expect(e4Square).toBeEmpty();
+    expect(e4Square).toBeEmptyDOMElement();
   });
 });
