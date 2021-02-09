@@ -5,6 +5,6 @@ import { PieceWasCaptured } from './PieceWasCaptured';
 import { SquareWithPiece } from './Types';
 
 export interface ChessModel {
-  move(byPlayer: Player, squareFrom: Square, squareTo: Square): (PieceWasMoved | PieceWasCaptured)[];
   readonly piecesPositions: SquareWithPiece;
+  move(byPlayer: Player, squareFrom: Square, squareTo: Square): (PieceWasMoved | PieceWasCaptured)[];
 }
