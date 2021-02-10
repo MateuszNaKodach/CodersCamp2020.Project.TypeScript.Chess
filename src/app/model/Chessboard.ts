@@ -2,9 +2,10 @@ import { PiecePositions } from './PiecesPositions';
 import { Piece } from './Piece';
 import { SquareWithPiece, Square } from './Types';
 import { PieceMoves } from './PieceMoves';
+import { PIECES_START_POSITION } from './Constances';
 
 export class Chessboard implements PieceMoves, PiecePositions {
-  constructor(private boardWithPieces: SquareWithPiece) {}
+  constructor(public boardWithPieces: SquareWithPiece = PIECES_START_POSITION) {}
 
   onPositionPiece(square: Square): Piece | undefined {
     return this.boardWithPieces[`${square.column}${square.row}`];

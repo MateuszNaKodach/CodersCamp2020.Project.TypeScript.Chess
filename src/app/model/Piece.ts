@@ -5,6 +5,7 @@ import { BOARD_SIZE } from './Constances';
 export abstract class Piece {
   protected constructor(public side: Side) {}
 
+  abstract name: string;
   abstract possibleMoves(position: Square, board: PiecePositions): Square[];
 
   protected lineMoves(board: PiecePositions, actualPosition: Square, vector: Vector): Square[] {

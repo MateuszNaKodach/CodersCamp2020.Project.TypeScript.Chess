@@ -4,6 +4,7 @@ import { Side, Square } from './Types';
 import { PiecePossibleMoves } from './PiecePossibleMoves';
 
 export class Queen extends Piece implements PiecePossibleMoves {
+  readonly name = 'Queen';
   constructor(side: Side) {
     super(side);
   }

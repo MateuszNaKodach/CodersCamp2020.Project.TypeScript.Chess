@@ -55,7 +55,7 @@ describe('Web Chess Board View with starting pieces positions', () => {
     const image = a1WhiteRook.getAttribute('src');
 
     expect(a1Square).toContainElement(a1WhiteRook);
-    expect(image).toBe('../static/img/pieces/white-rook.svg');
+    expect(image).toBe('static/img/pieces/white-rook.svg');
   });
 
   it('Square e7 should contain black pawn', async () => {
@@ -64,7 +64,7 @@ describe('Web Chess Board View with starting pieces positions', () => {
     const image = e7BlackPawn.getAttribute('src');
 
     expect(e7Square).toContainElement(e7BlackPawn);
-    expect(image).toBe('../static/img/pieces/black-pawn.svg');
+    expect(image).toBe('static/img/pieces/black-pawn.svg');
   });
 
   it('Square g8 should contain black knight', async () => {
@@ -73,8 +73,8 @@ describe('Web Chess Board View with starting pieces positions', () => {
     const image = g8WBlackKnight.getAttribute('src');
 
     expect(g8Square).toContainElement(g8WBlackKnight);
-    expect(image).not.toBe('../static/img/pieces/black-pawn.svg');
-    expect(image).toBe('../static/img/pieces/black-knight.svg');
+    expect(image).not.toBe('static/img/pieces/black-pawn.svg');
+    expect(image).toBe('static/img/pieces/black-knight.svg');
   });
 
   it('Square e4 should be empty', async () => {

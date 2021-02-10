@@ -10,6 +10,7 @@ const NEXT_ROW_DIFFERENCE: { WHITE: RowDifference; BLACK: RowDifference } = {
 };
 
 export class Pawn extends Piece implements PiecePossibleMoves {
+  readonly name = 'Pawn';
   constructor(side: Side) {
     super(side);
   }

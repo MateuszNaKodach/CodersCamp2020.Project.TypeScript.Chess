@@ -1,5 +1,5 @@
 import { ChessModel } from './ChessModel';
-import { Side, Square } from './Types';
+import { Side, Square, SquareWithPiece } from './Types';
 import { Piece } from './Piece';
 import { Player } from './Player';
 import { Chessboard } from './Chessboard';
@@ -9,8 +9,10 @@ import { isDefined } from './HelperFunctions';
 
 export class ChessEngine implements ChessModel {
   private currentSide: Side = Side.BLACK;
-
-  constructor(private readonly board: Chessboard) {}
+  readonly startingPiecesPositions: SquareWithPiece;
+  constructor(private readonly board: Chessboard) {
+    this.startingPiecesPositions = board.boardWithPieces;
+  }
 
   move(byPlayer: Player, squareFrom: Square, squareTo: Square): (PieceWasMoved | PieceWasCaptured)[] {
     const chosenPiece = this.board.onPositionPiece(squareFrom);
