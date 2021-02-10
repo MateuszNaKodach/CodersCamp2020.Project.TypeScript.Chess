@@ -9,4 +9,10 @@ export class ConsoleChessBoardView implements ChessBoardView {
   }
 
   showSelectedPiece(position: { x: number; y: number }): void {}
+
+  hideAllAvailableMoves(): void {}
+
+  hideSelection(): void {}
+
+  showAvailableMoves(squaresToHighlight: string[]): void {}
 }

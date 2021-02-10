@@ -34,5 +34,8 @@ function chessBoardViewMock(viewEventBus: ViewEventBus): ChessBoardView {
     },
     showChessBoard: jest.fn(),
     showSelectedPiece: jest.fn(),
+    hideSelection: jest.fn(),
+    showAvailableMoves: jest.fn(),
+    hideAllAvailableMoves: jest.fn(),
   };
 }
