@@ -3,7 +3,7 @@ import { Piece } from './Piece';
 import { SquareWithPiece, Square } from './Types';
 import { PieceMoves } from './PieceMoves';
 
-export class ChessBoard implements PieceMoves, PiecePositions {
+export class Chessboard implements PieceMoves, PiecePositions {
   constructor(private boardWithPieces: SquareWithPiece) {}
 
   onPositionPiece(square: Square): Piece | undefined {

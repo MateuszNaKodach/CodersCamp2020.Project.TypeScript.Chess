@@ -2,7 +2,7 @@ import { ChessModel } from './ChessModel';
 import { PiecesBoardPositions, Side, Square } from './Types';
 import { Piece } from './Piece';
 import { Player } from './Player';
-import { ChessBoard } from './ChessBoard';
+import { Chessboard } from './Chessboard';
 import { PieceWasMoved } from './PieceWasMoved';
 import { PieceWasCaptured } from './PieceWasCaptured';
 import { isDefined } from './HelperFunctions';
@@ -12,7 +12,7 @@ export class ChessEngine implements ChessModel {
   private currentSide: Side = Side.BLACK;
   piecesPositions: PiecesBoardPositions = PIECES_START_POSITION;
 
-  constructor(private readonly board: ChessBoard) {}
+  constructor(private readonly board: Chessboard) {}
 
   move(byPlayer: Player, squareFrom: Square, squareTo: Square): (PieceWasMoved | PieceWasCaptured)[] {
     const chosenPiece = this.board.onPositionPiece(squareFrom);
