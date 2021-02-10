@@ -5,8 +5,8 @@ import { ChessBoardView } from '../../../../src/app/view/ChessBoardView';
 import { WebChessView } from '../../../../src/app/view/web/WebChessView';
 import { ViewEventBus } from '../../../../src/app/view/events/ViewEventBus';
 import { SquareWasClicked } from '../../../../src/app/view/events/SquareWasClicked';
-import { PiecesBoardPositions } from '../../../../src/app/model/Types';
-import { PIECES_START_POSITION } from '../../../../src/app/model/Constances';
+import { PiecesBoardPositions } from '../../../../src/app/view/Types';
+import { Side } from '../../../../src/app/model/Types';
 
 describe('Web Chess Board View with starting pieces positions', () => {
   const publishViewEventMock = jest.fn();
@@ -14,7 +14,11 @@ describe('Web Chess Board View with starting pieces positions', () => {
     listenOn: jest.fn(),
     publish: publishViewEventMock,
   };
-  const piecesPositions: PiecesBoardPositions = PIECES_START_POSITION;
+  const piecesPositions: PiecesBoardPositions = {
+    A1: { name: 'Rook', side: Side.WHITE },
+    E7: { name: 'Pawn', side: Side.BLACK },
+    G8: { name: 'Knight', side: Side.BLACK },
+  };
   const chessBoardView: ChessBoardView = new WebChessView(viewEventBus);
   chessBoardView.showChessBoard(piecesPositions);
 

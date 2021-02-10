@@ -1,16 +1,14 @@
 import { ChessModel } from './ChessModel';
-import { PiecesBoardPositions, Side, Square } from './Types';
+import { Side, Square } from './Types';
 import { Piece } from './Piece';
 import { Player } from './Player';
 import { Chessboard } from './Chessboard';
 import { PieceWasMoved } from './PieceWasMoved';
 import { PieceWasCaptured } from './PieceWasCaptured';
 import { isDefined } from './HelperFunctions';
-import { PIECES_START_POSITION } from './Constances';
 
 export class ChessEngine implements ChessModel {
   private currentSide: Side = Side.BLACK;
-  piecesPositions: PiecesBoardPositions = PIECES_START_POSITION;
 
   constructor(private readonly board: Chessboard) {}
 

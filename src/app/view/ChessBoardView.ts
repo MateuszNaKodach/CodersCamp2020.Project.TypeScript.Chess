@@ -1,5 +1,5 @@
 import { ViewEventSource } from './events/ViewEventBus';
-import { PiecesBoardPositions } from '../model/Types';
+import { PiecesBoardPositions } from './Types';
 
 export interface ChessBoardView extends ViewEventSource {
   showChessBoard(piecesPositions: PiecesBoardPositions): void;

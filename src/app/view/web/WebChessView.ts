@@ -3,7 +3,7 @@ import { ChessBoardView } from '../ChessBoardView';
 import { ViewEventBus } from '../events/ViewEventBus';
 import { ViewEvent } from '../events/ViewEvent';
 import { SquareWasClicked } from '../events/SquareWasClicked';
-import { PiecesBoardPositions } from '../../model/Types';
+import { PiecesBoardPositions } from '../Types';
 
 export class WebChessView implements ChessBoardView {
   constructor(private readonly viewEventBus: ViewEventBus, private readonly parent: HTMLElement = document.body) {}

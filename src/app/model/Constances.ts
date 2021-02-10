@@ -1,8 +1,8 @@
-import { PiecesBoardPositions, Side } from './Types';
+import { Side } from './Types';
 
 export const BOARD_SIZE = 8;
 
-export const PIECES_START_POSITION: PiecesBoardPositions = {
+export const PIECES_START_POSITION = {
   A1: { name: 'Rook', side: Side.WHITE },
   B1: { name: 'Knight', side: Side.WHITE },
   C1: { name: 'Bishop', side: Side.WHITE },
