@@ -32,7 +32,7 @@ describe("King's possible moves", () => {
 
     const kingPossibleMoves = whiteKing.possibleMoves(whiteKingPosition, testBoard);
 
-    expect(kingPossibleMoves).toBe({ column: 'G', row: 1 });
+    expect(kingPossibleMoves).toIncludeSameMembers([{ column: 'G', row: 1 }]);
   });
 
   it('When black king is on F6, surrounded by some pieces and all possible moves are legal (none of squares is checked)', () => {
