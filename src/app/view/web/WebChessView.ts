@@ -30,13 +30,15 @@ export class WebChessView implements ChessBoardView {
     let pieceSide: string;
 
     for (const piece in piecesPositions) {
-      pieceName = piecesPositions[piece].name.toLowerCase();
-      pieceSide = piecesPositions[piece].side.toLowerCase();
+      if (piecesPositions.hasOwnProperty(piece)) {
+        pieceName = piecesPositions[piece].name.toLowerCase();
+        pieceSide = piecesPositions[piece].side.toLowerCase();
 
-      piecesSquareId = `#${piece.toLowerCase()}`;
-      pieceImage = `../static/img/pieces/${pieceSide}-${pieceName}.svg`;
+        piecesSquareId = `#${piece.toLowerCase()}`;
+        pieceImage = `../static/img/pieces/${pieceSide}-${pieceName}.svg`;
 
-      this.parent.querySelector(piecesSquareId)?.appendChild(this.createPieceDiv(pieceImage, piece.toLowerCase()));
+        this.parent.querySelector(piecesSquareId)?.appendChild(this.createPieceDiv(pieceImage, piece.toLowerCase()));
+      } else return;
     }
   }
 
