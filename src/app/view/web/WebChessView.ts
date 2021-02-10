@@ -23,6 +23,9 @@ export class WebChessView implements ChessBoardView {
 
   showSelectedPiece(position: { x: number; y: number }): void {}
 
+  // te sqauresToHighlight idą do podświetlenia
+  showAvailableMoves(squaresToHighlight: string[]): void {}
+
   private renderPiecesOnBoard(piecesPositions: PiecesBoardPositions) {
     let piecesSquareId: string;
     let pieceImage: string;
