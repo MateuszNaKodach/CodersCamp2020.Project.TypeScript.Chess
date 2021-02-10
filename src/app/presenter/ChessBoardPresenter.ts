@@ -13,13 +13,15 @@ export class ChessBoardPresenter {
   onSquareWasClicked(position: Position): void {
     //chessModel zwroci mozliwe ruchy dla bierki na wybranej pozycji
     //presenter kaze, zeby view wyswietlil mozliwe ruchy -> wywolujac np. view.showAvailableMoves(squares).
+    this.view.hideSelection();
+    this.view.showSelectedPiece(position);
 
     const squaresStringArray = this.getPossibleMoves(position);
-    console.log('Sqaure array of possible moves: ', squaresStringArray);
-    this.view.showAvailableMoves(squaresStringArray);
+    console.log('Square array of possible moves: ', squaresStringArray);
 
+    this.view.hideAllAvailableMoves();
+    this.view.showAvailableMoves(squaresStringArray);
     console.log('position: ', position);
-    this.view.showSelectedPiece(position);
   }
 
   startGame(): void {

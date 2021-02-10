@@ -6,6 +6,10 @@ export interface ChessBoardView extends ViewEventSource {
 
   showAvailableMoves(squaresToHighlight: string[]): void;
 
+  hideAllAvailableMoves(): void;
+
   //TODO: Do zmiany, brakuje jaka bierke pokazac
   showSelectedPiece(position: { x: number; y: number }): void;
+
+  hideSelection(): void;
 }
