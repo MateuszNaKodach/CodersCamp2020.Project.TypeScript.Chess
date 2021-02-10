@@ -24,22 +24,17 @@ export class WebChessView implements ChessBoardView {
   showSelectedPiece(position: { x: number; y: number }): void {}
 
   private renderPiecesOnBoard(piecesPositions: PiecesBoardPositions) {
-    let piecesSquareId: string;
-    let pieceImage: string;
-    let pieceName: string;
-    let pieceSide: string;
+    Object.keys(piecesPositions)
+      .map((square) => {
+        const pieceName = piecesPositions[square].name.toLowerCase();
+        const pieceSide = piecesPositions[square].side.toLowerCase();
 
-    for (const piece in piecesPositions) {
-      if (piecesPositions.hasOwnProperty(piece)) {
-        pieceName = piecesPositions[piece].name.toLowerCase();
-        pieceSide = piecesPositions[piece].side.toLowerCase();
-
-        piecesSquareId = `#${piece.toLowerCase()}`;
-        pieceImage = `../static/img/pieces/${pieceSide}-${pieceName}.svg`;
-
-        this.parent.querySelector(piecesSquareId)?.appendChild(this.createPieceDiv(pieceImage, piece.toLowerCase()));
-      } else return;
-    }
+        const pieceImage = `static/img/pieces/${pieceSide}-${pieceName}.svg`;
+        return { path: pieceImage, squareId: `#${square.toLowerCase()}`, square: square };
+      })
+      .forEach((element) => {
+        this.parent.querySelector(element.squareId)?.appendChild(this.createPieceDiv(element.path, element.square.toLowerCase()));
+      });
   }
 
   private createPieceDiv(pieceImage: string, id: string): HTMLElement {
