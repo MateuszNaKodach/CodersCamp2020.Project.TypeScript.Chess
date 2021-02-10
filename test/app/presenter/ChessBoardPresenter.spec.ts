@@ -7,11 +7,12 @@ import { ViewEvent } from '../../../src/app/view/events/ViewEvent';
 import { SquareWasClicked } from '../../../src/app/view/events/SquareWasClicked';
 import { InMemoryViewEventBus } from '../../../src/app/view/events/InMemoryViewEventBus';
 import { PiecesBoardPositions } from '../../../src/app/model/Types';
+import { PIECES_START_POSITION } from '../../../src/app/model/Constances';
 
 describe('ChessBoardPresenter', () => {
   const viewEvents: ViewEventBus = new InMemoryViewEventBus();
   const view: ChessBoardView = chessBoardViewMock(viewEvents);
-  const piecesPositions: PiecesBoardPositions = {};
+  const piecesPositions: PiecesBoardPositions = PIECES_START_POSITION;
   const model: ChessModel = { piecesPositions, move: jest.fn() };
   const presenter: ChessBoardPresenter = new ChessBoardPresenter(view, model);
 
@@ -19,6 +20,12 @@ describe('ChessBoardPresenter', () => {
     viewEvents.publish(new SquareWasClicked({ x: 1, y: 1 }));
 
     expect(view.showSelectedPiece).toHaveBeenCalledWith({ x: 1, y: 1 });
+  });
+
+  it('when game starts, check if pieces will show on the screen', () => {
+    presenter.startGame();
+
+    expect(view.showChessBoard).toHaveBeenCalledWith(piecesPositions);
   });
 });
 
