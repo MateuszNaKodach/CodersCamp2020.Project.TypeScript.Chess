@@ -9,6 +9,8 @@ describe("King's possible moves", () => {
   it('When king is on E1, not surrounded by any piece and all possible moves are legal (none of squares is checked)', () => {
     const whiteKing = new King(Side.WHITE);
     const whiteKingPosition: Square = { column: 'E', row: 1 };
+    const kingPossibleMoves = whiteKing.possibleMoves(whiteKingPosition, emptyBoard);
+
     const expectedKingPossibleMoves = [
       { column: 'D', row: 1 },
       { column: 'D', row: 2 },
@@ -16,9 +18,6 @@ describe("King's possible moves", () => {
       { column: 'F', row: 1 },
       { column: 'F', row: 2 },
     ];
-
-    const kingPossibleMoves = whiteKing.possibleMoves(whiteKingPosition, emptyBoard);
-
     expect(kingPossibleMoves).toIncludeSameMembers(expectedKingPossibleMoves);
   });
 
@@ -29,7 +28,6 @@ describe("King's possible moves", () => {
     });
     const whiteKing = new King(Side.WHITE);
     const whiteKingPosition: Square = { column: 'H', row: 1 };
-
     const kingPossibleMoves = whiteKing.possibleMoves(whiteKingPosition, testBoard);
 
     expect(kingPossibleMoves).toIncludeSameMembers([{ column: 'G', row: 1 }]);
@@ -45,6 +43,8 @@ describe("King's possible moves", () => {
     });
     const blackKing = new King(Side.BLACK);
     const blackKingPosition: Square = { column: 'F', row: 6 };
+    const kingPossibleMoves = blackKing.possibleMoves(blackKingPosition, testBoard);
+
     const expectedKingPossibleMoves = [
       { column: 'E', row: 5 },
       { column: 'E', row: 6 },
@@ -52,9 +52,6 @@ describe("King's possible moves", () => {
       { column: 'G', row: 5 },
       { column: 'G', row: 6 },
     ];
-
-    const kingPossibleMoves = blackKing.possibleMoves(blackKingPosition, testBoard);
-
     expect(kingPossibleMoves).toIncludeSameMembers(expectedKingPossibleMoves);
   });
 });
