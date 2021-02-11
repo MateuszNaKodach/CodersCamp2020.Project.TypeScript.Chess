@@ -1,9 +1,7 @@
 import 'jest-extended';
 import { boardWithPieces, emptyBoard } from './BoardFixture';
-import { Side, Square } from '../../../src/app/model/Types';
-import { King } from '../../../src/app/model/King';
-import { Pawn } from '../../../src/app/model/Pawn';
-import { Knight } from '../../../src/app/model/Knight';
+import { Side, Square } from '../../../src/app/model';
+import { Knight, Pawn, King } from '../../../src/app/model';
 
 describe("King's possible moves", () => {
   it('When king is on E1, not surrounded by any piece and all possible moves are legal (none of squares is checked)', () => {

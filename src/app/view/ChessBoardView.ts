@@ -1,7 +1,8 @@
 import { ViewEventSource } from './events/ViewEventBus';
+import { PiecesBoardPositions } from './Types';
 
 export interface ChessBoardView extends ViewEventSource {
-  showChessBoard(/*parametry*/): void;
+  showChessBoard(piecesPositions: PiecesBoardPositions): void;
 
   //TODO: Do zmiany, brakuje jaka bierke pokazac
   showSelectedPiece(position: { x: number; y: number }): void;
