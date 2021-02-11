@@ -29,7 +29,7 @@ export class ChessEngine implements ChessModel {
     if (!this.canMoveOnSquare(squareFrom, squareTo)) {
       throw new Error('Piece can not move to given square.');
     }
-    if (this.willBeKingChecked()) {
+    if (this.willBeKingChecked(squareFrom, squareTo)) {
       throw new Error(`The player cannot move piece which causes check of his king`);
     }
 
@@ -68,7 +68,16 @@ export class ChessEngine implements ChessModel {
     );
   }
 
-  private willBeKingChecked(): boolean {
+  private willBeKingChecked(squareFrom: Square, squareTo: Square): boolean {
+    const proposedSquaresWithPiece: SquareWithPiece = { ...this.board.squaresWithPiece };
+    // TODO: find king position on new chessboard
+    // TODO: set loop where item is every pieces from other side and return type of squares array
+    {
+      // TODO: check possible squares where pieces of oponent can move to
+    }
+    // TODO: if it will be king's square on the above squares (where pieces of oponent can move to), function should return true
+
+    // DONE: in other way return false
     return false;
   }
 }
