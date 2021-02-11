@@ -145,7 +145,7 @@ describe('Chess Engine', () => {
   });
 
   describe('If player wants to move piece that check King will be captured', () => {
-    const errorMessage = `The player can not move piece, causing his king to check`;
+    const errorMessage = `The player cannot move piece which causes check of his king.`;
     const whiteKing = new King(Side.WHITE);
     const blackKing = new King(Side.BLACK);
     const playerWhite = new Player(Side.WHITE);
@@ -185,6 +185,22 @@ describe('Chess Engine', () => {
 
       const squareFrom: Square = { column: 'A', row: 1 };
       const squareTo: Square = { column: 'A', row: 2 };
+
+      expect(engine.move(playerWhite, squareFrom, squareTo)).toThrowError(errorMessage);
+    });
+
+    it(`Should throw an error if the white piece's move causes white king check.`, () => {
+      const boardWithPieces: SquareWithPiece = {
+        A1: whiteKing,
+        A2: new Rook(Side.WHITE),
+        A8: new Rook(Side.BLACK),
+      };
+      const chessboard = new Chessboard(boardWithPieces);
+      const engine = new ChessEngine(chessboard);
+      const playerWhite = new Player(Side.WHITE);
+
+      const squareFrom: Square = { column: 'A', row: 2 };
+      const squareTo: Square = { column: 'G', row: 2 };
 
       expect(engine.move(playerWhite, squareFrom, squareTo)).toThrowError(errorMessage);
     });
