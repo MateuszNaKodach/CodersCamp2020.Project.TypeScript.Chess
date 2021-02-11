@@ -5,10 +5,10 @@ import { PieceMoves } from './PieceMoves';
 import { PIECES_START_POSITION } from './Constances';
 
 export class Chessboard implements PieceMoves, PiecePositions {
-  constructor(public boardWithPieces: SquareWithPiece = PIECES_START_POSITION) {}
+  constructor(public squaresWithPiece: SquareWithPiece = PIECES_START_POSITION) {}
 
   onPositionPiece(square: Square): Piece | undefined {
-    return this.boardWithPieces[`${square.column}${square.row}`];
+    return this.squaresWithPiece[`${square.column}${square.row}`];
   }
 
   movePiece(squareFrom: Square, squareTo: Square): void {
@@ -16,7 +16,7 @@ export class Chessboard implements PieceMoves, PiecePositions {
     if (!piece) {
       throw new Error(`There is no piece on square!`);
     }
-    delete this.boardWithPieces[`${squareFrom.column}${squareFrom.row}`];
-    this.boardWithPieces[`${squareTo.column}${squareTo.row}`] = piece;
+    delete this.squaresWithPiece[`${squareFrom.column}${squareFrom.row}`];
+    this.squaresWithPiece[`${squareTo.column}${squareTo.row}`] = piece;
   }
 }

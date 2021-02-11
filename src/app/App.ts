@@ -1,10 +1,8 @@
 import { ChessBoardPresenter } from './presenter/ChessBoardPresenter';
 import { ChessBoardView } from './view/ChessBoardView';
 import { WebChessView } from './view/web/WebChessView';
-import { ChessEngine } from './model/ChessEngine';
-import { ChessModel } from './model/ChessModel';
+import { Chessboard, ChessEngine, ChessModel } from './model';
 import { InMemoryViewEventBus } from './view/events/InMemoryViewEventBus';
-import { Chessboard } from './model/Chessboard';
 
 export const App = (): void => {
   const viewEventBus = new InMemoryViewEventBus();

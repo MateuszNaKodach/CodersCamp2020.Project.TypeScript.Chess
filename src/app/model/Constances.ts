@@ -1,9 +1,5 @@
 import { Side, SquareWithPiece } from './Types';
-import { Rook } from './pieces/Rook';
-import { Knight } from './pieces/Knight';
-import { Bishop } from './pieces/Bishop';
-import { Queen } from './pieces/Queen';
-import { Pawn } from './pieces/Pawn';
+import { Bishop, Knight, Pawn, Queen, Rook } from './pieces';
 
 export const BOARD_SIZE = 8;
 

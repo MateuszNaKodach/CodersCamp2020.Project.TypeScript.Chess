@@ -1,6 +1,6 @@
 import { ChessBoardView } from '../view/ChessBoardView';
 import { Position } from './Position';
-import { ChessModel } from '../model/ChessModel';
+import { ChessModel } from '../model';
 import { SquareWasClicked } from '../view/events/SquareWasClicked';
 
 export class ChessBoardPresenter {
@@ -16,6 +16,6 @@ export class ChessBoardPresenter {
   }
 
   startGame(): void {
-    this.view.showChessBoard(this.chessModel.startingPiecesPositions);
+    this.view.showChessBoard(this.chessModel.squaresWithPiece);
   }
 }

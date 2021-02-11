@@ -1,6 +1,6 @@
 import { ChessModel } from './ChessModel';
 import { Side, Square, SquareWithPiece } from './Types';
-import { Piece } from './pieces/Piece';
+import { Piece } from './pieces';
 import { Player } from './Player';
 import { Chessboard } from './Chessboard';
 import { PieceWasMoved } from './PieceWasMoved';
@@ -9,9 +9,9 @@ import { isDefined } from './HelperFunctions';
 
 export class ChessEngine implements ChessModel {
   private currentSide: Side = Side.BLACK;
-  readonly startingPiecesPositions: SquareWithPiece;
+  readonly squaresWithPiece: SquareWithPiece;
   constructor(private readonly board: Chessboard) {
-    this.startingPiecesPositions = board.boardWithPieces;
+    this.squaresWithPiece = board.squaresWithPiece;
   }
 
   move(byPlayer: Player, squareFrom: Square, squareTo: Square): (PieceWasMoved | PieceWasCaptured)[] {
