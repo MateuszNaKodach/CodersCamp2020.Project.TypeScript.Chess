@@ -1,9 +1,10 @@
-import { PiecePositions } from './PiecesPositions';
+import { PiecePositions } from '../PiecesPositions';
 import { Piece } from './Piece';
-import { columns, Row, Side, Square } from './Types';
-import { PiecePossibleMoves } from './PiecePossibleMoves';
+import { columns, Row, Side, Square } from '../Types';
+import { PiecePossibleMoves } from '../PiecePossibleMoves';
 
 export class King extends Piece implements PiecePossibleMoves {
+  readonly name = 'King';
   constructor(side: Side) {
     super(side);
   }

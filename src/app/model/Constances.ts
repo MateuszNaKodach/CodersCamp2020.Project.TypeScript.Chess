@@ -1,5 +1,5 @@
 import { Side, SquareWithPiece } from './Types';
-import { Bishop, Knight, Pawn, Queen, Rook } from './pieces';
+import { Bishop, Knight, Pawn, Queen, Rook, King } from './pieces';
 
 export const BOARD_SIZE = 8;
 
@@ -8,7 +8,7 @@ export const PIECES_START_POSITION: SquareWithPiece = {
   B1: new Knight(Side.WHITE),
   C1: new Bishop(Side.WHITE),
   D1: new Queen(Side.WHITE),
-  // E1: new King(Side.WHITE),
+  E1: new King(Side.WHITE),
   F1: new Bishop(Side.WHITE),
   G1: new Knight(Side.WHITE),
   H1: new Rook(Side.WHITE),
@@ -24,7 +24,7 @@ export const PIECES_START_POSITION: SquareWithPiece = {
   B8: new Knight(Side.BLACK),
   C8: new Bishop(Side.BLACK),
   D8: new Queen(Side.BLACK),
-  // E8: new King(Side.BLACK),
+  E8: new King(Side.BLACK),
   F8: new Bishop(Side.BLACK),
   G8: new Knight(Side.BLACK),
   H8: new Rook(Side.BLACK),
