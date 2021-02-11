@@ -10,8 +10,6 @@ export class ChessBoardPresenter {
   }
 
   onSquareWasClicked(position: Position): void {
-    //chessModel zwroci mozliwe ruchy dla bierki na wybranej pozycji
-    //presenter kaze, zeby view wyswietlil mozliwe ruchy -> wywolujac np. view.showAvailableMoves(squares).
     this.view.hideSelection();
     this.view.showSelectedPiece(position);
 
