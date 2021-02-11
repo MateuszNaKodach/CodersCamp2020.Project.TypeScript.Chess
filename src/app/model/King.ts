@@ -22,6 +22,6 @@ export class King extends Piece implements PiecePossibleMoves {
       { column: columns[currentColumnNumber + 1], row: (currentRowNumber + 1) as Row },
     ]
       .filter(King.isWithinChessboardBorders)
-      .filter((square) => this.checkIfOponent(square, board));
+      .filter((square) => this.checkIfNotSameColorPiece(square, board));
   }
 }
