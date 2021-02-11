@@ -151,7 +151,7 @@ describe('Chess Engine', () => {
     const playerWhite = new Player(Side.WHITE);
     const blackWhite = new Player(Side.WHITE);
 
-    it(`Shouldn if chosen King is not just captured`, () => {
+    it(`Should not throw error if the king's move causes his check.`, () => {
       const boardWithPieces: SquareWithPiece = {
         A2: whiteKing,
         A8: blackKing,
@@ -173,7 +173,7 @@ describe('Chess Engine', () => {
       expect(engine.move(playerWhite, squareFrom, squareTo)).toIncludeSameMembers(expectedResult);
     });
 
-    it(`Should throw an error if chosen King is just in checked`, () => {
+    it(`Should throw an error if the king's move causes his check.`, () => {
       const boardWithPieces: SquareWithPiece = {
         A1: whiteKing,
         B8: new Rook(Side.BLACK),
