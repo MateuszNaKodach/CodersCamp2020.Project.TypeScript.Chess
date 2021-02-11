@@ -17,7 +17,7 @@ describe('ChessBoardPresenter', () => {
   it('when square A1 was clicked on the view, then selected piece should be shown with its possible moves', () => {
     viewEvents.publish(new SquareWasClicked({ x: 1, y: 1 }));
 
-    expect(view.showSelectedPiece).toHaveBeenCalledWith({ x: 1, y: 1 });
+    expect(view.showSelectedPiece).toHaveBeenCalledWith('a1');
     expect(view.hideSelection).toHaveBeenCalled();
     expect(view.hideAllAvailableMoves).toHaveBeenCalled();
     expect(view.showAvailableMoves).toHaveBeenCalledWith([]);
@@ -26,7 +26,7 @@ describe('ChessBoardPresenter', () => {
   it('when square was A2 clicked on the view, then selected piece should be shown with its possible moves', () => {
     viewEvents.publish(new SquareWasClicked({ x: 1, y: 2 }));
 
-    expect(view.showSelectedPiece).toHaveBeenCalledWith({ x: 1, y: 2 });
+    expect(view.showSelectedPiece).toHaveBeenCalledWith('a2');
     expect(view.hideSelection).toHaveBeenCalled();
     expect(view.hideAllAvailableMoves).toHaveBeenCalled();
     expect(view.showAvailableMoves).toHaveBeenCalledWith(['a3', 'a4']);
