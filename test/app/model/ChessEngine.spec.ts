@@ -149,7 +149,6 @@ describe('Chess Engine', () => {
     const whiteKing = new King(Side.WHITE);
     const blackKing = new King(Side.BLACK);
     const playerWhite = new Player(Side.WHITE);
-    const blackWhite = new Player(Side.WHITE);
 
     it(`Should not throw error if the king's move causes his check.`, () => {
       const boardWithPieces: SquareWithPiece = {
