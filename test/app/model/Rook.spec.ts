@@ -1,8 +1,6 @@
-import { Rook } from '../../../src/app/model/Rook';
-import { Side, Square } from '../../../src/app/model/Types';
+import { Pawn, Rook, Side, Square } from '../../../src/app/model';
 import 'jest-extended';
 import { boardWithPieces, emptyBoard } from './BoardFixture';
-import { Pawn } from '../../../src/app/model/Pawn';
 
 describe('Rook movement', () => {
   it("Check possible squares to go, when Rook is on A1 and there is no pieces on Roook's way", () => {

@@ -1,7 +1,7 @@
-import { PiecePositions } from './PiecesPositions';
+import { PiecePositions } from '../PiecesPositions';
 import { Piece } from './Piece';
-import { PiecePossibleMoves } from './PiecePossibleMoves';
-import { columns, Row, Side, Square } from './Types';
+import { PiecePossibleMoves } from '../PiecePossibleMoves';
+import { columns, Row, Side, Square } from '../Types';
 
 type RowDifference = 1 | -1;
 const NEXT_ROW_DIFFERENCE: { WHITE: RowDifference; BLACK: RowDifference } = {
@@ -10,6 +10,7 @@ const NEXT_ROW_DIFFERENCE: { WHITE: RowDifference; BLACK: RowDifference } = {
 };
 
 export class Pawn extends Piece implements PiecePossibleMoves {
+  readonly name = 'Pawn';
   constructor(side: Side) {
     super(side);
   }
@@ -47,7 +48,7 @@ export class Pawn extends Piece implements PiecePossibleMoves {
       column: columns[currentColumnNumber + 1],
       row: (currentRowNumber + 1 * this.nextRowDifference()) as Row,
     };
-    if (board.onPositionPiece(rightDiagonal) && this.checkIfOponent(rightDiagonal, board)) {
+    if (board.onPositionPiece(rightDiagonal) && this.checkIfNotSameColorPiece(rightDiagonal, board)) {
       movesToGo.push(rightDiagonal);
     }
 
@@ -55,7 +56,7 @@ export class Pawn extends Piece implements PiecePossibleMoves {
       column: columns[currentColumnNumber - 1],
       row: (currentRowNumber + 1 * this.nextRowDifference()) as Row,
     };
-    if (board.onPositionPiece(leftDiagonal) && this.checkIfOponent(leftDiagonal, board)) {
+    if (board.onPositionPiece(leftDiagonal) && this.checkIfNotSameColorPiece(leftDiagonal, board)) {
       movesToGo.push(leftDiagonal);
     }
 

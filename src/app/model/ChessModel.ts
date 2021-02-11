@@ -1,9 +1,9 @@
 import { Player } from './Player';
-import { Square } from './Types';
+import { Square, SquareWithPiece } from './Types';
 import { PieceWasMoved } from './PieceWasMoved';
 import { PieceWasCaptured } from './PieceWasCaptured';
 
 export interface ChessModel {
-  possibleMoves(position: Square): Square[];
+  readonly squaresWithPiece: SquareWithPiece;
   move(byPlayer: Player, squareFrom: Square, squareTo: Square): (PieceWasMoved | PieceWasCaptured)[];
 }

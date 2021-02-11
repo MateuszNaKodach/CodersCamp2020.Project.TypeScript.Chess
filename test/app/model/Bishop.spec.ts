@@ -1,8 +1,6 @@
 import 'jest-extended';
 import { boardWithPieces, emptyBoard } from './BoardFixture';
-import { Side, Square } from '../../../src/app/model/Types';
-import { Bishop } from '../../../src/app/model/Bishop';
-import { Pawn } from '../../../src/app/model/Pawn';
+import { Bishop, Pawn, Side, Square } from '../../../src/app/model';
 
 describe('Bishop possible moves', () => {
   it('When Bishop is on D4 and there is no pieces on its way', () => {
