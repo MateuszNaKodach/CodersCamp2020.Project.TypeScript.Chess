@@ -10,6 +10,7 @@ import { isDefined } from './HelperFunctions';
 export class ChessEngine implements ChessModel {
   private currentSide: Side = Side.BLACK;
   readonly squaresWithPiece: SquareWithPiece;
+
   constructor(private readonly board: Chessboard) {
     this.squaresWithPiece = board.squaresWithPiece;
   }
@@ -28,6 +29,7 @@ export class ChessEngine implements ChessModel {
     if (!this.canMoveOnSquare(squareFrom, squareTo)) {
       throw new Error('Piece can not move to given square.');
     }
+    // if(!) ----------------------------------------------------------------------
 
     const pieceWasMoved: PieceWasMoved = {
       eventType: 'PieceWasMoved',
@@ -62,5 +64,9 @@ export class ChessEngine implements ChessModel {
     return (
       piecePossibleMoves?.some((possibleMove) => possibleMove.column === squareTo.column && possibleMove.row === squareTo.row) ?? false
     );
+  }
+
+  private willBeKingChecked(): boolean {
+    return false;
   }
 }

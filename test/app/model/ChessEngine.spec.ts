@@ -145,7 +145,7 @@ describe('Chess Engine', () => {
   });
 
   describe('If player wants to move piece that check King will be captured', () => {
-    it(`Shouldn  if chosen King is not just captured`, () => {
+    it(`Shouldn if chosen King is not just captured`, () => {
       const whiteKing = new King(Side.WHITE);
       const boardWithPieces: SquareWithPiece = {
         A2: whiteKing,
