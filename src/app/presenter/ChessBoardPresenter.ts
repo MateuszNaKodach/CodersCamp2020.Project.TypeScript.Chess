@@ -16,6 +16,7 @@ export class ChessBoardPresenter {
     const squaresStringArray = this.getPossibleMoves(position);
 
     this.view.hideAllAvailableMoves();
+    console.log(squaresStringArray);
     this.view.showAvailableMoves(squaresStringArray);
   }
 

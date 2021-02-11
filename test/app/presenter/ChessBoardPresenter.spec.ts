@@ -14,10 +14,22 @@ describe('ChessBoardPresenter', () => {
   const model: ChessModel = { squaresWithPiece: PIECES_START_POSITION, move: jest.fn(), possibleMoves: jest.fn() };
   const presenter: ChessBoardPresenter = new ChessBoardPresenter(view, model);
 
-  it('when square was clicked on the view, then selected piece should be shown', () => {
+  it('when square A1 was clicked on the view, then selected piece should be shown with its possible moves', () => {
     viewEvents.publish(new SquareWasClicked({ x: 1, y: 1 }));
 
     expect(view.showSelectedPiece).toHaveBeenCalledWith({ x: 1, y: 1 });
+    expect(view.hideSelection).toHaveBeenCalled();
+    expect(view.hideAllAvailableMoves).toHaveBeenCalled();
+    expect(view.showAvailableMoves).toHaveBeenCalledWith([]);
+  });
+
+  it('when square was A2 clicked on the view, then selected piece should be shown with its possible moves', () => {
+    viewEvents.publish(new SquareWasClicked({ x: 1, y: 2 }));
+
+    expect(view.showSelectedPiece).toHaveBeenCalledWith({ x: 1, y: 2 });
+    expect(view.hideSelection).toHaveBeenCalled();
+    expect(view.hideAllAvailableMoves).toHaveBeenCalled();
+    expect(view.showAvailableMoves).toHaveBeenCalledWith(['a3', 'a4']);
   });
 
   it('when game starts, check if pieces will show on the screen', () => {
