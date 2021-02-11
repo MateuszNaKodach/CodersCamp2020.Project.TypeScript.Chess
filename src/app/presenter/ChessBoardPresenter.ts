@@ -16,11 +16,9 @@ export class ChessBoardPresenter {
     this.view.showSelectedPiece(position);
 
     const squaresStringArray = this.getPossibleMoves(position);
-    console.log('Square array of possible moves: ', squaresStringArray);
 
     this.view.hideAllAvailableMoves();
     this.view.showAvailableMoves(squaresStringArray);
-    console.log('position: ', position);
   }
 
   startGame(): void {

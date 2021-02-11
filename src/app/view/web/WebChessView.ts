@@ -34,7 +34,6 @@ export class WebChessView implements ChessBoardView {
     });
   }
 
-  // te sqauresToHighlight idą do podświetlenia
   showAvailableMoves(squaresToHighlight: string[]): void {
     squaresToHighlight.forEach((square) => {
       this.parent.querySelector(`#${square}`)?.classList.add('square--possibleMove');
