@@ -4,8 +4,6 @@ import { ViewEventBus } from '../events/ViewEventBus';
 import { ViewEvent } from '../events/ViewEvent';
 import { SquareWasClicked } from '../events/SquareWasClicked';
 import { PiecesBoardPositions } from '../Types';
-import { Position } from '../../presenter/Position';
-import { columns, Row, Square } from '../../model';
 
 export class WebChessView implements ChessBoardView {
   constructor(private readonly viewEventBus: ViewEventBus, private readonly parent: HTMLElement = document.body) {}
@@ -23,9 +21,8 @@ export class WebChessView implements ChessBoardView {
     this.viewEventBus.listenOn(eventType, reaction);
   }
 
-  showSelectedPiece(position: Position): void {
-    const selectedSquare = this.translatePositionToSquare(position);
-    this.parent.querySelector(`#${selectedSquare.column.toLowerCase()}${selectedSquare.row}`)?.classList.add('square--selected');
+  showSelectedPiece(id: string): void {
+    if (this.parent.querySelector(`#${id}`)?.hasChildNodes()) this.parent.querySelector(`#${id}`)?.classList.add('square--selected');
   }
 
   hideSelection(): void {
@@ -72,9 +69,5 @@ export class WebChessView implements ChessBoardView {
     newPieceElement.setAttribute('data-testid', `${id}-img`);
     newPieceElement.src = pieceImage;
     return newPieceElement;
-  }
-
-  private translatePositionToSquare(position: Position): Square {
-    return { column: columns[position.x - 1], row: position.y as Row };
   }
 }

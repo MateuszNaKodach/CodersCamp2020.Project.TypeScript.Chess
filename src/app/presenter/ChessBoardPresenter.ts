@@ -11,12 +11,10 @@ export class ChessBoardPresenter {
 
   onSquareWasClicked(position: Position): void {
     this.view.hideSelection();
-    this.view.showSelectedPiece(position);
-
+    this.view.showSelectedPiece(this.translatePositionToAlgebraicNotation(position));
     const squaresStringArray = this.getPossibleMoves(position);
 
     this.view.hideAllAvailableMoves();
-    console.log(squaresStringArray);
     this.view.showAvailableMoves(squaresStringArray);
   }
 
@@ -27,5 +25,10 @@ export class ChessBoardPresenter {
   private getPossibleMoves(position: Position): string[] {
     const square: Square = { column: columns[position.x - 1], row: position.y as Row };
     return this.chessModel.possibleMoves(square)?.map((square) => `${square.column.toLowerCase()}${square.row}`) ?? [];
+  }
+
+  private translatePositionToAlgebraicNotation(position: Position): string {
+    const square = { column: columns[position.x - 1], row: position.y as Row };
+    return `${square.column.toLowerCase()}${square.row}`;
   }
 }
