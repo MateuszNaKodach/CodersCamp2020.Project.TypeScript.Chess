@@ -204,5 +204,58 @@ describe('Chess Engine', () => {
 
       expect(engine.move(playerWhite, squareFrom, squareTo)).toThrowError(errorMessage);
     });
+
+    it(`Should not throw an error if the king is on checked square and the king's move does not cause his check.`, () => {
+      const boardWithPieces: SquareWithPiece = {
+        A2: whiteKing,
+        B5: new Rook(Side.BLACK),
+      };
+      const chessboard = new Chessboard(boardWithPieces);
+      const engine = new ChessEngine(chessboard);
+
+      const squareFrom: Square = { column: 'A', row: 2 };
+      const squareTo: Square = { column: 'A', row: 3 };
+
+      const expectedResult = [
+        {
+          eventType: 'PieceWasMoved',
+          piece: whiteKing,
+          from: squareFrom,
+          to: squareTo,
+        },
+      ];
+      expect(engine.move(playerWhite, squareFrom, squareTo)).toIncludeSameMembers(expectedResult);
+    });
+
+    it(`Should throw an error if the king is on checked square and the king's move causes his check.`, () => {
+      const boardWithPieces: SquareWithPiece = {
+        A2: whiteKing,
+        A5: new Rook(Side.BLACK),
+        B5: new Rook(Side.BLACK),
+      };
+      const chessboard = new Chessboard(boardWithPieces);
+      const engine = new ChessEngine(chessboard);
+
+      const squareFrom: Square = { column: 'A', row: 2 };
+      const squareTo: Square = { column: 'B', row: 3 };
+
+      expect(engine.move(playerWhite, squareFrom, squareTo)).toThrowError(errorMessage);
+    });
+
+    it(`Should throw an error if the king is on checked square and the piece's move causes check of his king.`, () => {
+      const boardWithPieces: SquareWithPiece = {
+        A2: whiteKing,
+        A3: new Queen(Side.WHITE),
+        A5: new Rook(Side.BLACK),
+        G2: new Rook(Side.BLACK),
+      };
+      const chessboard = new Chessboard(boardWithPieces);
+      const engine = new ChessEngine(chessboard);
+
+      const squareFrom: Square = { column: 'A', row: 3 };
+      const squareTo: Square = { column: 'B', row: 2 };
+
+      expect(engine.move(playerWhite, squareFrom, squareTo)).toThrowError(errorMessage);
+    });
   });
 });
