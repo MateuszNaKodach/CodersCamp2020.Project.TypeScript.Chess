@@ -65,7 +65,6 @@ export class ChessEngine implements ChessModel {
   }
 
   possibleMoves(position: Square): Square[] {
-    const pieceOnPosition: Piece | undefined = this.board.onPositionPiece(position);
-    return pieceOnPosition ? pieceOnPosition.possibleMoves(position, this.board) : [];
+    return this.board.onPositionPiece(position)?.possibleMoves(position, this.board) ?? [];
   }
 }

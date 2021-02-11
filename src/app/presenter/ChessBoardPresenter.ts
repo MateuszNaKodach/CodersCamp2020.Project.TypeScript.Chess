@@ -30,8 +30,10 @@ export class ChessBoardPresenter {
   private getPossibleMoves(position: Position): string[] {
     const square: Square = { column: columns[position.x - 1], row: position.y as Row };
     const squares: Square[] = this.chessModel.possibleMoves(square);
-    return squares?.map((square) => {
-      return `${square.column.toLowerCase()}${square.row}`;
-    });
+    return (
+      squares?.map((square) => {
+        return `${square.column.toLowerCase()}${square.row}`;
+      }) ?? []
+    );
   }
 }
