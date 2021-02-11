@@ -100,7 +100,7 @@ describe('Chess Engine', () => {
 
     engine.move(player, squareStart, squareMiddle);
 
-    expect(() => engine.move(player, squareMiddle, squareFinish)).toThrowError('Player can not move twice in a row.');
+    expect(() => engine.move(player, squareMiddle, squareFinish)).toThrowError(`It's not Your turn.`);
   });
 
   it('Should throw an Error if player wants to move piece that was just captured', () => {

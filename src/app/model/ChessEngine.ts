@@ -8,9 +8,8 @@ import { PieceWasCaptured } from './PieceWasCaptured';
 import { isDefined } from './HelperFunctions';
 
 export class ChessEngine implements ChessModel {
-  private currentSide: Side = Side.BLACK;
+  private currentSide: Side = Side.WHITE;
   readonly squaresWithPiece: SquareWithPiece;
-
   constructor(private readonly board: Chessboard) {
     this.squaresWithPiece = board.squaresWithPiece;
   }
@@ -20,8 +19,8 @@ export class ChessEngine implements ChessModel {
     if (!chosenPiece) {
       throw new Error('There is no piece on this square.');
     }
-    if (byPlayer.side == this.currentSide) {
-      throw new Error('Player can not move twice in a row.');
+    if (byPlayer.side !== this.currentSide) {
+      throw new Error(`It's not Your turn.`);
     }
     if (byPlayer.side !== chosenPiece.side) {
       throw new Error('Player can not move other players pieces.');
@@ -58,7 +57,7 @@ export class ChessEngine implements ChessModel {
 
   private onPieceWasMoved(event: PieceWasMoved): void {
     this.board.movePiece(event.from, event.to);
-    this.currentSide = event.piece.side;
+    this.currentSide = this.changeTurn(event.piece.side);
   }
 
   private canMoveOnSquare(squareFrom: Square, squareTo: Square): boolean {
@@ -66,6 +65,10 @@ export class ChessEngine implements ChessModel {
     return (
       piecePossibleMoves?.some((possibleMove) => possibleMove.column === squareTo.column && possibleMove.row === squareTo.row) ?? false
     );
+  }
+
+  private changeTurn(side: Side): Side {
+    return side === Side.WHITE ? Side.BLACK : Side.WHITE;
   }
 
   private willBeKingChecked(squareFrom: Square, squareTo: Square): boolean {
