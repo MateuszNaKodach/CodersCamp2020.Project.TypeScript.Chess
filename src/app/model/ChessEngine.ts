@@ -29,7 +29,9 @@ export class ChessEngine implements ChessModel {
     if (!this.canMoveOnSquare(squareFrom, squareTo)) {
       throw new Error('Piece can not move to given square.');
     }
-    // if(!) ----------------------------------------------------------------------
+    if (this.willBeKingChecked()) {
+      throw new Error(`The player cannot move piece which causes check of his king`);
+    }
 
     const pieceWasMoved: PieceWasMoved = {
       eventType: 'PieceWasMoved',
