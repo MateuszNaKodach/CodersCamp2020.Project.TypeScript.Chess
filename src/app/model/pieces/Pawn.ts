@@ -48,7 +48,7 @@ export class Pawn extends Piece implements PiecePossibleMoves {
       column: columns[currentColumnNumber + 1],
       row: (currentRowNumber + 1 * this.nextRowDifference()) as Row,
     };
-    if (board.onPositionPiece(rightDiagonal) && this.checkIfOponent(rightDiagonal, board)) {
+    if (board.onPositionPiece(rightDiagonal) && this.checkIfNotSameColorPiece(rightDiagonal, board)) {
       movesToGo.push(rightDiagonal);
     }
 
@@ -56,7 +56,7 @@ export class Pawn extends Piece implements PiecePossibleMoves {
       column: columns[currentColumnNumber - 1],
       row: (currentRowNumber + 1 * this.nextRowDifference()) as Row,
     };
-    if (board.onPositionPiece(leftDiagonal) && this.checkIfOponent(leftDiagonal, board)) {
+    if (board.onPositionPiece(leftDiagonal) && this.checkIfNotSameColorPiece(leftDiagonal, board)) {
       movesToGo.push(leftDiagonal);
     }
 

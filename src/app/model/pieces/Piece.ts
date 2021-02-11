@@ -19,7 +19,7 @@ export abstract class Piece {
     }
     const isSquareOccupied = board.onPositionPiece(nextSquare);
     if (isSquareOccupied) {
-      return this.checkIfOponent(nextSquare, board) ? [nextSquare] : [];
+      return this.checkIfNotSameColorPiece(nextSquare, board) ? [nextSquare] : [];
     } else {
       return [nextSquare].concat(this.lineMoves(board, nextSquare, vector));
     }
@@ -30,7 +30,7 @@ export abstract class Piece {
     return columnNumber < BOARD_SIZE && columnNumber >= 0 && position.row <= BOARD_SIZE && position.row > 0;
   }
 
-  protected checkIfOponent(position: Square, board: PiecePositions): boolean {
+  protected checkIfNotSameColorPiece(position: Square, board: PiecePositions): boolean {
     return board.onPositionPiece(position)?.side !== this.side;
   }
 
