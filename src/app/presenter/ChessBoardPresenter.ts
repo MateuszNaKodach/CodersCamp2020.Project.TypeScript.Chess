@@ -24,12 +24,11 @@ export class ChessBoardPresenter {
 
   private getPossibleMoves(position: Position): string[] {
     const square: Square = { column: columns[position.x - 1], row: position.y as Row };
-    console.log(this.chessModel.possibleMoves(square));
     return this.chessModel.possibleMoves(square)?.map((square) => `${square.column.toLowerCase()}${square.row}`) ?? [];
   }
 
   private translatePositionToAlgebraicNotation(position: Position): string {
-    const square = { column: columns[position.x - 1], row: position.y as Row };
+    const square: Square = { column: columns[position.x - 1], row: position.y as Row };
     return `${square.column.toLowerCase()}${square.row}`;
   }
 }

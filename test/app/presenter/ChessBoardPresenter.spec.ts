@@ -1,20 +1,25 @@
 import '@testing-library/jest-dom';
 import { ChessBoardView } from '../../../src/app/view/ChessBoardView';
-import { ChessModel } from '../../../src/app/model';
+import { ChessModel, PIECES_START_POSITION, Square } from '../../../src/app/model';
 import { ChessBoardPresenter } from '../../../src/app/presenter/ChessBoardPresenter';
 import { ViewEventBus } from '../../../src/app/view/events/ViewEventBus';
 import { ViewEvent } from '../../../src/app/view/events/ViewEvent';
 import { SquareWasClicked } from '../../../src/app/view/events/SquareWasClicked';
 import { InMemoryViewEventBus } from '../../../src/app/view/events/InMemoryViewEventBus';
-import { PIECES_START_POSITION } from '../../../src/app/model';
 
 describe('ChessBoardPresenter', () => {
-  const viewEvents: ViewEventBus = new InMemoryViewEventBus();
-  const view: ChessBoardView = chessBoardViewMock(viewEvents);
-  const model: ChessModel = { squaresWithPiece: PIECES_START_POSITION, move: jest.fn(), possibleMoves: jest.fn() };
-  const presenter: ChessBoardPresenter = new ChessBoardPresenter(view, model);
-
   it('when square A1 was clicked on the view, then selected piece should be shown with its possible moves', () => {
+    const viewEvents: ViewEventBus = new InMemoryViewEventBus();
+    const view: ChessBoardView = chessBoardViewMock(viewEvents);
+    const model: ChessModel = {
+      squaresWithPiece: PIECES_START_POSITION,
+      move: jest.fn(),
+      possibleMoves(position: Square): Square[] {
+        return [];
+      },
+    };
+    new ChessBoardPresenter(view, model);
+
     viewEvents.publish(new SquareWasClicked({ x: 1, y: 1 }));
 
     expect(view.showSelectedPiece).toHaveBeenCalledWith('a1');
@@ -23,7 +28,21 @@ describe('ChessBoardPresenter', () => {
     expect(view.showAvailableMoves).toHaveBeenCalledWith([]);
   });
 
-  it('when square was A2 clicked on the view, then selected piece should be shown with its possible moves', () => {
+  it('when square A2 was clicked on the view, then selected piece should be shown with its possible moves', () => {
+    const viewEvents: ViewEventBus = new InMemoryViewEventBus();
+    const view: ChessBoardView = chessBoardViewMock(viewEvents);
+    const model: ChessModel = {
+      squaresWithPiece: PIECES_START_POSITION,
+      move: jest.fn(),
+      possibleMoves(position: Square): Square[] {
+        return [
+          { column: 'A', row: 3 },
+          { column: 'A', row: 4 },
+        ];
+      },
+    };
+    new ChessBoardPresenter(view, model);
+
     viewEvents.publish(new SquareWasClicked({ x: 1, y: 2 }));
 
     expect(view.showSelectedPiece).toHaveBeenCalledWith('a2');
@@ -33,6 +52,10 @@ describe('ChessBoardPresenter', () => {
   });
 
   it('when game starts, check if pieces will show on the screen', () => {
+    const viewEvents: ViewEventBus = new InMemoryViewEventBus();
+    const view: ChessBoardView = chessBoardViewMock(viewEvents);
+    const model: ChessModel = { squaresWithPiece: PIECES_START_POSITION, move: jest.fn(), possibleMoves: jest.fn() };
+    const presenter: ChessBoardPresenter = new ChessBoardPresenter(view, model);
     presenter.startGame();
 
     expect(view.showChessBoard).toHaveBeenCalledWith(PIECES_START_POSITION);
