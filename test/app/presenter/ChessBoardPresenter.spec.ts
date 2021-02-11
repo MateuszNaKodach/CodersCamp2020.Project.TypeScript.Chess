@@ -1,17 +1,17 @@
 import '@testing-library/jest-dom';
 import { ChessBoardView } from '../../../src/app/view/ChessBoardView';
-import { ChessModel } from '../../../src/app/model/ChessModel';
+import { ChessModel } from '../../../src/app/model';
 import { ChessBoardPresenter } from '../../../src/app/presenter/ChessBoardPresenter';
 import { ViewEventBus } from '../../../src/app/view/events/ViewEventBus';
 import { ViewEvent } from '../../../src/app/view/events/ViewEvent';
 import { SquareWasClicked } from '../../../src/app/view/events/SquareWasClicked';
 import { InMemoryViewEventBus } from '../../../src/app/view/events/InMemoryViewEventBus';
-import { PIECES_START_POSITION } from '../../../src/app/model/Constances';
+import { PIECES_START_POSITION } from '../../../src/app/model';
 
 describe('ChessBoardPresenter', () => {
   const viewEvents: ViewEventBus = new InMemoryViewEventBus();
   const view: ChessBoardView = chessBoardViewMock(viewEvents);
-  const model: ChessModel = { squaresWithPiece: PIECES_START_POSITION, move: jest.fn() };
+  const model: ChessModel = { squaresWithPiece: PIECES_START_POSITION, move: jest.fn(), possibleMoves: jest.fn() };
   const presenter: ChessBoardPresenter = new ChessBoardPresenter(view, model);
 
   it('when square was clicked on the view, then selected piece should be shown', () => {

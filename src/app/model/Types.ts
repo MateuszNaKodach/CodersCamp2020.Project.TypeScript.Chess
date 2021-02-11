@@ -1,4 +1,4 @@
-import { Piece } from './pieces/Piece';
+import { Piece } from './pieces';
 
 export const columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 export type Column = typeof columns[number];
