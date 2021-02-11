@@ -144,7 +144,7 @@ describe('Chess Engine', () => {
     ).toThrowError('There is no piece on this square.');
   });
 
-  describe('If player wants to move piece that check King will be captured', () => {
+  describe('If player wants to move piece that check king will be captured', () => {
     const errorMessage = `The player cannot move piece which causes check of his king.`;
     const whiteKing = new King(Side.WHITE);
     const blackKing = new King(Side.BLACK);
