@@ -6,7 +6,7 @@ import { Player } from '../../../src/app/model/Player';
 import 'jest-extended';
 import { Queen } from '../../../src/app/model/pieces/Queen';
 import { Knight } from '../../../src/app/model/pieces/Knight';
-import { King } from '../../../src/app/model';
+import { King, Rook } from '../../../src/app/model';
 
 describe('Chess Engine', () => {
   it('Given white piece on A2 and black piece on A4, when move white piece from A2 to A3, then white piece was moved from A2 to A3', () => {
@@ -145,7 +145,7 @@ describe('Chess Engine', () => {
   });
 
   describe('If player wants to move piece that check King will be captured', () => {
-    const errorMessage = `Player can not move other players pieces.`;
+    const errorMessage = `The player can not move piece, causing his king to check`;
     const whiteKing = new King(Side.WHITE);
     const blackKing = new King(Side.BLACK);
     const playerWhite = new Player(Side.WHITE);
@@ -171,6 +171,22 @@ describe('Chess Engine', () => {
         },
       ];
       expect(engine.move(playerWhite, squareFrom, squareTo)).toIncludeSameMembers(expectedResult);
+    });
+
+    it(`Should throw an error if chosen King is just in checked`, () => {
+      const boardWithPieces: SquareWithPiece = {
+        A1: whiteKing,
+        B8: new Rook(Side.BLACK),
+        H2: new Rook(Side.BLACK),
+      };
+      const chessboard = new Chessboard(boardWithPieces);
+      const engine = new ChessEngine(chessboard);
+      const playerWhite = new Player(Side.WHITE);
+
+      const squareFrom: Square = { column: 'A', row: 1 };
+      const squareTo: Square = { column: 'A', row: 2 };
+
+      expect(engine.move(playerWhite, squareFrom, squareTo)).toThrowError(errorMessage);
     });
   });
 });
