@@ -6,6 +6,7 @@ import { Player } from '../../../src/app/model/Player';
 import 'jest-extended';
 import { Queen } from '../../../src/app/model/pieces/Queen';
 import { Knight } from '../../../src/app/model/pieces/Knight';
+import { King } from '../../../src/app/model';
 
 describe('Chess Engine', () => {
   it('Given white piece on A2 and black piece on A4, when move white piece from A2 to A3, then white piece was moved from A2 to A3', () => {
@@ -141,5 +142,31 @@ describe('Chess Engine', () => {
         },
       ),
     ).toThrowError('There is no piece on this square.');
+  });
+
+  describe('If player wants to move piece that check King will be captured', () => {
+    it(`Shouldn  if chosen King is not just captured`, () => {
+      const whiteKing = new King(Side.WHITE);
+      const boardWithPieces: SquareWithPiece = {
+        A2: whiteKing,
+        A8: new King(Side.BLACK),
+      };
+      const chessboard = new Chessboard(boardWithPieces);
+      const engine = new ChessEngine(chessboard);
+      const playerWhite = new Player(Side.WHITE);
+
+      const squareFrom: Square = { column: 'A', row: 2 };
+      const squareTo: Square = { column: 'A', row: 3 };
+
+      const expectedResult = [
+        {
+          eventType: 'PieceWasMoved',
+          piece: whiteKing,
+          from: squareFrom,
+          to: squareTo,
+        },
+      ];
+      expect(engine.move(playerWhite, squareFrom, squareTo)).toIncludeSameMembers(expectedResult);
+    });
   });
 });
