@@ -1,6 +1,6 @@
 import { ChessModel } from './ChessModel';
 import { Side, Square, SquareWithPiece } from './Types';
-import { Piece } from './Piece';
+import { Piece } from './pieces/Piece';
 import { Player } from './Player';
 import { Chessboard } from './Chessboard';
 import { PieceWasMoved } from './PieceWasMoved';

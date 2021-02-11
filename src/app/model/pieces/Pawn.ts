@@ -1,7 +1,7 @@
-import { PiecePositions } from './PiecesPositions';
+import { PiecePositions } from '../PiecesPositions';
 import { Piece } from './Piece';
-import { PiecePossibleMoves } from './PiecePossibleMoves';
-import { columns, Row, Side, Square } from './Types';
+import { PiecePossibleMoves } from '../PiecePossibleMoves';
+import { columns, Row, Side, Square } from '../Types';
 
 type RowDifference = 1 | -1;
 const NEXT_ROW_DIFFERENCE: { WHITE: RowDifference; BLACK: RowDifference } = {

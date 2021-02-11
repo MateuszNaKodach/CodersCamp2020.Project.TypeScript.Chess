@@ -1,8 +1,6 @@
 import 'jest-extended';
 import { boardWithPieces, emptyBoard } from './BoardFixture';
-import { Side, Square } from '../../../src/app/model/Types';
-import { Queen } from '../../../src/app/model/Queen';
-import { Pawn } from '../../../src/app/model/Pawn';
+import { Pawn, Queen, Side, Square } from '../../../src/app/model';
 
 describe('Queen possible moves', () => {
   it('When Queen is on D4 and there is no pieces on Queens way', () => {

@@ -1,4 +1,4 @@
-import { Piece } from './Piece';
+import { Piece } from './pieces/Piece';
 import { Square } from './Types';
 
 export type PieceWasCaptured = {

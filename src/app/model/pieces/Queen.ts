@@ -1,7 +1,7 @@
-import { PiecePositions } from './PiecesPositions';
+import { PiecePositions } from '../PiecesPositions';
 import { Piece } from './Piece';
-import { Side, Square } from './Types';
-import { PiecePossibleMoves } from './PiecePossibleMoves';
+import { Side, Square } from '../Types';
+import { PiecePossibleMoves } from '../PiecePossibleMoves';
 
 export class Queen extends Piece implements PiecePossibleMoves {
   readonly name = 'Queen';

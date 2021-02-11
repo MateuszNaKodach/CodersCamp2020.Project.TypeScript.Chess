@@ -1,6 +1,6 @@
-import { columns, Row, Side, Square, Vector } from './Types';
-import { PiecePositions } from './PiecesPositions';
-import { BOARD_SIZE } from './Constances';
+import { columns, Row, Side, Square, Vector } from '../Types';
+import { PiecePositions } from '../PiecesPositions';
+import { BOARD_SIZE } from '../Constances';
 
 export abstract class Piece {
   protected constructor(public side: Side) {}

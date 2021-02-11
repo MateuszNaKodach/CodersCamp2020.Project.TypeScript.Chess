@@ -1,7 +1,7 @@
 import { Chessboard } from '../../../src/app/model/Chessboard';
-import { Pawn } from '../../../src/app/model/Pawn';
-import { Rook } from '../../../src/app/model/Rook';
-import { Square, SquareWithPiece, Side } from '../../../src/app/model/Types';
+import { Pawn } from '../../../src/app/model/pieces/Pawn';
+import { Rook } from '../../../src/app/model/pieces/Rook';
+import { Side, Square, SquareWithPiece } from '../../../src/app/model/Types';
 
 describe('ChessBoard', () => {
   const pawn: Pawn = new Pawn(Side.WHITE);
