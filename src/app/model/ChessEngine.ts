@@ -1,6 +1,6 @@
 import { ChessModel } from './ChessModel';
 import { Side, Square, SquareWithPiece } from './Types';
-import { Piece } from './pieces';
+import { King, Piece } from './pieces';
 import { Player } from './Player';
 import { Chessboard } from './Chessboard';
 import { PieceWasMoved } from './PieceWasMoved';
@@ -10,6 +10,7 @@ import { isDefined } from './HelperFunctions';
 export class ChessEngine implements ChessModel {
   private currentSide: Side = Side.WHITE;
   readonly squaresWithPiece: SquareWithPiece;
+
   constructor(private readonly board: Chessboard) {
     this.squaresWithPiece = board.squaresWithPiece;
   }
@@ -28,7 +29,7 @@ export class ChessEngine implements ChessModel {
     if (!this.canMoveOnSquare(squareFrom, squareTo)) {
       throw new Error('Piece can not move to given square.');
     }
-    if (this.willBeKingChecked(squareFrom, squareTo)) {
+    if (this.willBeKingChecked(byPlayer, squareFrom, squareTo)) {
       throw new Error(`The player cannot move piece which causes check of his king`);
     }
 
@@ -71,13 +72,20 @@ export class ChessEngine implements ChessModel {
     return side === Side.WHITE ? Side.BLACK : Side.WHITE;
   }
 
-  private willBeKingChecked(squareFrom: Square, squareTo: Square): boolean {
+  private willBeKingChecked(player: Player, squareFrom: Square, squareTo: Square): boolean {
     const proposedSquaresWithPiece: SquareWithPiece = { ...this.board.squaresWithPiece };
+
     // TODO: find king position on new chessboard
+    const kingPosition =
+      player.side === Side.WHITE
+        ? Object.keys(proposedSquaresWithPiece).find((key) => proposedSquaresWithPiece[key] === new King(Side.WHITE))
+        : Object.keys(proposedSquaresWithPiece).find((key) => proposedSquaresWithPiece[key] === new King(Side.BLACK));
+
     // TODO: set loop where item is every pieces from other side and return type of squares array
     {
       // TODO: check possible squares where pieces of oponent can move to
     }
+
     // TODO: if it will be king's square on the above squares (where pieces of oponent can move to), function should return true
 
     // DONE: in other way return false
