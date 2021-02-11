@@ -145,15 +145,19 @@ describe('Chess Engine', () => {
   });
 
   describe('If player wants to move piece that check King will be captured', () => {
+    const errorMessage = `Player can not move other players pieces.`;
+    const whiteKing = new King(Side.WHITE);
+    const blackKing = new King(Side.BLACK);
+    const playerWhite = new Player(Side.WHITE);
+    const blackWhite = new Player(Side.WHITE);
+
     it(`Shouldn if chosen King is not just captured`, () => {
-      const whiteKing = new King(Side.WHITE);
       const boardWithPieces: SquareWithPiece = {
         A2: whiteKing,
-        A8: new King(Side.BLACK),
+        A8: blackKing,
       };
       const chessboard = new Chessboard(boardWithPieces);
       const engine = new ChessEngine(chessboard);
-      const playerWhite = new Player(Side.WHITE);
 
       const squareFrom: Square = { column: 'A', row: 2 };
       const squareTo: Square = { column: 'A', row: 3 };
