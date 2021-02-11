@@ -78,10 +78,15 @@ export class ChessEngine implements ChessModel {
     // TODO: find king position on new chessboard
     const kingPosition =
       player.side === Side.WHITE
-        ? Object.keys(proposedSquaresWithPiece).find((key) => proposedSquaresWithPiece[key] === new King(Side.WHITE))
-        : Object.keys(proposedSquaresWithPiece).find((key) => proposedSquaresWithPiece[key] === new King(Side.BLACK));
+        ? Object.keys(proposedSquaresWithPiece).find(
+            (key) => proposedSquaresWithPiece[key].name === 'King' && proposedSquaresWithPiece[key].side === player.side,
+          )
+        : Object.keys(proposedSquaresWithPiece).find(
+            (key) => proposedSquaresWithPiece[key].name === 'King' && proposedSquaresWithPiece[key].side !== player.side,
+          );
 
     // TODO: set loop where item is every pieces from other side and return type of squares array
+
     {
       // TODO: check possible squares where pieces of oponent can move to
     }
