@@ -115,13 +115,23 @@ export class ChessEngine implements ChessModel {
     return isCheckedSquareFlag;
   }
 
-  removePlayerMovesThatCauseHisKingToCheck(position: Square) {
-    // returnPlayerMovesWithoutThoseThatCauseHisKingToCheck(position: Square, possibleMoves?: Square[], chessBoard?: Chessboard): Square[]  {
+  returnPlayerMovesWithoutThoseThatCauseHisKingToCheck(position: Square): Square[] {
+    const initialPossibleMoves = this.board.onPositionPiece(position)?.possibleMoves(position, this.board) ?? [];
 
-    return this.board.onPositionPiece(position)?.possibleMoves(position, this.board) ?? [];
+    function filteringFunction(onePossibleMove: Square) {
+      return true;
+    }
+
+    const filteredPossibleMoves = initialPossibleMoves.filter((onePossibleMove) => filteringFunction(onePossibleMove));
+    return filteredPossibleMoves;
   }
 
   possibleMoves(position: Square): Square[] {
     return this.board.onPositionPiece(position)?.possibleMoves(position, this.board) ?? [];
   }
 }
+
+// player: Player,
+//     chessboard:Chessboard,
+//     squareFrom:Square,
+//     squareTo:Square
