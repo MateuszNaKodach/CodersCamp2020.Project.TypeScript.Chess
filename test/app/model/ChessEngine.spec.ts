@@ -1,5 +1,5 @@
 import { ChessEngine } from '../../../src/app/model/ChessEngine';
-import { Row, Side, Square, SquareWithPiece } from '../../../src/app/model/Types';
+import { Column, Row, Side, Square, SquareWithPiece } from '../../../src/app/model/Types';
 import { Chessboard } from '../../../src/app/model/Chessboard';
 import { Pawn } from '../../../src/app/model/pieces/Pawn';
 import { Player } from '../../../src/app/model/Player';
@@ -257,4 +257,32 @@ describe('Chess Engine', () => {
   //     expect(() => engine.move(playerWhite, squareFrom, squareTo)).toThrowError(errorMessage);
   //   });
   // });
+
+  describe('Return player moves without those that cause his king to check', () => {
+    const whiteKing = new King(Side.WHITE);
+    const blackKing = new King(Side.BLACK);
+    const playerWhite = new Player(Side.WHITE);
+
+    it(`Should return the same possible moves array if the king's move doesn't cause his check.`, () => {
+      const boardWithPieces: SquareWithPiece = {
+        A2: whiteKing,
+        A8: blackKing,
+      };
+      const chessboard = new Chessboard(boardWithPieces);
+      const engine = new ChessEngine(chessboard);
+      const movedPiecePosition: Square = { column: 'A', row: 2 };
+      const possibleMovesBeforeFiltration = [
+        { column: 'A', row: 1 },
+        { column: 'A', row: 3 },
+        { column: 'B', row: 1 },
+        { column: 'B', row: 2 },
+        { column: 'B', row: 3 },
+      ];
+
+      const returnedResult = engine.returnPlayerMovesWithoutThoseThatCauseHisKingToCheck(movedPiecePosition);
+
+      const expectedResult = possibleMovesBeforeFiltration;
+      expect(returnedResult).toIncludeSameMembers(expectedResult);
+    });
+  });
 });
