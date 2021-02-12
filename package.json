@@ -5,7 +5,7 @@
   "scripts": {
     "clean": "rimraf .cache && rimraf coverage && rimraf dist && rimraf node_modules",
     "prebuild": "rimraf dist",
-    "build": "rm -rf dist && tsc --noEmit && parcel build index.html",
+    "build": "rm -rf dist && tsc --noEmit && parcel build index.html --public-url ./",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "format:ci": "prettier -c \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix --format codeframe",
