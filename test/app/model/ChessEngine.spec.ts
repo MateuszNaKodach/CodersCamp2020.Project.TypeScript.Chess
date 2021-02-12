@@ -4,9 +4,9 @@ import { Chessboard } from '../../../src/app/model/Chessboard';
 import { Pawn } from '../../../src/app/model/pieces/Pawn';
 import { Player } from '../../../src/app/model/Player';
 import 'jest-extended';
-import { Bishop } from '../../../src/app/model/pieces/Bishop';
 import { Queen } from '../../../src/app/model/pieces/Queen';
 import { Knight } from '../../../src/app/model/pieces/Knight';
+import { Bishop } from '../../../src/app/model/pieces/Bishop';
 import { King } from '../../../src/app/model/pieces/King';
 
 describe('Chess Engine', () => {
