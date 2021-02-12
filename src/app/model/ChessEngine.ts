@@ -30,9 +30,6 @@ export class ChessEngine implements ChessModel {
     if (!this.canMoveOnSquare(squareFrom, squareTo)) {
       throw new Error('Piece can not move to given square.');
     }
-    if (this.willBeKingChecked(byPlayer, this.board, squareFrom, squareTo)) {
-      throw new Error(`The player cannot move piece which causes check of his king.`);
-    }
 
     const pieceWasMoved: PieceWasMoved = {
       eventType: 'PieceWasMoved',
@@ -116,6 +113,12 @@ export class ChessEngine implements ChessModel {
       }
     });
     return isCheckedSquareFlag;
+  }
+
+  removePlayerMovesThatCauseHisKingToCheck(position: Square) {
+    // returnPlayerMovesWithoutThoseThatCauseHisKingToCheck(position: Square, possibleMoves?: Square[], chessBoard?: Chessboard): Square[]  {
+
+    return this.board.onPositionPiece(position)?.possibleMoves(position, this.board) ?? [];
   }
 
   possibleMoves(position: Square): Square[] {
