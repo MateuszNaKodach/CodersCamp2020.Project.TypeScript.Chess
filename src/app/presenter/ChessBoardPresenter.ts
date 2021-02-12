@@ -13,6 +13,7 @@ export class ChessBoardPresenter {
     //presenter kaze, zeby view wyswietlil mozliwe ruchy -> wywolujac np. view.showAvailableMoves(squares).
     console.log(position);
     this.view.showSelectedPiece(position);
+    this.view.pawnPromotion();
   }
 
   startGame(): void {
