@@ -6,7 +6,7 @@ import { ViewEventBus } from '../../../src/app/view/events/ViewEventBus';
 import { ViewEvent } from '../../../src/app/view/events/ViewEvent';
 import { SquareWasClicked } from '../../../src/app/view/events/SquareWasClicked';
 import { InMemoryViewEventBus } from '../../../src/app/view/events/InMemoryViewEventBus';
-import { PIECES_START_POSITION } from '../../../src/app/model/Constances';
+import { PIECES_START_POSITION } from '../../../src/app/model/constances/PiecesStartPosition';
 
 describe('ChessBoardPresenter', () => {
   const viewEvents: ViewEventBus = new InMemoryViewEventBus();
