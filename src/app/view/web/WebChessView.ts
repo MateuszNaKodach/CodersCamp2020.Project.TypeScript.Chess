@@ -22,7 +22,9 @@ export class WebChessView implements ChessBoardView {
   }
 
   showSelectedPiece(id: string): void {
-    if (this.parent.querySelector(`#${id}`)?.hasChildNodes()) this.parent.querySelector(`#${id}`)?.classList.add('square--selected');
+    if (this.parent.querySelector(`#${id}`)?.hasChildNodes()) {
+      this.parent.querySelector(`#${id}`)?.classList.add('square--selected');
+    }
   }
 
   hideSelection(): void {
