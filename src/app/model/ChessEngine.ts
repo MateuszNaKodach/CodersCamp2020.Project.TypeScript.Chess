@@ -67,4 +67,8 @@ export class ChessEngine implements ChessModel {
   private changeTurn(side: Side): Side {
     return side === Side.WHITE ? Side.BLACK : Side.WHITE;
   }
+
+  possibleMoves(position: Square): Square[] {
+    return this.board.onPositionPiece(position)?.possibleMoves(position, this.board) ?? [];
+  }
 }
