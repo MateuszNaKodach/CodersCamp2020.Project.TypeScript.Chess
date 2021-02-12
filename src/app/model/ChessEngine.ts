@@ -117,4 +117,8 @@ export class ChessEngine implements ChessModel {
     });
     return isCheckedSquareFlag;
   }
+
+  possibleMoves(position: Square): Square[] {
+    return this.board.onPositionPiece(position)?.possibleMoves(position, this.board) ?? [];
+  }
 }
