@@ -20,6 +20,14 @@
   &--dark {
     background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), url('../static/img/board/dark.png');
   }
+
+  &--possibleMove {
+    box-shadow: inset 0 0 15px $square-possibleMove;
+  }
+
+  &--selected {
+    box-shadow: inset 0 0 15px $square-selected;
+  }
 }
 
 @media (orientation: landscape) {
