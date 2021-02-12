@@ -169,7 +169,7 @@ describe('Chess Engine', () => {
           to: squareTo,
         },
       ];
-      expect(engine.move(playerWhite, squareFrom, squareTo)).toIncludeSameMembers(expectedResult);
+      expect(() => engine.move(playerWhite, squareFrom, squareTo)).toIncludeSameMembers(expectedResult);
     });
 
     it(`Should throw an error if the king's move causes his check.`, () => {
@@ -185,7 +185,7 @@ describe('Chess Engine', () => {
       const squareFrom: Square = { column: 'A', row: 1 };
       const squareTo: Square = { column: 'A', row: 2 };
 
-      expect(engine.move(playerWhite, squareFrom, squareTo)).toThrowError(errorMessage);
+      expect(() => engine.move(playerWhite, squareFrom, squareTo)).toThrowError(errorMessage);
     });
 
     it(`Should throw an error if the white piece's move causes white king check.`, () => {
@@ -201,7 +201,7 @@ describe('Chess Engine', () => {
       const squareFrom: Square = { column: 'A', row: 2 };
       const squareTo: Square = { column: 'G', row: 2 };
 
-      expect(engine.move(playerWhite, squareFrom, squareTo)).toThrowError(errorMessage);
+      expect(() => engine.move(playerWhite, squareFrom, squareTo)).toThrowError(errorMessage);
     });
 
     it(`Should not throw an error if the king is on checked square and the king's move does not cause his check.`, () => {
@@ -223,7 +223,7 @@ describe('Chess Engine', () => {
           to: squareTo,
         },
       ];
-      expect(engine.move(playerWhite, squareFrom, squareTo)).toIncludeSameMembers(expectedResult);
+      expect(() => engine.move(playerWhite, squareFrom, squareTo)).toIncludeSameMembers(expectedResult);
     });
 
     it(`Should throw an error if the king is on checked square and the king's move causes his check.`, () => {
@@ -238,7 +238,7 @@ describe('Chess Engine', () => {
       const squareFrom: Square = { column: 'A', row: 2 };
       const squareTo: Square = { column: 'B', row: 3 };
 
-      expect(engine.move(playerWhite, squareFrom, squareTo)).toThrowError(errorMessage);
+      expect(() => engine.move(playerWhite, squareFrom, squareTo)).toThrowError(errorMessage);
     });
 
     it(`Should throw an error if the king is on checked square and the piece's move causes check of his king.`, () => {
@@ -254,7 +254,7 @@ describe('Chess Engine', () => {
       const squareFrom: Square = { column: 'A', row: 3 };
       const squareTo: Square = { column: 'B', row: 2 };
 
-      expect(engine.move(playerWhite, squareFrom, squareTo)).toThrowError(errorMessage);
+      expect(() => engine.move(playerWhite, squareFrom, squareTo)).toThrowError(errorMessage);
     });
   });
 });
