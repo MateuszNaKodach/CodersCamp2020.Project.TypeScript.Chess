@@ -169,7 +169,7 @@ describe('Chess Engine', () => {
           to: squareTo,
         },
       ];
-      expect(() => engine.move(playerWhite, squareFrom, squareTo)).toIncludeSameMembers(expectedResult);
+      expect(engine.move(playerWhite, squareFrom, squareTo)).toIncludeSameMembers(expectedResult);
     });
 
     it(`Should throw an error if the king's move causes his check.`, () => {
@@ -223,7 +223,7 @@ describe('Chess Engine', () => {
           to: squareTo,
         },
       ];
-      expect(() => engine.move(playerWhite, squareFrom, squareTo)).toIncludeSameMembers(expectedResult);
+      expect(engine.move(playerWhite, squareFrom, squareTo)).toIncludeSameMembers(expectedResult);
     });
 
     it(`Should throw an error if the king is on checked square and the king's move causes his check.`, () => {
