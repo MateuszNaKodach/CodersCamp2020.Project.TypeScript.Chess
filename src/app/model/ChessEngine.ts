@@ -70,9 +70,10 @@ export class ChessEngine implements ChessModel {
     return side === Side.WHITE ? Side.BLACK : Side.WHITE;
   }
 
-  private willBeKingChecked(player: Player, chessboard: Chessboard, squareFrom: Square, squareTo: Square): boolean {
+  willBeKingChecked(squareFrom: Square, squareTo: Square): boolean {
     let isCheckedSquareFlag = false;
 
+    const chessboard: Chessboard = this.board;
     const proposedChessboard = _.cloneDeep(chessboard);
     const { squaresWithPiece: proposedSquaresWithPieces } = proposedChessboard;
 
@@ -84,7 +85,7 @@ export class ChessEngine implements ChessModel {
 
     const allyKingPositionKey = Object.keys(proposedSquaresWithPieces).find((key) => {
       const isKingName = proposedSquaresWithPieces[key].name === 'King';
-      const isPlayerSide = proposedSquaresWithPieces[key].side === player.side;
+      const isPlayerSide = proposedSquaresWithPieces[key].side === this.currentSide;
       return isKingName && isPlayerSide;
     });
 
@@ -97,7 +98,7 @@ export class ChessEngine implements ChessModel {
 
     Object.keys(proposedSquaresWithPieces).forEach((key) => {
       const mappedPiece = proposedSquaresWithPieces[key];
-      const isEnemySide = mappedPiece.side !== player.side;
+      const isEnemySide = mappedPiece.side !== this.currentSide;
 
       if (isEnemySide) {
         const mappedPiecePosition = {
@@ -118,11 +119,12 @@ export class ChessEngine implements ChessModel {
   returnPlayerMovesWithoutThoseThatCauseHisKingToCheck(position: Square): Square[] {
     const initialPossibleMoves = this.board.onPositionPiece(position)?.possibleMoves(position, this.board) ?? [];
 
-    function filteringFunction(onePossibleMove: Square) {
-      return true;
-    }
+    const filteringFunction = (onePossibleMove: Square) => {
+      const willBeKingChecked = this.willBeKingChecked(position, onePossibleMove);
+      return !willBeKingChecked;
+    };
 
-    const filteredPossibleMoves = initialPossibleMoves.filter((onePossibleMove) => filteringFunction(onePossibleMove));
+    const filteredPossibleMoves = initialPossibleMoves.filter(filteringFunction.bind(this));
     return filteredPossibleMoves;
   }
 
