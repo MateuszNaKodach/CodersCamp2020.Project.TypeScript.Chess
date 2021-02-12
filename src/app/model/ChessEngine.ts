@@ -1,6 +1,6 @@
 import { ChessModel } from './ChessModel';
 import { Row, Side, Square, SquareWithPiece } from './Types';
-import { Piece } from './pieces';
+import { King, Piece } from './pieces';
 import { Player } from './Player';
 import { Chessboard } from './Chessboard';
 import { PieceWasMoved } from './PieceWasMoved';
@@ -70,12 +70,9 @@ export class ChessEngine implements ChessModel {
     return side === Side.WHITE ? Side.BLACK : Side.WHITE;
   }
 
-  willBeKingChecked(squareFrom: Square, squareTo: Square): boolean {
-    let isCheckedSquareFlag = false;
-
-    const chessboard: Chessboard = this.board;
-    const proposedChessboard = _.cloneDeep(chessboard);
-    const { squaresWithPiece: proposedSquaresWithPieces } = proposedChessboard;
+  private returnWirtualProposedBoardAfterMove(chessboard: Chessboard, squareFrom: Square, squareTo: Square): Chessboard {
+    const wirtualPorposedChessboard = _.cloneDeep(chessboard);
+    const { squaresWithPiece: proposedSquaresWithPieces } = wirtualPorposedChessboard;
 
     const movedPiece = chessboard.onPositionPiece(squareFrom);
     const positionFrom = `${squareFrom.column}${squareFrom.row}`;
@@ -83,29 +80,45 @@ export class ChessEngine implements ChessModel {
     delete proposedSquaresWithPieces[positionFrom];
     proposedSquaresWithPieces[positionTo] = movedPiece as Piece;
 
-    const allyKingPositionKey = Object.keys(proposedSquaresWithPieces).find((key) => {
-      const isKingName = proposedSquaresWithPieces[key].name === 'King';
-      const isPlayerSide = proposedSquaresWithPieces[key].side === this.currentSide;
+    return wirtualPorposedChessboard;
+  }
+
+  public static kingPosition(kingSide: Side, chessboard: Chessboard): Square | undefined {
+    const { squaresWithPiece: squaresWithPieces } = chessboard;
+
+    const allyKingPositionKey = Object.keys(squaresWithPieces).find((key) => {
+      const isKingName = squaresWithPieces[key].name === 'King';
+      const isPlayerSide = squaresWithPieces[key].side === kingSide;
       return isKingName && isPlayerSide;
     });
 
-    if (!allyKingPositionKey) return (isCheckedSquareFlag = false);
+    if (!allyKingPositionKey) return undefined;
 
     const kingPosition = {
       column: allyKingPositionKey[0],
       row: Number(allyKingPositionKey[1]) as Row,
     };
 
-    Object.keys(proposedSquaresWithPieces).forEach((key) => {
-      const mappedPiece = proposedSquaresWithPieces[key];
-      const isEnemySide = mappedPiece.side !== this.currentSide;
+    return kingPosition;
+  }
+
+  public static isKingChecked(chessboard: Chessboard, kingSide: Side): boolean {
+    let isCheckedSquareFlag = false;
+
+    const { squaresWithPiece: squaresWithPieces } = chessboard;
+
+    const kingPosition = this.kingPosition(kingSide, chessboard);
+
+    Object.keys(squaresWithPieces).forEach((key) => {
+      const mappedPiece = squaresWithPieces[key];
+      const isEnemySide = mappedPiece.side !== kingSide;
 
       if (isEnemySide) {
         const mappedPiecePosition = {
           column: key[0],
           row: Number(key[1]) as Row,
         };
-        const possibleMappedPieceMoves = mappedPiece.possibleMoves(mappedPiecePosition, proposedChessboard);
+        const possibleMappedPieceMoves = mappedPiece.possibleMoves(mappedPiecePosition, chessboard);
         const isKingPositionOnPossibleEnemyPieceMoves = possibleMappedPieceMoves.some(
           (checkedPosition) => JSON.stringify(checkedPosition) == JSON.stringify(kingPosition),
         );
@@ -116,24 +129,20 @@ export class ChessEngine implements ChessModel {
     return isCheckedSquareFlag;
   }
 
+  willBeKingChecked(squareFrom: Square, squareTo: Square): boolean {
+    const chessboard: Chessboard = this.board;
+    const wirtualPorposedChessboard = this.returnWirtualProposedBoardAfterMove(chessboard, squareFrom, squareTo);
+    return ChessEngine.isKingChecked(wirtualPorposedChessboard, this.currentSide);
+  }
+
   returnPlayerMovesWithoutThoseThatCauseHisKingToCheck(position: Square): Square[] {
     const initialPossibleMoves = this.board.onPositionPiece(position)?.possibleMoves(position, this.board) ?? [];
+    const filteringFunction = (onePossibleMove: Square) => !this.willBeKingChecked(position, onePossibleMove);
 
-    const filteringFunction = (onePossibleMove: Square) => {
-      const willBeKingChecked = this.willBeKingChecked(position, onePossibleMove);
-      return !willBeKingChecked;
-    };
-
-    const filteredPossibleMoves = initialPossibleMoves.filter(filteringFunction);
-    return filteredPossibleMoves;
+    return initialPossibleMoves.filter(filteringFunction);
   }
 
   possibleMoves(position: Square): Square[] {
     return this.returnPlayerMovesWithoutThoseThatCauseHisKingToCheck(position);
   }
 }
-
-// player: Player,
-//     chessboard:Chessboard,
-//     squareFrom:Square,
-//     squareTo:Square
