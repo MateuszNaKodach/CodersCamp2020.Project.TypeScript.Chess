@@ -1,11 +1,10 @@
-import { ChessEngine } from '../../../src/app/model/ChessEngine';
-import { Side, Square, SquareWithPiece } from '../../../src/app/model/Types';
-import { Chessboard } from '../../../src/app/model/Chessboard';
-import { Pawn } from '../../../src/app/model/pieces/Pawn';
-import { Player } from '../../../src/app/model/Player';
+import { ChessEngine } from '../../../src/app/model';
+import { Side, Square, SquareWithPiece } from '../../../src/app/model';
+import { Chessboard } from '../../../src/app/model';
+import { Pawn } from '../../../src/app/model';
 import 'jest-extended';
-import { Queen } from '../../../src/app/model/pieces/Queen';
-import { Knight } from '../../../src/app/model/pieces/Knight';
+import { Queen } from '../../../src/app/model';
+import { Knight } from '../../../src/app/model';
 
 describe('Chess Engine', () => {
   it('Given white piece on A2 and black piece on A4, when move white piece from A2 to A3, then white piece was moved from A2 to A3', () => {
@@ -14,11 +13,10 @@ describe('Chess Engine', () => {
     const boardWithPieces: SquareWithPiece = { A2: whitePiece, A4: blackPiece };
     const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
-    const player = new Player(Side.WHITE);
     const squareFrom: Square = { column: 'A', row: 2 };
     const squareTo: Square = { column: 'A', row: 3 };
 
-    expect(engine.move(player, squareFrom, squareTo)).toIncludeSameMembers([
+    expect(engine.move(Side.WHITE, squareFrom, squareTo)).toIncludeSameMembers([
       {
         eventType: 'PieceWasMoved',
         piece: whitePiece,
@@ -34,11 +32,10 @@ describe('Chess Engine', () => {
     const boardWithPieces: SquareWithPiece = { A2: whitePiece, A4: blackPiece };
     const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
-    const player = new Player(Side.WHITE);
     const squareFrom: Square = { column: 'A', row: 2 };
     const squareTo: Square = { column: 'A', row: 4 };
 
-    expect(engine.move(player, squareFrom, squareTo)).toIncludeSameMembers([
+    expect(engine.move(Side.WHITE, squareFrom, squareTo)).toIncludeSameMembers([
       { eventType: 'PieceWasCaptured', piece: blackPiece, onSquare: squareTo },
       { eventType: 'PieceWasMoved', piece: whitePiece, from: squareFrom, to: squareTo },
     ]);
@@ -51,12 +48,10 @@ describe('Chess Engine', () => {
     const boardWithPieces: SquareWithPiece = { C2: whitePawn, B1: whiteKnight, B4: blackPawn };
     const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
-    const playerWhite = new Player(Side.WHITE);
-    const playerBlack = new Player(Side.BLACK);
 
-    engine.move(playerWhite, { column: 'C', row: 2 }, { column: 'C', row: 3 });
-    engine.move(playerBlack, { column: 'B', row: 4 }, { column: 'C', row: 3 });
-    expect(engine.move(playerWhite, { column: 'B', row: 1 }, { column: 'C', row: 3 })).toIncludeSameMembers([
+    engine.move(Side.WHITE, { column: 'C', row: 2 }, { column: 'C', row: 3 });
+    engine.move(Side.BLACK, { column: 'B', row: 4 }, { column: 'C', row: 3 });
+    expect(engine.move(Side.WHITE, { column: 'B', row: 1 }, { column: 'C', row: 3 })).toIncludeSameMembers([
       { eventType: 'PieceWasCaptured', piece: blackPawn, onSquare: { column: 'C', row: 3 } },
       { eventType: 'PieceWasMoved', piece: whiteKnight, from: { column: 'B', row: 1 }, to: { column: 'C', row: 3 } },
     ]);
@@ -68,11 +63,10 @@ describe('Chess Engine', () => {
     const boardWithPieces: SquareWithPiece = { A2: blackPiece, A4: whitePiece };
     const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
-    const player = new Player(Side.WHITE);
     const squareFrom: Square = { column: 'A', row: 2 };
     const squareTo: Square = { column: 'A', row: 4 };
 
-    expect(() => engine.move(player, squareFrom, squareTo)).toThrowError('Player can not move other players pieces.');
+    expect(() => engine.move(Side.WHITE, squareFrom, squareTo)).toThrowError('Player can not move other players pieces.');
   });
 
   it('Should throw an Error if player wants to move piece to not available square', () => {
@@ -80,11 +74,10 @@ describe('Chess Engine', () => {
     const boardWithPieces: SquareWithPiece = { A2: whitePiece };
     const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
-    const player = new Player(Side.WHITE);
     const squareFrom: Square = { column: 'A', row: 2 };
     const squareTo: Square = { column: 'A', row: 5 };
 
-    expect(() => engine.move(player, squareFrom, squareTo)).toThrowError('Piece can not move to given square.');
+    expect(() => engine.move(Side.WHITE, squareFrom, squareTo)).toThrowError('Piece can not move to given square.');
   });
 
   it('Should throw an Error if player wants to move twice', () => {
@@ -92,14 +85,13 @@ describe('Chess Engine', () => {
     const boardWithPieces: SquareWithPiece = { A2: whitePiece };
     const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
-    const player = new Player(Side.WHITE);
     const squareStart: Square = { column: 'A', row: 2 };
     const squareMiddle: Square = { column: 'A', row: 3 };
     const squareFinish: Square = { column: 'A', row: 4 };
 
-    engine.move(player, squareStart, squareMiddle);
+    engine.move(Side.WHITE, squareStart, squareMiddle);
 
-    expect(() => engine.move(player, squareMiddle, squareFinish)).toThrowError(`It's not Your turn.`);
+    expect(() => engine.move(Side.WHITE, squareMiddle, squareFinish)).toThrowError(`It's not Your turn.`);
   });
 
   it('Should throw an Error if player wants to move piece that was just captured', () => {
@@ -108,14 +100,12 @@ describe('Chess Engine', () => {
     const boardWithPieces: SquareWithPiece = { A2: whitePiece, A6: blackPiece };
     const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
-    const playerWhite = new Player(Side.WHITE);
-    const playerBlack = new Player(Side.BLACK);
 
-    engine.move(playerWhite, { column: 'A', row: 2 }, { column: 'A', row: 6 });
+    engine.move(Side.WHITE, { column: 'A', row: 2 }, { column: 'A', row: 6 });
 
     expect(() =>
       engine.move(
-        playerBlack,
+        Side.BLACK,
         { column: 'A', row: 6 },
         {
           column: 'A',
@@ -129,11 +119,10 @@ describe('Chess Engine', () => {
     const boardWithPieces: SquareWithPiece = {};
     const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
-    const playerWhite = new Player(Side.WHITE);
 
     expect(() =>
       engine.move(
-        playerWhite,
+        Side.WHITE,
         { column: 'A', row: 2 },
         {
           column: 'A',
