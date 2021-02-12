@@ -10,6 +10,6 @@ export interface ChessBoardView extends ViewEventSource {
 
   //TODO: Do zmiany, brakuje jaka bierke pokazac
   showSelectedPiece(id: string): void;
-
+  pawnPromotion(): void;
   hideSelection(): void;
 }

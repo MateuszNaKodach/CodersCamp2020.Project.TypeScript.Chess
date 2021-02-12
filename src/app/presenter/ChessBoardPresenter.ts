@@ -16,6 +16,7 @@ export class ChessBoardPresenter {
     this.view.hideAllAvailableMoves();
     const squaresStringArray = this.getPossibleMoves(position);
     this.view.showAvailableMoves(squaresStringArray);
+    this.view.pawnPromotion();
   }
 
   startGame(): void {

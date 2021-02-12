@@ -66,4 +66,54 @@ export class WebChessView implements ChessBoardView {
     newPieceElement.src = pieceImage;
     return newPieceElement;
   }
+
+  pawnPromotion(): void {
+    console.log('PIONEK!');
+
+    const promotionModal = document.createElement('div');
+    promotionModal.classList.add('promotionModal');
+    document.body.appendChild(promotionModal);
+
+    const modalWindow = document.createElement('div');
+    modalWindow.classList.add('modalWindow');
+    modalWindow.textContent = 'Choose your promotion pawn';
+    promotionModal.appendChild(modalWindow);
+
+    const modalPawnWrap = document.createElement('h1');
+    modalPawnWrap.classList.add('modalPawnWrap');
+    modalWindow.appendChild(modalPawnWrap);
+
+    const queenPromotion = document.createElement('div');
+    queenPromotion.classList.add('promotionPawn');
+    queenPromotion.textContent = 'Queen';
+    modalPawnWrap.appendChild(queenPromotion);
+
+    const rookPromotion = document.createElement('div');
+    rookPromotion.classList.add('promotionPawn');
+    rookPromotion.textContent = 'Rook';
+    modalPawnWrap.appendChild(rookPromotion);
+
+    const knightPromotion = document.createElement('div');
+    knightPromotion.classList.add('promotionPawn');
+    knightPromotion.textContent = 'Knight';
+    modalPawnWrap.appendChild(knightPromotion);
+
+    const bishopPromotion = document.createElement('div');
+    bishopPromotion.classList.add('promotionPawn');
+    bishopPromotion.textContent = 'Bishop';
+    modalPawnWrap.appendChild(bishopPromotion);
+
+    const clickedPawn = document.querySelectorAll('.promotionPawn');
+    clickedPawn.forEach(function (element) {
+      element.addEventListener('click', function (event: any) {
+        console.log('promocja na', event);
+      });
+    });
+
+    window.onclick = function (event: any) {
+      if (event.target == promotionModal) {
+        promotionModal.style.display = 'none';
+      }
+    };
+  }
 }
