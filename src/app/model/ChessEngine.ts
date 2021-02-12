@@ -124,7 +124,7 @@ export class ChessEngine implements ChessModel {
       return !willBeKingChecked;
     };
 
-    const filteredPossibleMoves = initialPossibleMoves.filter(filteringFunction.bind(this));
+    const filteredPossibleMoves = initialPossibleMoves.filter(filteringFunction);
     return filteredPossibleMoves;
   }
 
