@@ -129,7 +129,7 @@ export class ChessEngine implements ChessModel {
   }
 
   possibleMoves(position: Square): Square[] {
-    return this.board.onPositionPiece(position)?.possibleMoves(position, this.board) ?? [];
+    return this.returnPlayerMovesWithoutThoseThatCauseHisKingToCheck(position);
   }
 }
 
