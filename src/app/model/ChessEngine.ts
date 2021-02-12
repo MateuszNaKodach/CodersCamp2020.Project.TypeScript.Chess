@@ -98,7 +98,7 @@ export class ChessEngine implements ChessModel {
       row: Number(allyKingPositionKey[1]) as Row,
     };
 
-    Object.keys(proposedSquaresWithPieces).map((key) => {
+    Object.keys(proposedSquaresWithPieces).forEach((key) => {
       const mappedPiece = proposedSquaresWithPieces[key];
       const isEnemySide = mappedPiece.side !== player.side;
 
