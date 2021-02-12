@@ -1,18 +1,18 @@
 import { ChessEngine } from '../../../src/app/model/ChessEngine';
 import { Side, Square, SquareWithPiece } from '../../../src/app/model/Types';
-import { ChessBoard } from '../../../src/app/model/ChessBoard';
-import { Pawn } from '../../../src/app/model/Pawn';
+import { Chessboard } from '../../../src/app/model/Chessboard';
+import { Pawn } from '../../../src/app/model/pieces/Pawn';
 import { Player } from '../../../src/app/model/Player';
 import 'jest-extended';
-import { Queen } from '../../../src/app/model/Queen';
-import { Knight } from '../../../src/app/model/Knight';
+import { Queen } from '../../../src/app/model/pieces/Queen';
+import { Knight } from '../../../src/app/model/pieces/Knight';
 
 describe('Chess Engine', () => {
   it('Given white piece on A2 and black piece on A4, when move white piece from A2 to A3, then white piece was moved from A2 to A3', () => {
     const whitePiece = new Pawn(Side.WHITE);
     const blackPiece = new Pawn(Side.BLACK);
     const boardWithPieces: SquareWithPiece = { A2: whitePiece, A4: blackPiece };
-    const chessBoard = new ChessBoard(boardWithPieces);
+    const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
     const player = new Player(Side.WHITE);
     const squareFrom: Square = { column: 'A', row: 2 };
@@ -32,7 +32,7 @@ describe('Chess Engine', () => {
     const whitePiece = new Queen(Side.WHITE);
     const blackPiece = new Pawn(Side.BLACK);
     const boardWithPieces: SquareWithPiece = { A2: whitePiece, A4: blackPiece };
-    const chessBoard = new ChessBoard(boardWithPieces);
+    const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
     const player = new Player(Side.WHITE);
     const squareFrom: Square = { column: 'A', row: 2 };
@@ -49,7 +49,7 @@ describe('Chess Engine', () => {
     const whiteKnight = new Knight(Side.WHITE);
     const blackPawn = new Pawn(Side.BLACK);
     const boardWithPieces: SquareWithPiece = { C2: whitePawn, B1: whiteKnight, B4: blackPawn };
-    const chessBoard = new ChessBoard(boardWithPieces);
+    const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
     const playerWhite = new Player(Side.WHITE);
     const playerBlack = new Player(Side.BLACK);
@@ -66,7 +66,7 @@ describe('Chess Engine', () => {
     const whitePiece = new Queen(Side.WHITE);
     const blackPiece = new Pawn(Side.BLACK);
     const boardWithPieces: SquareWithPiece = { A2: blackPiece, A4: whitePiece };
-    const chessBoard = new ChessBoard(boardWithPieces);
+    const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
     const player = new Player(Side.WHITE);
     const squareFrom: Square = { column: 'A', row: 2 };
@@ -78,7 +78,7 @@ describe('Chess Engine', () => {
   it('Should throw an Error if player wants to move piece to not available square', () => {
     const whitePiece = new Pawn(Side.WHITE);
     const boardWithPieces: SquareWithPiece = { A2: whitePiece };
-    const chessBoard = new ChessBoard(boardWithPieces);
+    const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
     const player = new Player(Side.WHITE);
     const squareFrom: Square = { column: 'A', row: 2 };
@@ -90,7 +90,7 @@ describe('Chess Engine', () => {
   it('Should throw an Error if player wants to move twice', () => {
     const whitePiece = new Pawn(Side.WHITE);
     const boardWithPieces: SquareWithPiece = { A2: whitePiece };
-    const chessBoard = new ChessBoard(boardWithPieces);
+    const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
     const player = new Player(Side.WHITE);
     const squareStart: Square = { column: 'A', row: 2 };
@@ -99,14 +99,14 @@ describe('Chess Engine', () => {
 
     engine.move(player, squareStart, squareMiddle);
 
-    expect(() => engine.move(player, squareMiddle, squareFinish)).toThrowError('Player can not move twice in a row.');
+    expect(() => engine.move(player, squareMiddle, squareFinish)).toThrowError(`It's not Your turn.`);
   });
 
   it('Should throw an Error if player wants to move piece that was just captured', () => {
     const whitePiece = new Queen(Side.WHITE);
     const blackPiece = new Pawn(Side.BLACK);
     const boardWithPieces: SquareWithPiece = { A2: whitePiece, A6: blackPiece };
-    const chessBoard = new ChessBoard(boardWithPieces);
+    const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
     const playerWhite = new Player(Side.WHITE);
     const playerBlack = new Player(Side.BLACK);
@@ -127,7 +127,7 @@ describe('Chess Engine', () => {
 
   it('Should throw an Error if chosen square is not occupied', () => {
     const boardWithPieces: SquareWithPiece = {};
-    const chessBoard = new ChessBoard(boardWithPieces);
+    const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
     const playerWhite = new Player(Side.WHITE);
 

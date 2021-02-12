@@ -1,8 +1,6 @@
-import { Knight } from '../../../src/app/model/Knight';
-import { Side, Square } from '../../../src/app/model/Types';
+import { Knight, Pawn, Side, Square } from '../../../src/app/model';
 import 'jest-extended';
 import { boardWithPieces, emptyBoard } from './BoardFixture';
-import { Pawn } from '../../../src/app/model/Pawn';
 
 describe('Knight possible moves', () => {
   it("When Knight is on F3 and there is no pieces on Knight's final movement squares", () => {

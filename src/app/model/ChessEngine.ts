@@ -1,24 +1,26 @@
 import { ChessModel } from './ChessModel';
-import { Side, Square } from './Types';
-import { Piece } from './Piece';
+import { Side, Square, SquareWithPiece } from './Types';
+import { Piece } from './pieces';
 import { Player } from './Player';
-import { ChessBoard } from './ChessBoard';
+import { Chessboard } from './Chessboard';
 import { PieceWasMoved } from './PieceWasMoved';
 import { PieceWasCaptured } from './PieceWasCaptured';
 import { isDefined } from './HelperFunctions';
 
 export class ChessEngine implements ChessModel {
-  private currentSide: Side = Side.BLACK;
-
-  constructor(private readonly board: ChessBoard) {}
+  private currentSide: Side = Side.WHITE;
+  readonly squaresWithPiece: SquareWithPiece;
+  constructor(private readonly board: Chessboard) {
+    this.squaresWithPiece = board.squaresWithPiece;
+  }
 
   move(byPlayer: Player, squareFrom: Square, squareTo: Square): (PieceWasMoved | PieceWasCaptured)[] {
     const chosenPiece = this.board.onPositionPiece(squareFrom);
     if (!chosenPiece) {
       throw new Error('There is no piece on this square.');
     }
-    if (byPlayer.side == this.currentSide) {
-      throw new Error('Player can not move twice in a row.');
+    if (byPlayer.side !== this.currentSide) {
+      throw new Error(`It's not Your turn.`);
     }
     if (byPlayer.side !== chosenPiece.side) {
       throw new Error('Player can not move other players pieces.');
@@ -27,7 +29,12 @@ export class ChessEngine implements ChessModel {
       throw new Error('Piece can not move to given square.');
     }
 
-    const pieceWasMoved: PieceWasMoved = { eventType: 'PieceWasMoved', piece: chosenPiece, from: squareFrom, to: squareTo };
+    const pieceWasMoved: PieceWasMoved = {
+      eventType: 'PieceWasMoved',
+      piece: chosenPiece,
+      from: squareFrom,
+      to: squareTo,
+    };
     const pieceWasCaptured = this.pieceWasCaptured(squareTo, chosenPiece);
 
     this.onPieceWasMoved(pieceWasMoved);
@@ -47,7 +54,7 @@ export class ChessEngine implements ChessModel {
 
   private onPieceWasMoved(event: PieceWasMoved): void {
     this.board.movePiece(event.from, event.to);
-    this.currentSide = event.piece.side;
+    this.currentSide = this.changeTurn(event.piece.side);
   }
 
   private canMoveOnSquare(squareFrom: Square, squareTo: Square): boolean {
@@ -55,5 +62,13 @@ export class ChessEngine implements ChessModel {
     return (
       piecePossibleMoves?.some((possibleMove) => possibleMove.column === squareTo.column && possibleMove.row === squareTo.row) ?? false
     );
+  }
+
+  private changeTurn(side: Side): Side {
+    return side === Side.WHITE ? Side.BLACK : Side.WHITE;
+  }
+
+  possibleMoves(position: Square): Square[] {
+    return this.board.onPositionPiece(position)?.possibleMoves(position, this.board) ?? [];
   }
 }

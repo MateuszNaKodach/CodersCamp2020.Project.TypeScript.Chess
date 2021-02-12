@@ -1,4 +1,4 @@
-import { Piece } from './Piece';
+import { Piece } from './pieces';
 import { Square } from './Types';
 
 export interface PiecePositions {
