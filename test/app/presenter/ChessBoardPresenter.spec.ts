@@ -6,31 +6,31 @@ import { ViewEventBus } from '../../../src/app/view/events/ViewEventBus';
 import { ViewEvent } from '../../../src/app/view/events/ViewEvent';
 import { SquareWasClicked } from '../../../src/app/view/events/SquareWasClicked';
 import { InMemoryViewEventBus } from '../../../src/app/view/events/InMemoryViewEventBus';
-import { Position } from '../../../src/app/presenter/Position';
 
 describe('ChessBoardPresenter', () => {
   it('when square A1 was clicked on the view, then selected piece should be shown with its possible moves', () => {
-    const view = chessboardStateMock([], { x: 1, y: 1 });
+    const chessboardState = chessboardStateMock([]);
 
-    expect(view.showSelectedPiece).toHaveBeenCalledWith('a1');
-    expect(view.hideSelection).toHaveBeenCalled();
-    expect(view.hideAllAvailableMoves).toHaveBeenCalled();
-    expect(view.showAvailableMoves).toHaveBeenCalledWith([]);
+    chessboardState.viewEvents.publish(new SquareWasClicked({ x: 1, y: 1 }));
+
+    expect(chessboardState.view.showSelectedPiece).toHaveBeenCalledWith('a1');
+    expect(chessboardState.view.hideSelection).toHaveBeenCalled();
+    expect(chessboardState.view.hideAllAvailableMoves).toHaveBeenCalled();
+    expect(chessboardState.view.showAvailableMoves).toHaveBeenCalledWith([]);
   });
 
   it('when square A2 was clicked on the view, then selected piece should be shown with its possible moves', () => {
-    const view = chessboardStateMock(
-      [
-        { column: 'A', row: 3 },
-        { column: 'A', row: 4 },
-      ],
-      { x: 1, y: 2 },
-    );
+    const chessboardState = chessboardStateMock([
+      { column: 'A', row: 3 },
+      { column: 'A', row: 4 },
+    ]);
 
-    expect(view.showSelectedPiece).toHaveBeenCalledWith('a2');
-    expect(view.hideSelection).toHaveBeenCalled();
-    expect(view.hideAllAvailableMoves).toHaveBeenCalled();
-    expect(view.showAvailableMoves).toHaveBeenCalledWith(['a3', 'a4']);
+    chessboardState.viewEvents.publish(new SquareWasClicked({ x: 1, y: 2 }));
+
+    expect(chessboardState.view.showSelectedPiece).toHaveBeenCalledWith('a2');
+    expect(chessboardState.view.hideSelection).toHaveBeenCalled();
+    expect(chessboardState.view.hideAllAvailableMoves).toHaveBeenCalled();
+    expect(chessboardState.view.showAvailableMoves).toHaveBeenCalledWith(['a3', 'a4']);
   });
 
   it('when game starts, check if pieces will show on the screen', () => {
@@ -57,7 +57,7 @@ function chessBoardViewMock(viewEventBus: ViewEventBus): ChessBoardView {
   };
 }
 
-function chessboardStateMock(square: Square[], position: Position) {
+function chessboardStateMock(square: Square[]) {
   const viewEvents: ViewEventBus = new InMemoryViewEventBus();
   const view: ChessBoardView = chessBoardViewMock(viewEvents);
   const model: ChessModel = {
@@ -70,6 +70,5 @@ function chessboardStateMock(square: Square[], position: Position) {
 
   new ChessBoardPresenter(view, model);
 
-  viewEvents.publish(new SquareWasClicked(position));
-  return view;
+  return { view, viewEvents };
 }
