@@ -164,8 +164,49 @@ describe('Chess Engine', () => {
       },
       {
         eventType: 'KingWasChecked',
-        king: King,
+        king: blackPiece,
         onSquare: { column: 'D', row: 8 },
+      },
+    ]);
+  });
+
+  it('After black players move, black king is no longer checked', () => {
+    const whitePiece = new Bishop(Side.WHITE);
+    const blackPiece = new King(Side.BLACK);
+    const boardWithPieces: SquareWithPiece = { D8: blackPiece, F4: whitePiece };
+    const chessBoard = new Chessboard(boardWithPieces);
+    const engine = new ChessEngine(chessBoard);
+    const playerBlack = new Player(Side.BLACK);
+    const kingSquareFrom: Square = { column: 'D', row: 8 };
+    const kingSquareTo: Square = { column: 'D', row: 7 };
+    const playerWhite = new Player(Side.WHITE);
+    const bishopSquareFrom: Square = { column: 'F', row: 4 };
+    const bishopSquareTo: Square = { column: 'G', row: 5 };
+
+    engine.move(playerWhite, bishopSquareFrom, bishopSquareTo);
+
+    expect(engine.move(playerBlack, kingSquareFrom, kingSquareTo)).toIncludeSameMembers([
+      {
+        eventType: 'PieceWasMoved',
+        piece: whitePiece,
+        from: bishopSquareFrom,
+        to: bishopSquareTo,
+      },
+      {
+        eventType: 'KingWasChecked',
+        king: blackPiece,
+        onSquare: { column: 'D', row: 8 },
+      },
+      {
+        eventType: 'PieceWasMoved',
+        piece: blackPiece,
+        from: kingSquareFrom,
+        to: kingSquareTo,
+      },
+      {
+        eventType: 'KingWasUnchecked',
+        king: blackPiece,
+        onSquare: { column: 'D', row: 7 },
       },
     ]);
   });
