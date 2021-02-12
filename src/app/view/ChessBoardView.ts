@@ -12,4 +12,7 @@ export interface ChessBoardView extends ViewEventSource {
   showSelectedPiece(id: string): void;
 
   hideSelection(): void;
+
+  movePiece(squareFrom: string, squareTo: string): void;
+  capturePiece(onSquare: string): void;
 }

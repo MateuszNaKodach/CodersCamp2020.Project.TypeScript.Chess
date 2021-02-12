@@ -38,7 +38,7 @@ export class ChessEngine implements ChessModel {
     const pieceWasCaptured = this.pieceWasCaptured(squareTo, chosenPiece);
 
     this.onPieceWasMoved(pieceWasMoved);
-    return pieceWasCaptured ? [pieceWasMoved, pieceWasCaptured] : [pieceWasMoved];
+    return pieceWasCaptured ? [pieceWasCaptured, pieceWasMoved] : [pieceWasMoved];
   }
 
   private pieceWasCaptured(squareTo: Square, chosenPiece: Piece): PieceWasCaptured | undefined {
