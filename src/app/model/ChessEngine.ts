@@ -1,5 +1,5 @@
 import { ChessModel } from './ChessModel';
-import { Side, Square, SquareWithPiece } from './Types';
+import { Row, Side, Square, SquareWithPiece } from './Types';
 import { King, Piece } from './pieces';
 import { Player } from './Player';
 import { Chessboard } from './Chessboard';
@@ -29,8 +29,8 @@ export class ChessEngine implements ChessModel {
     if (!this.canMoveOnSquare(squareFrom, squareTo)) {
       throw new Error('Piece can not move to given square.');
     }
-    if (this.willBeKingChecked(byPlayer, squareFrom, squareTo)) {
-      throw new Error(`The player cannot move piece which causes check of his king`);
+    if (this.willBeKingChecked(byPlayer, this.board, squareFrom, squareTo)) {
+      throw new Error(`The player cannot move piece which causes check of his king.`);
     }
 
     const pieceWasMoved: PieceWasMoved = {
@@ -72,11 +72,19 @@ export class ChessEngine implements ChessModel {
     return side === Side.WHITE ? Side.BLACK : Side.WHITE;
   }
 
-  private willBeKingChecked(player: Player, squareFrom: Square, squareTo: Square): boolean {
+  private willBeKingChecked(player: Player, chessboard: Chessboard, squareFrom: Square, squareTo: Square): boolean {
+    let isCheckedSquare = false;
+
     const proposedSquaresWithPiece: SquareWithPiece = { ...this.board.squaresWithPiece };
 
-    // TODO: find king position on new chessboard
-    const kingPosition =
+    const movedPiece = chessboard.onPositionPiece(squareFrom);
+
+    if (movedPiece) {
+      delete proposedSquaresWithPiece[`${squareFrom.column}${squareFrom.row}`];
+      proposedSquaresWithPiece[`${squareTo.column}${squareTo.row}`] = movedPiece;
+    }
+
+    const allyKingPositionKey =
       player.side === Side.WHITE
         ? Object.keys(proposedSquaresWithPiece).find(
             (key) => proposedSquaresWithPiece[key].name === 'King' && proposedSquaresWithPiece[key].side === player.side,
@@ -85,15 +93,42 @@ export class ChessEngine implements ChessModel {
             (key) => proposedSquaresWithPiece[key].name === 'King' && proposedSquaresWithPiece[key].side !== player.side,
           );
 
-    // TODO: set loop where item is every pieces from other side and return type of squares array
-
-    {
-      // TODO: check possible squares where pieces of oponent can move to
+    if (!allyKingPositionKey) {
+      return (isCheckedSquare = false);
     }
 
-    // TODO: if it will be king's square on the above squares (where pieces of oponent can move to), function should return true
+    const kingPosition = {
+      column: allyKingPositionKey[0],
+      row: Number(allyKingPositionKey[1]) as Row,
+    };
+
+    Object.keys(proposedSquaresWithPiece).map((key, index) => {
+      if (proposedSquaresWithPiece[key].side !== player.side) {
+        // TODO: check possible squares where pieces of oponent can move to
+        // TODO: if it will be king's square on the above squares (where pieces of oponent can move to), function should return true
+
+        const enemyPiecePosition = {
+          column: key[0],
+          row: Number(key[1]) as Row,
+        };
+
+        const possiblePieceMoves = proposedSquaresWithPiece[key].possibleMoves(
+          enemyPiecePosition,
+          new Chessboard(proposedSquaresWithPiece),
+        );
+
+        const isKingPositionOnPossibleEnemyPieceMoves = possiblePieceMoves.some(
+          (item) => JSON.stringify(item) == JSON.stringify(kingPosition),
+        );
+
+        if (isKingPositionOnPossibleEnemyPieceMoves) {
+          isCheckedSquare = true;
+        }
+      }
+    });
 
     // DONE: in other way return false
-    return false;
+
+    return isCheckedSquare;
   }
 }
