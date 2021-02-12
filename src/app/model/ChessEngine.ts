@@ -6,15 +6,19 @@ import { Chessboard } from './Chessboard';
 import { PieceWasMoved } from './PieceWasMoved';
 import { PieceWasCaptured } from './PieceWasCaptured';
 import { isDefined } from './HelperFunctions';
+import { KingWasChecked } from './KingWasChecked';
+import { KingWasUnchecked } from './KingWasUnchecked';
 
 export class ChessEngine implements ChessModel {
   private currentSide: Side = Side.WHITE;
   readonly squaresWithPiece: SquareWithPiece;
+  private eventsHistory: (PieceWasMoved | PieceWasCaptured | KingWasChecked | KingWasUnchecked)[] = [];
   constructor(private readonly board: Chessboard) {
     this.squaresWithPiece = board.squaresWithPiece;
   }
 
-  move(byPlayer: Player, squareFrom: Square, squareTo: Square): (PieceWasMoved | PieceWasCaptured)[] {
+  move(byPlayer: Player, squareFrom: Square, squareTo: Square): (PieceWasMoved | PieceWasCaptured | KingWasChecked | KingWasUnchecked)[] {
+    const events = [];
     const chosenPiece = this.board.onPositionPiece(squareFrom);
     if (!chosenPiece) {
       throw new Error('There is no piece on this square.');
@@ -36,9 +40,15 @@ export class ChessEngine implements ChessModel {
       to: squareTo,
     };
     const pieceWasCaptured = this.pieceWasCaptured(squareTo, chosenPiece);
+    if (pieceWasCaptured) {
+      events.push(pieceWasCaptured);
+    }
 
     this.onPieceWasMoved(pieceWasMoved);
-    return pieceWasCaptured ? [pieceWasMoved, pieceWasCaptured] : [pieceWasMoved];
+    events.push(pieceWasMoved);
+
+    // return pieceWasCaptured ? [pieceWasMoved, pieceWasCaptured] : [pieceWasMoved];
+    return events;
   }
 
   private pieceWasCaptured(squareTo: Square, chosenPiece: Piece): PieceWasCaptured | undefined {
