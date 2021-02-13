@@ -13,6 +13,7 @@ export class ChessEngine implements ChessModel {
   private currentSide: Side = Side.WHITE;
   readonly squaresWithPiece: SquareWithPiece;
   private eventsHistory: (PieceWasMoved | PieceWasCaptured | KingWasChecked | KingWasUnchecked)[] = [];
+
   constructor(private readonly board: Chessboard) {
     this.squaresWithPiece = board.squaresWithPiece;
   }
@@ -76,5 +77,11 @@ export class ChessEngine implements ChessModel {
 
   private changeTurn(side: Side): Side {
     return side === Side.WHITE ? Side.BLACK : Side.WHITE;
+  }
+
+  private kingWasChecked(squareTo: Square, chosenPiece: Piece): KingWasChecked | undefined {
+    const possMoves = chosenPiece.possibleMoves(squareTo, this.board);
+    const squaresWithOpponents = possMoves.filter((square) => this.board.onPositionPiece(square)?.isOpponentOf(chosenPiece));
+    const king = squaresWithOpponents.map((square) => this.board.onPositionPiece(square)?.isKing(this.board.onPositionPiece(square)));
   }
 }
