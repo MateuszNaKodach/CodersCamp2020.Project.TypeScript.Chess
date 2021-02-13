@@ -72,13 +72,7 @@ export class ChessEngine implements ChessModel {
   private simulatedChessboardAfterMove(chessboard: Chessboard, squareFrom: Square, squareTo: Square): Chessboard {
     const simulatedChessboard = new Chessboard({ ...chessboard.squaresWithPiece });
     const { squaresWithPiece: proposedSquaresWithPieces } = simulatedChessboard;
-
-    const movedPiece = chessboard.onPositionPiece(squareFrom);
-    const positionFrom = `${squareFrom.column}${squareFrom.row}`;
-    const positionTo = `${squareTo.column}${squareTo.row}`;
-    delete proposedSquaresWithPieces[positionFrom];
-    proposedSquaresWithPieces[positionTo] = movedPiece as Piece;
-
+    simulatedChessboard.movePiece(squareFrom, squareTo);
     return simulatedChessboard;
   }
 
