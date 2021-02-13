@@ -144,117 +144,183 @@ describe('Chess Engine', () => {
     ).toThrowError('There is no piece on this square.');
   });
 
-  describe('If player wants to move piece that check if it causes checking of his king.', () => {
-    const errorMessage = `The player cannot move piece which causes check of his king.`;
+  describe('Return player moves without those that cause his king to check', () => {
     const whiteKing = new King(Side.WHITE);
+    const whiteRook = new Rook(Side.WHITE);
     const blackKing = new King(Side.BLACK);
-    const playerWhite = new Player(Side.WHITE);
+    const blackRook = new Rook(Side.BLACK);
+    // const playerWhite = new Player(Side.WHITE);
 
-    it(`Should not throw error if the king's move doesn't cause his check.`, () => {
+    it(`Should return the same possible moves array if the king's move doesn't cause his check.`, () => {
       const boardWithPieces: SquareWithPiece = {
         A2: whiteKing,
         A8: blackKing,
       };
       const chessboard = new Chessboard(boardWithPieces);
       const engine = new ChessEngine(chessboard);
+      const movedPiecePosition: Square = { column: 'A', row: 2 };
+      const possibleMovesBeforeFiltration = [
+        { column: 'A', row: 1 },
+        { column: 'A', row: 3 },
+        { column: 'B', row: 1 },
+        { column: 'B', row: 2 },
+        { column: 'B', row: 3 },
+      ];
 
-      const squareFrom: Square = { column: 'A', row: 2 };
-      const squareTo: Square = { column: 'A', row: 3 };
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
+
+      const expectedResult = possibleMovesBeforeFiltration;
+      expect(returnedResult).toIncludeSameMembers(expectedResult);
+    });
+
+    it(`Should return possible moves array if the king's move causes his check.`, () => {
+      const boardWithPieces: SquareWithPiece = {
+        A2: whiteKing,
+        A8: blackKing,
+        B8: blackRook,
+      };
+      const chessboard = new Chessboard(boardWithPieces);
+      const engine = new ChessEngine(chessboard);
+      const movedPiecePosition: Square = { column: 'A', row: 2 };
+
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
 
       const expectedResult = [
-        {
-          eventType: 'PieceWasMoved',
-          piece: whiteKing,
-          from: squareFrom,
-          to: squareTo,
-        },
+        { column: 'A', row: 1 },
+        { column: 'A', row: 3 },
       ];
-      expect(engine.move(playerWhite, squareFrom, squareTo)).toIncludeSameMembers(expectedResult);
+      expect(returnedResult).toIncludeSameMembers(expectedResult);
     });
 
-    it(`Should throw an error if the king's move causes his check.`, () => {
-      const boardWithPieces: SquareWithPiece = {
-        A1: whiteKing,
-        B8: new Rook(Side.BLACK),
-        H2: new Rook(Side.BLACK),
-      };
-      const chessboard = new Chessboard(boardWithPieces);
-      const engine = new ChessEngine(chessboard);
-      const playerWhite = new Player(Side.WHITE);
-
-      const squareFrom: Square = { column: 'A', row: 1 };
-      const squareTo: Square = { column: 'A', row: 2 };
-
-      expect(() => engine.move(playerWhite, squareFrom, squareTo)).toThrowError(errorMessage);
-    });
-
-    it(`Should throw an error if the white piece's move causes white king check.`, () => {
-      const boardWithPieces: SquareWithPiece = {
-        A1: whiteKing,
-        A2: new Rook(Side.WHITE),
-        A8: new Rook(Side.BLACK),
-      };
-      const chessboard = new Chessboard(boardWithPieces);
-      const engine = new ChessEngine(chessboard);
-      const playerWhite = new Player(Side.WHITE);
-
-      const squareFrom: Square = { column: 'A', row: 2 };
-      const squareTo: Square = { column: 'G', row: 2 };
-
-      expect(() => engine.move(playerWhite, squareFrom, squareTo)).toThrowError(errorMessage);
-    });
-
-    it(`Should not throw an error if the king is on checked square and the king's move does not cause his check.`, () => {
+    it(`Should return possible moves array if the king's move causes his check but king could capture his enemy whose check possible moves of king.`, () => {
       const boardWithPieces: SquareWithPiece = {
         A2: whiteKing,
-        B5: new Rook(Side.BLACK),
+        A8: blackKing,
+        B3: blackRook,
       };
       const chessboard = new Chessboard(boardWithPieces);
       const engine = new ChessEngine(chessboard);
+      const movedPiecePosition: Square = { column: 'A', row: 2 };
 
-      const squareFrom: Square = { column: 'A', row: 2 };
-      const squareTo: Square = { column: 'A', row: 3 };
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
 
       const expectedResult = [
-        {
-          eventType: 'PieceWasMoved',
-          piece: whiteKing,
-          from: squareFrom,
-          to: squareTo,
-        },
+        { column: 'A', row: 1 },
+        { column: 'B', row: 3 },
       ];
-      expect(engine.move(playerWhite, squareFrom, squareTo)).toIncludeSameMembers(expectedResult);
+      expect(returnedResult).toIncludeSameMembers(expectedResult);
     });
 
-    it(`Should throw an error if the king is on checked square and the king's move causes his check.`, () => {
+    it(`Should return possible moves array if the king's move causes his check but king could capture his enemy whose check possible moves of king.`, () => {
       const boardWithPieces: SquareWithPiece = {
         A2: whiteKing,
-        A5: new Rook(Side.BLACK),
-        B5: new Rook(Side.BLACK),
+        A8: blackKing,
+        B3: blackRook,
       };
       const chessboard = new Chessboard(boardWithPieces);
       const engine = new ChessEngine(chessboard);
+      const movedPiecePosition: Square = { column: 'A', row: 2 };
 
-      const squareFrom: Square = { column: 'A', row: 2 };
-      const squareTo: Square = { column: 'B', row: 3 };
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
 
-      expect(() => engine.move(playerWhite, squareFrom, squareTo)).toThrowError(errorMessage);
+      const expectedResult = [
+        { column: 'A', row: 1 },
+        { column: 'B', row: 3 },
+      ];
+      expect(returnedResult).toIncludeSameMembers(expectedResult);
     });
 
-    it(`Should throw an error if the king is on checked square and the piece's move causes check of his king.`, () => {
+    it(`Should return possible moves array if the king's move causes his check but king cannot capture his enemy whose check possible moves of king.`, () => {
       const boardWithPieces: SquareWithPiece = {
         A2: whiteKing,
-        A3: new Queen(Side.WHITE),
-        A5: new Rook(Side.BLACK),
-        G2: new Rook(Side.BLACK),
+        A8: blackKing,
+        B3: blackRook,
+        B8: blackRook,
       };
       const chessboard = new Chessboard(boardWithPieces);
       const engine = new ChessEngine(chessboard);
+      const movedPiecePosition: Square = { column: 'A', row: 2 };
 
-      const squareFrom: Square = { column: 'A', row: 3 };
-      const squareTo: Square = { column: 'B', row: 2 };
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
 
-      expect(() => engine.move(playerWhite, squareFrom, squareTo)).toThrowError(errorMessage);
+      const expectedResult = [{ column: 'A', row: 1 }];
+      expect(returnedResult).toIncludeSameMembers(expectedResult);
+    });
+
+    it(`Should return possible king's moves array if the king is checked.`, () => {
+      const boardWithPieces: SquareWithPiece = {
+        A2: whiteKing,
+        A7: blackRook,
+        A8: blackKing,
+      };
+      const chessboard = new Chessboard(boardWithPieces);
+      const engine = new ChessEngine(chessboard);
+      const movedPiecePosition: Square = { column: 'A', row: 2 };
+
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
+
+      const expectedResult = [
+        { column: 'B', row: 1 },
+        { column: 'B', row: 2 },
+        { column: 'B', row: 3 },
+      ];
+      expect(returnedResult).toIncludeSameMembers(expectedResult);
+    });
+
+    it(`Should return possible rook's moves array if the rook's move causes his king check`, () => {
+      const boardWithPieces: SquareWithPiece = {
+        A2: whiteKing,
+        A3: whiteRook,
+        A7: blackRook,
+        A8: blackKing,
+      };
+      const chessboard = new Chessboard(boardWithPieces);
+      const engine = new ChessEngine(chessboard);
+      const movedPiecePosition: Square = { column: 'A', row: 3 };
+
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
+
+      const expectedResult = [
+        { column: 'A', row: 4 },
+        { column: 'A', row: 5 },
+        { column: 'A', row: 6 },
+        { column: 'A', row: 7 },
+      ];
+      expect(returnedResult).toIncludeSameMembers(expectedResult);
+    });
+
+    it(`Should return empty possible rook's moves array if the king is checked and rook's move causes his king check`, () => {
+      const boardWithPieces: SquareWithPiece = {
+        A1: whiteRook,
+        A2: whiteKing,
+        A7: blackRook,
+        A8: blackKing,
+      };
+      const chessboard = new Chessboard(boardWithPieces);
+      const engine = new ChessEngine(chessboard);
+      const movedPiecePosition: Square = { column: 'A', row: 1 };
+
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
+
+      const expectedResult = [] as Square[];
+      expect(returnedResult).toIncludeSameMembers(expectedResult);
+    });
+
+    it(`Should return empty possible king's moves array if it's checkmate`, () => {
+      const boardWithPieces: SquareWithPiece = {
+        A2: whiteKing,
+        A7: blackRook,
+        A8: blackKing,
+        B7: blackRook,
+      };
+      const chessboard = new Chessboard(boardWithPieces);
+      const engine = new ChessEngine(chessboard);
+      const movedPiecePosition: Square = { column: 'A', row: 2 };
+
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
+
+      const expectedResult = [] as Square[];
+      expect(returnedResult).toIncludeSameMembers(expectedResult);
     });
   });
 });

@@ -8,5 +8,11 @@ export class ConsoleChessBoardView implements ChessBoardView {
     console.log('Tutaj bysmy wyswietlili szachownice na konsoli');
   }
 
-  showSelectedPiece(position: { x: number; y: number }): void {}
+  showSelectedPiece(id: string): void {}
+
+  hideAllAvailableMoves(): void {}
+
+  hideSelection(): void {}
+
+  showAvailableMoves(squaresToHighlight: string[]): void {}
 }
