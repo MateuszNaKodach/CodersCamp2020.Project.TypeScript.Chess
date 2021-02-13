@@ -1,4 +1,4 @@
-import { Side, Square, SquareWithPiece, ChessEngine, Chessboard, Pawn, Queen, Knight } from '../../../src/app/model';
+import { Side, Square, SquareWithPiece, ChessEngine, Chessboard, Pawn, Queen, Knight, Bishop, King } from '../../../src/app/model';
 import 'jest-extended';
 
 describe('Chess Engine', () => {
@@ -115,11 +115,10 @@ describe('Chess Engine', () => {
     const boardWithPieces: SquareWithPiece = { D8: blackPiece, F4: whitePiece };
     const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
-    const playerWhite = new Player(Side.WHITE);
     const bishopSquareFrom: Square = { column: 'F', row: 4 };
     const bishopSquareTo: Square = { column: 'G', row: 5 };
 
-    expect(engine.move(playerWhite, bishopSquareFrom, bishopSquareTo)).toIncludeSameMembers([
+    expect(engine.move(bishopSquareFrom, bishopSquareTo)).toIncludeSameMembers([
       {
         eventType: 'PieceWasMoved',
         piece: whitePiece,
@@ -140,16 +139,14 @@ describe('Chess Engine', () => {
     const boardWithPieces: SquareWithPiece = { D8: blackPiece, F4: whitePiece };
     const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
-    const playerBlack = new Player(Side.BLACK);
     const kingSquareFrom: Square = { column: 'D', row: 8 };
     const kingSquareTo: Square = { column: 'D', row: 7 };
-    const playerWhite = new Player(Side.WHITE);
     const bishopSquareFrom: Square = { column: 'F', row: 4 };
     const bishopSquareTo: Square = { column: 'G', row: 5 };
 
-    engine.move(playerWhite, bishopSquareFrom, bishopSquareTo);
+    engine.move(bishopSquareFrom, bishopSquareTo);
 
-    expect(engine.move(playerBlack, kingSquareFrom, kingSquareTo)).toIncludeSameMembers([
+    expect(engine.move(kingSquareFrom, kingSquareTo)).toIncludeSameMembers([
       {
         eventType: 'PieceWasMoved',
         piece: whitePiece,
