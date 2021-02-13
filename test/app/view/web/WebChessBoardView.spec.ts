@@ -6,7 +6,7 @@ import { WebChessView } from '../../../../src/app/view/web/WebChessView';
 import { ViewEventBus } from '../../../../src/app/view/events/ViewEventBus';
 import { SquareWasClicked } from '../../../../src/app/view/events/SquareWasClicked';
 import { PiecesBoardPositions } from '../../../../src/app/view/Types';
-import { Side } from '../../../../src/app/model/Types';
+import { Side } from '../../../../src/app/model';
 
 describe('Web Chess Board View with starting pieces positions', () => {
   const publishViewEventMock = jest.fn();
