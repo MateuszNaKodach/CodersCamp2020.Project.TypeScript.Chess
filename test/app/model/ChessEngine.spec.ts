@@ -171,12 +171,14 @@ describe('Chess Engine', () => {
     const squareFrom: Square = { column: 'H', row: 2 };
     const squareTo: Square = { column: 'H', row: 1 };
 
+    engine.move(whitePlayer, { column: 'A', row: 2 }, { column: 'A', row: 3 });
+
     expect(engine.move(blackPlayer, squareFrom, squareTo)).toIncludeSameMembers([
       { eventType: 'PieceWasMoved', piece: blackPawn, from: squareFrom, to: squareTo },
       { eventType: 'PawnPromotionWasEnabled', onSquare: squareTo, pawn: blackPawn },
     ]);
 
-    expect(() => engine.move(whitePlayer, { column: 'A', row: 2 }, { column: 'A', row: 3 })).toThrowError(
+    expect(() => engine.move(whitePlayer, { column: 'A', row: 3 }, { column: 'A', row: 4 })).toThrowError(
       'No move is possible until promotion is done.',
     );
   });
