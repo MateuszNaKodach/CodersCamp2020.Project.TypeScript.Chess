@@ -82,4 +82,54 @@ describe('Web Chess Board View with starting pieces positions', () => {
 
     expect(e4Square).toBeEmptyDOMElement();
   });
+
+  it('Should highlight square, when clicked', async () => {
+    const a1Square = await screen.findByTestId('a1');
+
+    chessBoardView.showSelectedPiece(a1Square.id);
+
+    expect(a1Square).toHaveClass('square--selected');
+  });
+
+  it('Should hide selection of every selected square', async () => {
+    const a1Square = await screen.findByTestId('a1');
+    const e7Square = await screen.findByTestId('e7');
+    const f8Square = await screen.findByTestId('f8');
+
+    chessBoardView.hideSelection();
+
+    expect(a1Square).not.toHaveClass('square--selected');
+    expect(e7Square).not.toHaveClass('square--selected');
+    expect(f8Square).not.toHaveClass('square--selected');
+  });
+
+  it('Should highlight all possible squares to move', async () => {
+    const a3Square = await screen.findByTestId('a3');
+    const a4Square = await screen.findByTestId('a4');
+    const a5Square = await screen.findByTestId('a5');
+
+    chessBoardView.showAvailableMoves(['a3', 'a4', 'a5']);
+
+    expect(a3Square).toHaveClass('square--possibleMove');
+    expect(a4Square).toHaveClass('square--possibleMove');
+    expect(a5Square).toHaveClass('square--possibleMove');
+  });
+
+  it('Should remove highlight from all squares', async () => {
+    const a3Square = await screen.findByTestId('a3');
+    const a4Square = await screen.findByTestId('a4');
+    const a5Square = await screen.findByTestId('a5');
+
+    chessBoardView.showAvailableMoves(['a3', 'a4', 'a5']);
+
+    expect(a3Square).toHaveClass('square--possibleMove');
+    expect(a4Square).toHaveClass('square--possibleMove');
+    expect(a5Square).toHaveClass('square--possibleMove');
+
+    chessBoardView.hideAllAvailableMoves();
+
+    expect(a3Square).not.toHaveClass('square--possibleMove');
+    expect(a4Square).not.toHaveClass('square--possibleMove');
+    expect(a5Square).not.toHaveClass('square--possibleMove');
+  });
 });
