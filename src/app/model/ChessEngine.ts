@@ -98,7 +98,7 @@ export class ChessEngine implements ChessModel {
         position: { column: squareKey[0], row: Number(squareKey[1]) as Row },
         piece: squaresWithPieces[squareKey],
       }))
-      .filter(({ piece }) => piece.side !== playerSide) //Skoro rozpatrujemy tylko przeciwnikow, tak sie mozemy pozbyc ifa. Moznaby to sprawdzanie dac do klasy Piece.
+      .filter(({ piece }) => piece.side !== playerSide)
       .map(({ position, piece }) => piece.possibleMoves(position, chessboard))
       .some((piecePossibleMoves) =>
         piecePossibleMoves.some((moveSquare) => moveSquare.column === positionToControl.column && moveSquare.row === positionToControl.row),
