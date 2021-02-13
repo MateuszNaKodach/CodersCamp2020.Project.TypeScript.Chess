@@ -75,7 +75,7 @@ export class ChessEngine implements ChessModel {
     return simulatedChessboard;
   }
 
-  public kingPosition(chessboard: Chessboard, kingSide: Side): Square | undefined {
+  private kingPosition(chessboard: Chessboard, kingSide: Side): Square | undefined {
     const { squaresWithPiece: squaresWithPieces } = chessboard;
     const kingPositionKey = Object.keys(squaresWithPieces).find((key) => {
       const isKingName = squaresWithPieces[key].name === 'King';
@@ -91,7 +91,7 @@ export class ChessEngine implements ChessModel {
     return kingPosition;
   }
 
-  public isSquareChecked(chessboard: Chessboard, playerSide: Side, positionToControl: Square): boolean {
+  private isSquareChecked(chessboard: Chessboard, playerSide: Side, positionToControl: Square): boolean {
     const squaresWithPieces = chessboard.squaresWithPiece;
     return Object.keys(squaresWithPieces)
       .map((squareKey) => ({
@@ -105,24 +105,24 @@ export class ChessEngine implements ChessModel {
       );
   }
 
-  public isKingChecked(chessboard: Chessboard, kingSide: Side): boolean {
+  private isKingChecked(chessboard: Chessboard, kingSide: Side): boolean {
     const kingPosition = this.kingPosition(chessboard, kingSide);
     return kingPosition ? this.isSquareChecked(chessboard, kingSide, kingPosition) : false;
   }
 
-  willBeKingChecked(squareFrom: Square, squareTo: Square): boolean {
+  private willBeKingChecked(squareFrom: Square, squareTo: Square): boolean {
     const chessboard: Chessboard = this.board;
     const wirtualPorposedChessboard = this.simulatedChessboardAfterMove(chessboard, squareFrom, squareTo);
     return this.isKingChecked(wirtualPorposedChessboard, this.currentSide);
   }
 
-  pieceMovesNotCausingAllyKingCheckmate(position: Square): Square[] {
+  private pieceMovesNotCausingAllyKingCheckmate(position: Square): Square[] {
     const initialPossibleMoves = this.board.onPositionPiece(position)?.possibleMoves(position, this.board) ?? [];
     const filteringFunction = (onePossibleMove: Square) => !this.willBeKingChecked(position, onePossibleMove);
     return initialPossibleMoves.filter(filteringFunction);
   }
 
-  possibleMoves(position: Square): Square[] {
+  public possibleMoves(position: Square): Square[] {
     return this.pieceMovesNotCausingAllyKingCheckmate(position);
   }
 }
