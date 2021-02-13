@@ -13,16 +13,13 @@ export class ChessEngine implements ChessModel {
     this.squaresWithPiece = board.squaresWithPiece;
   }
 
-  move(side: Side, squareFrom: Square, squareTo: Square): (PieceWasMoved | PieceWasCaptured)[] {
+  move(squareFrom: Square, squareTo: Square): (PieceWasMoved | PieceWasCaptured)[] {
     const chosenPiece = this.board.onPositionPiece(squareFrom);
     if (!chosenPiece) {
       throw new Error('There is no piece on this square.');
     }
-    if (side !== this.currentSide) {
+    if (chosenPiece.side !== this.currentSide) {
       throw new Error(`It's not Your turn.`);
-    }
-    if (side !== chosenPiece.side) {
-      throw new Error('Player can not move other players pieces.');
     }
     if (!this.canMoveOnSquare(squareFrom, squareTo)) {
       throw new Error('Piece can not move to given square.');

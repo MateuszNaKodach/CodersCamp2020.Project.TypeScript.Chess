@@ -16,7 +16,7 @@ describe('Chess Engine', () => {
     const squareFrom: Square = { column: 'A', row: 2 };
     const squareTo: Square = { column: 'A', row: 3 };
 
-    expect(engine.move(Side.WHITE, squareFrom, squareTo)).toIncludeSameMembers([
+    expect(engine.move(squareFrom, squareTo)).toIncludeSameMembers([
       {
         eventType: 'PieceWasMoved',
         piece: whitePiece,
@@ -35,7 +35,7 @@ describe('Chess Engine', () => {
     const squareFrom: Square = { column: 'A', row: 2 };
     const squareTo: Square = { column: 'A', row: 4 };
 
-    expect(engine.move(Side.WHITE, squareFrom, squareTo)).toIncludeSameMembers([
+    expect(engine.move(squareFrom, squareTo)).toIncludeSameMembers([
       { eventType: 'PieceWasCaptured', piece: blackPiece, onSquare: squareTo },
       { eventType: 'PieceWasMoved', piece: whitePiece, from: squareFrom, to: squareTo },
     ]);
@@ -49,9 +49,9 @@ describe('Chess Engine', () => {
     const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
 
-    engine.move(Side.WHITE, { column: 'C', row: 2 }, { column: 'C', row: 3 });
-    engine.move(Side.BLACK, { column: 'B', row: 4 }, { column: 'C', row: 3 });
-    expect(engine.move(Side.WHITE, { column: 'B', row: 1 }, { column: 'C', row: 3 })).toIncludeSameMembers([
+    engine.move({ column: 'C', row: 2 }, { column: 'C', row: 3 });
+    engine.move({ column: 'B', row: 4 }, { column: 'C', row: 3 });
+    expect(engine.move({ column: 'B', row: 1 }, { column: 'C', row: 3 })).toIncludeSameMembers([
       { eventType: 'PieceWasCaptured', piece: blackPawn, onSquare: { column: 'C', row: 3 } },
       { eventType: 'PieceWasMoved', piece: whiteKnight, from: { column: 'B', row: 1 }, to: { column: 'C', row: 3 } },
     ]);
@@ -66,7 +66,7 @@ describe('Chess Engine', () => {
     const squareFrom: Square = { column: 'A', row: 2 };
     const squareTo: Square = { column: 'A', row: 4 };
 
-    expect(() => engine.move(Side.WHITE, squareFrom, squareTo)).toThrowError('Player can not move other players pieces.');
+    expect(() => engine.move(squareFrom, squareTo)).toThrowError("It's not Your turn.");
   });
 
   it('Should throw an Error if player wants to move piece to not available square', () => {
@@ -77,7 +77,7 @@ describe('Chess Engine', () => {
     const squareFrom: Square = { column: 'A', row: 2 };
     const squareTo: Square = { column: 'A', row: 5 };
 
-    expect(() => engine.move(Side.WHITE, squareFrom, squareTo)).toThrowError('Piece can not move to given square.');
+    expect(() => engine.move(squareFrom, squareTo)).toThrowError('Piece can not move to given square.');
   });
 
   it('Should throw an Error if player wants to move twice', () => {
@@ -89,9 +89,9 @@ describe('Chess Engine', () => {
     const squareMiddle: Square = { column: 'A', row: 3 };
     const squareFinish: Square = { column: 'A', row: 4 };
 
-    engine.move(Side.WHITE, squareStart, squareMiddle);
+    engine.move(squareStart, squareMiddle);
 
-    expect(() => engine.move(Side.WHITE, squareMiddle, squareFinish)).toThrowError(`It's not Your turn.`);
+    expect(() => engine.move(squareMiddle, squareFinish)).toThrowError(`It's not Your turn.`);
   });
 
   it('Should throw an Error if player wants to move piece that was just captured', () => {
@@ -101,18 +101,9 @@ describe('Chess Engine', () => {
     const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
 
-    engine.move(Side.WHITE, { column: 'A', row: 2 }, { column: 'A', row: 6 });
+    engine.move({ column: 'A', row: 2 }, { column: 'A', row: 6 });
 
-    expect(() =>
-      engine.move(
-        Side.BLACK,
-        { column: 'A', row: 6 },
-        {
-          column: 'A',
-          row: 5,
-        },
-      ),
-    ).toThrowError('Player can not move other players pieces.');
+    expect(() => engine.move({ column: 'A', row: 6 }, { column: 'A', row: 5 })).toThrowError("It's not Your turn.");
   });
 
   it('Should throw an Error if chosen square is not occupied', () => {
@@ -120,15 +111,6 @@ describe('Chess Engine', () => {
     const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
 
-    expect(() =>
-      engine.move(
-        Side.WHITE,
-        { column: 'A', row: 2 },
-        {
-          column: 'A',
-          row: 6,
-        },
-      ),
-    ).toThrowError('There is no piece on this square.');
+    expect(() => engine.move({ column: 'A', row: 2 }, { column: 'A', row: 6 })).toThrowError('There is no piece on this square.');
   });
 });
