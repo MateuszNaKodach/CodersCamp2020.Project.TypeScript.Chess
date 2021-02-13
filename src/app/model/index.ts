@@ -1,7 +1,7 @@
 export * from './Chessboard';
 export * from './ChessEngine';
 export * from './ChessModel';
-export * from './Constances';
+export * from './constances/BoardSize';
 export * from './HelperFunctions';
 export * from './PieceMoves';
 export * from './PiecePossibleMoves';
@@ -10,3 +10,4 @@ export * from './PieceWasCaptured';
 export * from './PieceWasMoved';
 export * from './pieces';
 export * from './Types';
+export { PIECES_START_POSITION } from './constances/PiecesStartPosition';
