@@ -8,7 +8,6 @@ export * from './PiecePossibleMoves';
 export * from './PiecesPositions';
 export * from './PieceWasCaptured';
 export * from './PieceWasMoved';
-export * from './Player';
 export * from './pieces';
 export * from './Types';
 export { PIECES_START_POSITION } from './constances/PiecesStartPosition';
