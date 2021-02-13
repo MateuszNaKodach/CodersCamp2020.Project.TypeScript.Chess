@@ -167,7 +167,7 @@ describe('Chess Engine', () => {
         { column: 'B', row: 3 },
       ];
 
-      const returnedResult = engine.returnPlayerMovesWithoutThoseThatCauseHisKingToCheck(movedPiecePosition);
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
 
       const expectedResult = possibleMovesBeforeFiltration;
       expect(returnedResult).toIncludeSameMembers(expectedResult);
@@ -183,7 +183,7 @@ describe('Chess Engine', () => {
       const engine = new ChessEngine(chessboard);
       const movedPiecePosition: Square = { column: 'A', row: 2 };
 
-      const returnedResult = engine.returnPlayerMovesWithoutThoseThatCauseHisKingToCheck(movedPiecePosition);
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
 
       const expectedResult = [
         { column: 'A', row: 1 },
@@ -202,7 +202,7 @@ describe('Chess Engine', () => {
       const engine = new ChessEngine(chessboard);
       const movedPiecePosition: Square = { column: 'A', row: 2 };
 
-      const returnedResult = engine.returnPlayerMovesWithoutThoseThatCauseHisKingToCheck(movedPiecePosition);
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
 
       const expectedResult = [
         { column: 'A', row: 1 },
@@ -221,7 +221,7 @@ describe('Chess Engine', () => {
       const engine = new ChessEngine(chessboard);
       const movedPiecePosition: Square = { column: 'A', row: 2 };
 
-      const returnedResult = engine.returnPlayerMovesWithoutThoseThatCauseHisKingToCheck(movedPiecePosition);
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
 
       const expectedResult = [
         { column: 'A', row: 1 },
@@ -241,7 +241,7 @@ describe('Chess Engine', () => {
       const engine = new ChessEngine(chessboard);
       const movedPiecePosition: Square = { column: 'A', row: 2 };
 
-      const returnedResult = engine.returnPlayerMovesWithoutThoseThatCauseHisKingToCheck(movedPiecePosition);
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
 
       const expectedResult = [{ column: 'A', row: 1 }];
       expect(returnedResult).toIncludeSameMembers(expectedResult);
@@ -257,7 +257,7 @@ describe('Chess Engine', () => {
       const engine = new ChessEngine(chessboard);
       const movedPiecePosition: Square = { column: 'A', row: 2 };
 
-      const returnedResult = engine.returnPlayerMovesWithoutThoseThatCauseHisKingToCheck(movedPiecePosition);
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
 
       const expectedResult = [
         { column: 'B', row: 1 },
@@ -278,7 +278,7 @@ describe('Chess Engine', () => {
       const engine = new ChessEngine(chessboard);
       const movedPiecePosition: Square = { column: 'A', row: 3 };
 
-      const returnedResult = engine.returnPlayerMovesWithoutThoseThatCauseHisKingToCheck(movedPiecePosition);
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
 
       const expectedResult = [
         { column: 'A', row: 4 },
@@ -300,7 +300,7 @@ describe('Chess Engine', () => {
       const engine = new ChessEngine(chessboard);
       const movedPiecePosition: Square = { column: 'A', row: 1 };
 
-      const returnedResult = engine.returnPlayerMovesWithoutThoseThatCauseHisKingToCheck(movedPiecePosition);
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
 
       const expectedResult = [] as Square[];
       expect(returnedResult).toIncludeSameMembers(expectedResult);
@@ -317,7 +317,7 @@ describe('Chess Engine', () => {
       const engine = new ChessEngine(chessboard);
       const movedPiecePosition: Square = { column: 'A', row: 2 };
 
-      const returnedResult = engine.returnPlayerMovesWithoutThoseThatCauseHisKingToCheck(movedPiecePosition);
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
 
       const expectedResult = [] as Square[];
       expect(returnedResult).toIncludeSameMembers(expectedResult);
