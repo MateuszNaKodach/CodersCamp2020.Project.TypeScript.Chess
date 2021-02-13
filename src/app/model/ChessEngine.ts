@@ -1,10 +1,11 @@
 import { ChessModel } from './ChessModel';
 import { Side, Square, SquareWithPiece } from './Types';
-import { Piece } from './pieces';
+import { Pawn, Piece } from './pieces';
 import { Player } from './Player';
 import { Chessboard } from './Chessboard';
 import { PieceWasMoved } from './PieceWasMoved';
 import { PieceWasCaptured } from './PieceWasCaptured';
+import { PawnPromotionWasEnabled } from './PawnPromotionWasEnabled';
 import { isDefined } from './HelperFunctions';
 
 export class ChessEngine implements ChessModel {
@@ -14,7 +15,7 @@ export class ChessEngine implements ChessModel {
     this.squaresWithPiece = board.squaresWithPiece;
   }
 
-  move(byPlayer: Player, squareFrom: Square, squareTo: Square): (PieceWasMoved | PieceWasCaptured)[] {
+  move(byPlayer: Player, squareFrom: Square, squareTo: Square): (PieceWasMoved | PieceWasCaptured | PawnPromotionWasEnabled)[] {
     const chosenPiece = this.board.onPositionPiece(squareFrom);
     if (!chosenPiece) {
       throw new Error('There is no piece on this square.');
@@ -37,8 +38,9 @@ export class ChessEngine implements ChessModel {
     };
     const pieceWasCaptured = this.pieceWasCaptured(squareTo, chosenPiece);
 
+    const pawnPromotionWasEnabled = chosenPiece instanceof Pawn ? this.pawnPromotionWasEnabled(chosenPiece, squareTo) : undefined;
     this.onPieceWasMoved(pieceWasMoved);
-    return pieceWasCaptured ? [pieceWasMoved, pieceWasCaptured] : [pieceWasMoved];
+    return [pieceWasMoved, pieceWasCaptured, pawnPromotionWasEnabled].filter(isDefined);
   }
 
   private pieceWasCaptured(squareTo: Square, chosenPiece: Piece): PieceWasCaptured | undefined {
@@ -48,6 +50,16 @@ export class ChessEngine implements ChessModel {
           eventType: 'PieceWasCaptured',
           piece: pieceOnSquare,
           onSquare: squareTo,
+        }
+      : undefined;
+  }
+
+  private pawnPromotionWasEnabled(chosenPiece: Pawn, squareTo: Square): PawnPromotionWasEnabled | undefined {
+    return (chosenPiece.side === Side.WHITE && squareTo.row === 8) || (chosenPiece.side === Side.BLACK && squareTo.row === 1)
+      ? {
+          eventType: 'PawnPromotionWasEnabled',
+          onSquare: squareTo,
+          pawn: chosenPiece,
         }
       : undefined;
   }

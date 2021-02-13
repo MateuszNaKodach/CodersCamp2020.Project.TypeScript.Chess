@@ -4,6 +4,7 @@ export * from './ChessModel';
 export * from './Constances';
 export * from './HelperFunctions';
 export * from './PieceMoves';
+export * from './PawnPromotionWasEnabled';
 export * from './PiecePossibleMoves';
 export * from './PiecesPositions';
 export * from './PieceWasCaptured';
