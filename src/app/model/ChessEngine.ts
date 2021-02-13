@@ -69,8 +69,8 @@ export class ChessEngine implements ChessModel {
     return side === Side.WHITE ? Side.BLACK : Side.WHITE;
   }
 
-  private simulatedChessboardAfterMove(chessboard: Chessboard, squareFrom: Square, squareTo: Square): Chessboard {
-    const simulatedChessboard = new Chessboard({ ...chessboard.squaresWithPiece });
+  private simulatedChessboardAfterMove(squareFrom: Square, squareTo: Square): Chessboard {
+    const simulatedChessboard = new Chessboard({ ...this.board.squaresWithPiece });
     simulatedChessboard.movePiece(squareFrom, squareTo);
     return simulatedChessboard;
   }
@@ -82,13 +82,12 @@ export class ChessEngine implements ChessModel {
       const isPlayerSide = squaresWithPieces[key].side === kingSide;
       return isKingName && isPlayerSide;
     });
-    const kingPosition = kingPositionKey
+    return kingPositionKey
       ? {
           column: kingPositionKey[0],
           row: Number(kingPositionKey[1]) as Row,
         }
       : undefined;
-    return kingPosition;
   }
 
   private isSquareChecked(chessboard: Chessboard, playerSide: Side, positionToControl: Square): boolean {
@@ -111,9 +110,8 @@ export class ChessEngine implements ChessModel {
   }
 
   private willBeKingChecked(squareFrom: Square, squareTo: Square): boolean {
-    const chessboard: Chessboard = this.board;
-    const wirtualPorposedChessboard = this.simulatedChessboardAfterMove(chessboard, squareFrom, squareTo);
-    return this.isKingChecked(wirtualPorposedChessboard, this.currentSide);
+    const simulatedChessboard = this.simulatedChessboardAfterMove(squareFrom, squareTo);
+    return this.isKingChecked(simulatedChessboard, this.currentSide);
   }
 
   private pieceMovesNotCausingAllyKingCheckmate(position: Square): Square[] {
