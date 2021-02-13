@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { ChessBoardView } from '../../../src/app/view/ChessBoardView';
-import { ChessModel, PIECES_START_POSITION, Square } from '../../../src/app/model';
+import { ChessModel, Square } from '../../../src/app/model';
 import { ChessBoardPresenter } from '../../../src/app/presenter/ChessBoardPresenter';
 import { ViewEventBus } from '../../../src/app/view/events/ViewEventBus';
 import { ViewEvent } from '../../../src/app/view/events/ViewEvent';
