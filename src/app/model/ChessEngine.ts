@@ -141,6 +141,7 @@ export class ChessEngine implements ChessModel {
   private kingWasChecked(chosenPiece: Piece): KingWasChecked | undefined {
     const kingsSide = chosenPiece.side === Side.WHITE ? Side.BLACK : Side.WHITE;
     const kingPosition = this.kingPosition(this.board, kingsSide);
+    // poniższe brzydkie i mi się nie podoba, ale na razie działa - możecie podpowiedzieć zmiany :)
     let king;
     if (kingPosition) {
       king = this.board.onPositionPiece(kingPosition);
