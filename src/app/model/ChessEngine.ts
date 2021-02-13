@@ -85,25 +85,23 @@ export class ChessEngine implements ChessModel {
 
   public static kingPosition(chessboard: Chessboard, kingSide: Side): Square | undefined {
     const { squaresWithPiece: squaresWithPieces } = chessboard;
-
-    const allyKingPositionKey = Object.keys(squaresWithPieces).find((key) => {
+    const kingPositionKey = Object.keys(squaresWithPieces).find((key) => {
       const isKingName = squaresWithPieces[key].name === 'King';
       const isPlayerSide = squaresWithPieces[key].side === kingSide;
       return isKingName && isPlayerSide;
     });
+    const kingPosition = kingPositionKey
+      ? {
+          column: kingPositionKey[0],
+          row: Number(kingPositionKey[1]) as Row,
+        }
+      : undefined;
 
-    if (!allyKingPositionKey) return undefined;
-
-    const kingPosition = {
-      column: allyKingPositionKey[0],
-      row: Number(allyKingPositionKey[1]) as Row,
-    };
     return kingPosition;
   }
 
   public static isSquareChecked(chessboard: Chessboard, playerSide: Side, positionToControl: Square): boolean {
     let isCheckedSquareFlag = false;
-
     const { squaresWithPiece: squaresWithPieces } = chessboard;
 
     Object.keys(squaresWithPieces).forEach((key) => {
@@ -119,8 +117,7 @@ export class ChessEngine implements ChessModel {
         const isKingPositionOnPossibleEnemyPieceMoves = possibleMappedPieceMoves.some(
           (checkedPosition) => JSON.stringify(checkedPosition) == JSON.stringify(positionToControl),
         );
-
-        if (isKingPositionOnPossibleEnemyPieceMoves) isCheckedSquareFlag = isKingPositionOnPossibleEnemyPieceMoves;
+        if (isKingPositionOnPossibleEnemyPieceMoves) isCheckedSquareFlag = true;
       }
     });
     return isCheckedSquareFlag;
