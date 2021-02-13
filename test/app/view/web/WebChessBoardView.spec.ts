@@ -134,7 +134,7 @@ describe('Web Chess Board View with starting pieces positions', () => {
   });
 });
 
-describe('Web Chess Board View during move and captures methods', () => {
+describe('Web Chess Board View during move and capture methods', () => {
   const publishViewEventMock = jest.fn();
   const viewEventBus: ViewEventBus = {
     listenOn: jest.fn(),
