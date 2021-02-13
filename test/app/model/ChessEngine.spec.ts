@@ -142,4 +142,42 @@ describe('Chess Engine', () => {
       ),
     ).toThrowError('There is no piece on this square.');
   });
+
+  it('When white pawn reaches the last row, pawn promotion is enabled', () => {
+    const whitePawn = new Pawn(Side.WHITE);
+    const blackKnight = new Knight(Side.BLACK);
+    const boardWithPieces: SquareWithPiece = { A7: whitePawn, B8: blackKnight };
+    const chessBoard = new Chessboard(boardWithPieces);
+    const engine = new ChessEngine(chessBoard);
+    const whitePlayer = new Player(Side.WHITE);
+    const squareFrom: Square = { column: 'A', row: 7 };
+    const squareTo: Square = { column: 'B', row: 8 };
+
+    expect(engine.move(whitePlayer, squareFrom, squareTo)).toIncludeSameMembers([
+      { eventType: 'PieceWasCaptured', piece: blackKnight, onSquare: squareTo },
+      { eventType: 'PieceWasMoved', piece: whitePawn, from: squareFrom, to: squareTo },
+      { eventType: 'PawnPromotionWasEnabled', onSquare: squareTo, pawn: whitePawn },
+    ]);
+  });
+
+  it('When black pawn reaches the last row, no move is possible until promotion is done', () => {
+    const whitePawn = new Pawn(Side.WHITE);
+    const blackPawn = new Pawn(Side.BLACK);
+    const boardWithPieces: SquareWithPiece = { A2: whitePawn, H2: blackPawn };
+    const chessBoard = new Chessboard(boardWithPieces);
+    const engine = new ChessEngine(chessBoard);
+    const whitePlayer = new Player(Side.WHITE);
+    const blackPlayer = new Player(Side.BLACK);
+    const squareFrom: Square = { column: 'H', row: 2 };
+    const squareTo: Square = { column: 'H', row: 1 };
+
+    expect(engine.move(blackPlayer, squareFrom, squareTo)).toIncludeSameMembers([
+      { eventType: 'PieceWasMoved', piece: blackPawn, from: squareFrom, to: squareTo },
+      { eventType: 'PawnPromotionWasEnabled', onSquare: squareTo, pawn: blackPawn },
+    ]);
+
+    expect(() => engine.move(whitePlayer, { column: 'A', row: 2 }, { column: 'A', row: 3 })).toThrowError(
+      'No move is possible until promotion is done.',
+    );
+  });
 });
