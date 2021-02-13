@@ -21,14 +21,35 @@ export class WebChessView implements ChessBoardView {
     this.viewEventBus.listenOn(eventType, reaction);
   }
 
-  showSelectedPiece(position: { x: number; y: number }): void {}
+  showSelectedPiece(id: string): void {
+    if (this.parent.querySelector(`#${id}`)?.hasChildNodes()) {
+      this.parent.querySelector(`#${id}`)?.classList.add('square--selected');
+    }
+  }
+
+  hideSelection(): void {
+    this.parent.querySelectorAll('.square')?.forEach((square) => {
+      square.classList.remove('square--selected');
+    });
+  }
+
+  showAvailableMoves(squaresToHighlight: string[]): void {
+    squaresToHighlight.forEach((square) => {
+      this.parent.querySelector(`#${square}`)?.classList.add('square--possibleMove');
+    });
+  }
+
+  hideAllAvailableMoves(): void {
+    this.parent.querySelectorAll('.square')?.forEach((square) => {
+      square.classList.remove('square--possibleMove');
+    });
+  }
 
   private renderPiecesOnBoard(piecesPositions: PiecesBoardPositions) {
     Object.keys(piecesPositions)
       .map((square) => {
         const pieceName = piecesPositions[square].name.toLowerCase();
         const pieceSide = piecesPositions[square].side.toLowerCase();
-
         const pieceImage = `static/img/pieces/${pieceSide}-${pieceName}.svg`;
         return { path: pieceImage, squareId: `#${square.toLowerCase()}`, square: square };
       })
