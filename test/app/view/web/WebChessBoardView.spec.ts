@@ -135,6 +135,9 @@ describe('Web Chess Board View with starting pieces positions', () => {
 });
 
 describe('Web Chess Board View during move and capture methods', () => {
+  beforeEach(() => {
+    document.body.innerHTML = '';
+  });
   const publishViewEventMock = jest.fn();
   const viewEventBus: ViewEventBus = {
     listenOn: jest.fn(),
@@ -184,7 +187,7 @@ describe('Web Chess Board View during move and capture methods', () => {
     const d5BlackPawn = await screen.findByTestId('d5-img');
 
     chessBoardView.capturePiece('d5');
-    chessBoardView.movePiece('a2', 'a3');
+    chessBoardView.movePiece('e4', 'd5');
 
     expect(d5Square).not.toContainElement(d5BlackPawn);
     expect(e4Square).not.toContainElement(e4WhitePawn);
