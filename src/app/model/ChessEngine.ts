@@ -1,6 +1,6 @@
 import { ChessModel } from './ChessModel';
 import { Row, Side, Square, SquareWithPiece } from './Types';
-import { Piece } from './pieces';
+import { King, Piece } from './pieces';
 import { Chessboard } from './Chessboard';
 import { PieceWasMoved } from './PieceWasMoved';
 import { PieceWasCaptured } from './PieceWasCaptured';
@@ -18,7 +18,7 @@ export class ChessEngine implements ChessModel {
     this.squaresWithPiece = board.squaresWithPiece;
   }
 
-  move(squareFrom: Square, squareTo: Square): (PieceWasMoved | PieceWasCaptured)[] {
+  move(squareFrom: Square, squareTo: Square): (PieceWasMoved | PieceWasCaptured | KingWasChecked)[] {
     const events = [];
     const chosenPiece = this.board.onPositionPiece(squareFrom);
     if (!chosenPiece) {
@@ -45,7 +45,10 @@ export class ChessEngine implements ChessModel {
     this.onPieceWasMoved(pieceWasMoved);
     events.push(pieceWasMoved);
 
-    // return pieceWasCaptured ? [pieceWasMoved, pieceWasCaptured] : [pieceWasMoved];
+    const kingWasChecked = this.kingWasChecked(chosenPiece);
+    if (kingWasChecked) {
+      events.push(kingWasChecked);
+    }
     return events;
   }
 
@@ -131,9 +134,17 @@ export class ChessEngine implements ChessModel {
     return this.pieceMovesNotCausingAllyKingCheckmate(position);
   }
 
-  private kingWasChecked(squareTo: Square, chosenPiece: Piece): KingWasChecked | undefined {
-    const possMoves = chosenPiece.possibleMoves(squareTo, this.board);
-    const squaresWithOpponents = possMoves.filter((square) => this.board.onPositionPiece(square)?.isOpponentOf(chosenPiece));
-    const king = squaresWithOpponents.map((square) => this.board.onPositionPiece(square)?.isKing(this.board.onPositionPiece(square)));
+  private kingWasChecked(chosenPiece: Piece): KingWasChecked | undefined {
+    const kingsSide = chosenPiece.side === Side.WHITE ? Side.BLACK : Side.WHITE;
+    const kingPosition = this.kingPosition(this.board, kingsSide);
+    const king = this.board.onPositionPiece(kingPosition as Square);
+    const isKingChecked = this.isKingChecked(this.board, kingsSide);
+    return isKingChecked && king instanceof King && kingPosition
+      ? {
+          eventType: 'KingWasChecked',
+          king: king,
+          onSquare: kingPosition,
+        }
+      : undefined;
   }
 }

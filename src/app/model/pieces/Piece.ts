@@ -1,7 +1,6 @@
 import { columns, Row, Side, Square, Vector } from '../Types';
 import { PiecePositions } from '../PiecesPositions';
 import { BOARD_SIZE } from '../Constances';
-import { King } from './King';
 
 export abstract class Piece {
   protected constructor(public side: Side) {}
@@ -37,9 +36,5 @@ export abstract class Piece {
 
   isOpponentOf(anotherPiece: Piece): boolean {
     return anotherPiece.side !== this.side;
-  }
-
-  isKing(piece: Piece | undefined): piece is King {
-    return piece !== undefined && piece.name === 'King';
   }
 }
