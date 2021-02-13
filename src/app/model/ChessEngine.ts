@@ -6,7 +6,6 @@ import { Chessboard } from './Chessboard';
 import { PieceWasMoved } from './PieceWasMoved';
 import { PieceWasCaptured } from './PieceWasCaptured';
 import { isDefined } from './HelperFunctions';
-import _ from 'lodash/fp';
 
 export class ChessEngine implements ChessModel {
   private currentSide: Side = Side.WHITE;
@@ -70,9 +69,9 @@ export class ChessEngine implements ChessModel {
     return side === Side.WHITE ? Side.BLACK : Side.WHITE;
   }
 
-  private returnWirtualProposedBoardAfterMove(chessboard: Chessboard, squareFrom: Square, squareTo: Square): Chessboard {
-    const wirtualPorposedChessboard = _.cloneDeep(chessboard);
-    const { squaresWithPiece: proposedSquaresWithPieces } = wirtualPorposedChessboard;
+  private simulatedChessboardAfterMove(chessboard: Chessboard, squareFrom: Square, squareTo: Square): Chessboard {
+    const simulatedChessboard = new Chessboard({ ...chessboard.squaresWithPiece });
+    const { squaresWithPiece: proposedSquaresWithPieces } = simulatedChessboard;
 
     const movedPiece = chessboard.onPositionPiece(squareFrom);
     const positionFrom = `${squareFrom.column}${squareFrom.row}`;
@@ -80,7 +79,7 @@ export class ChessEngine implements ChessModel {
     delete proposedSquaresWithPieces[positionFrom];
     proposedSquaresWithPieces[positionTo] = movedPiece as Piece;
 
-    return wirtualPorposedChessboard;
+    return simulatedChessboard;
   }
 
   public static kingPosition(chessboard: Chessboard, kingSide: Side): Square | undefined {
@@ -90,13 +89,7 @@ export class ChessEngine implements ChessModel {
       const isPlayerSide = squaresWithPieces[key].side === kingSide;
       return isKingName && isPlayerSide;
     });
-    const kingPosition = kingPositionKey
-      ? {
-          column: kingPositionKey[0],
-          row: Number(kingPositionKey[1]) as Row,
-        }
-      : undefined;
-
+    const kingPosition = kingPositionKey ? { column: kingPositionKey[0], row: Number(kingPositionKey[1]) as Row } : undefined;
     return kingPosition;
   }
 
@@ -131,7 +124,7 @@ export class ChessEngine implements ChessModel {
 
   willBeKingChecked(squareFrom: Square, squareTo: Square): boolean {
     const chessboard: Chessboard = this.board;
-    const wirtualPorposedChessboard = this.returnWirtualProposedBoardAfterMove(chessboard, squareFrom, squareTo);
+    const wirtualPorposedChessboard = this.simulatedChessboardAfterMove(chessboard, squareFrom, squareTo);
     return ChessEngine.isKingChecked(wirtualPorposedChessboard, this.currentSide);
   }
 
