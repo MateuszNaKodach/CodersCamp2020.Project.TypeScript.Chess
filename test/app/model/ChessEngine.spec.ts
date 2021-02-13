@@ -1,10 +1,5 @@
-import { ChessEngine } from '../../../src/app/model';
-import { Side, Square, SquareWithPiece } from '../../../src/app/model';
-import { Chessboard } from '../../../src/app/model';
-import { Pawn } from '../../../src/app/model';
+import { Side, Square, SquareWithPiece, ChessEngine, Chessboard, Pawn, Queen, Knight } from '../../../src/app/model';
 import 'jest-extended';
-import { Queen } from '../../../src/app/model';
-import { Knight } from '../../../src/app/model';
 
 describe('Chess Engine', () => {
   it('Given white piece on A2 and black piece on A4, when move white piece from A2 to A3, then white piece was moved from A2 to A3', () => {
