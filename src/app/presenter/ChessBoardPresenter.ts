@@ -1,6 +1,6 @@
 import { ChessBoardView } from '../view/ChessBoardView';
 import { Position } from './Position';
-import { ChessModel, columns, PieceWasCaptured, PieceWasMoved, Player, Row, Side, Square } from '../model';
+import { ChessModel, columns, PieceWasCaptured, PieceWasMoved, Row, Square } from '../model';
 import { SquareWasClicked } from '../view/events/SquareWasClicked';
 
 export class ChessBoardPresenter {
@@ -10,9 +10,6 @@ export class ChessBoardPresenter {
 
   private lastPossibleMoves: string[] = [];
   private lastMoveAsPosition: Position = { x: 0, y: 0 };
-  private whitePlayer = new Player(Side.WHITE);
-  private blackPlayer = new Player(Side.BLACK);
-  private actualPlayer: Player = new Player(Side.WHITE);
 
   onSquareWasClicked(position: Position): void {
     this.view.hideSelection();
@@ -55,18 +52,12 @@ export class ChessBoardPresenter {
     });
   }
 
-  private switchPlayer(player: Player): Player {
-    return player.side === Side.WHITE ? this.blackPlayer : this.whitePlayer;
-  }
-
   private pieceMovement(position: Position, squaresStringArray: string[]) {
     if (this.lastPossibleMoves.includes(this.translatePositionToAlgebraicNotation(position))) {
       const moveEvents = this.chessModel.move(
-        this.actualPlayer,
         this.translatePositionToSquareNotation(this.lastMoveAsPosition),
         this.translatePositionToSquareNotation(position),
       );
-      this.actualPlayer = this.switchPlayer(this.actualPlayer);
       this.checkEvents(moveEvents);
       this.view.hideSelection();
       this.view.hideAllAvailableMoves();
