@@ -12,8 +12,6 @@ export class ChessEngine implements ChessModel {
   private currentSide: Side = Side.WHITE;
   readonly squaresWithPiece: SquareWithPiece;
 
-  private eventsHistory: (PieceWasMoved | PieceWasCaptured | KingWasChecked | KingWasUnchecked)[] = [];
-
   constructor(private readonly board: Chessboard) {
     this.squaresWithPiece = board.squaresWithPiece;
   }
