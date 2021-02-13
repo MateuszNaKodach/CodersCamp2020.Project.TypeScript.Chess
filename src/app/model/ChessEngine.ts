@@ -1,6 +1,6 @@
 import { ChessModel } from './ChessModel';
 import { Row, Side, Square, SquareWithPiece } from './Types';
-import { King, Piece } from './pieces';
+import { Piece } from './pieces';
 import { Player } from './Player';
 import { Chessboard } from './Chessboard';
 import { PieceWasMoved } from './PieceWasMoved';
@@ -71,7 +71,6 @@ export class ChessEngine implements ChessModel {
 
   private simulatedChessboardAfterMove(chessboard: Chessboard, squareFrom: Square, squareTo: Square): Chessboard {
     const simulatedChessboard = new Chessboard({ ...chessboard.squaresWithPiece });
-    const { squaresWithPiece: proposedSquaresWithPieces } = simulatedChessboard;
     simulatedChessboard.movePiece(squareFrom, squareTo);
     return simulatedChessboard;
   }
@@ -83,37 +82,32 @@ export class ChessEngine implements ChessModel {
       const isPlayerSide = squaresWithPieces[key].side === kingSide;
       return isKingName && isPlayerSide;
     });
-    const kingPosition = kingPositionKey ? { column: kingPositionKey[0], row: Number(kingPositionKey[1]) as Row } : undefined;
+    const kingPosition = kingPositionKey
+      ? {
+          column: kingPositionKey[0],
+          row: Number(kingPositionKey[1]) as Row,
+        }
+      : undefined;
     return kingPosition;
   }
 
   public static isSquareChecked(chessboard: Chessboard, playerSide: Side, positionToControl: Square): boolean {
-    let isCheckedSquareFlag = false;
-    const { squaresWithPiece: squaresWithPieces } = chessboard;
-
-    Object.keys(squaresWithPieces).forEach((key) => {
-      const mappedPiece = squaresWithPieces[key];
-      const isEnemySide = mappedPiece.side !== playerSide;
-
-      if (isEnemySide) {
-        const mappedPiecePosition = {
-          column: key[0],
-          row: Number(key[1]) as Row,
-        };
-        const possibleMappedPieceMoves = mappedPiece.possibleMoves(mappedPiecePosition, chessboard);
-        const isKingPositionOnPossibleEnemyPieceMoves = possibleMappedPieceMoves.some(
-          (checkedPosition) => JSON.stringify(checkedPosition) == JSON.stringify(positionToControl),
-        );
-        if (isKingPositionOnPossibleEnemyPieceMoves) isCheckedSquareFlag = true;
-      }
-    });
-    return isCheckedSquareFlag;
+    const squaresWithPieces = chessboard.squaresWithPiece;
+    return Object.keys(squaresWithPieces)
+      .map((squareKey) => ({
+        position: { column: squareKey[0], row: Number(squareKey[1]) as Row },
+        piece: squaresWithPieces[squareKey],
+      }))
+      .filter(({ piece }) => piece.side !== playerSide) //Skoro rozpatrujemy tylko przeciwnikow, tak sie mozemy pozbyc ifa. Moznaby to sprawdzanie dac do klasy Piece.
+      .map(({ position, piece }) => piece.possibleMoves(position, chessboard))
+      .some((piecePossibleMoves) =>
+        piecePossibleMoves.some((moveSquare) => moveSquare.column === positionToControl.column && moveSquare.row === positionToControl.row),
+      );
   }
 
   public static isKingChecked(chessboard: Chessboard, kingSide: Side): boolean {
     const kingPosition = this.kingPosition(chessboard, kingSide);
-    const isKingChecked = kingPosition ? this.isSquareChecked(chessboard, kingSide, kingPosition) : false;
-    return isKingChecked;
+    return kingPosition ? this.isSquareChecked(chessboard, kingSide, kingPosition) : false;
   }
 
   willBeKingChecked(squareFrom: Square, squareTo: Square): boolean {
