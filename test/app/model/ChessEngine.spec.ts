@@ -149,17 +149,6 @@ describe('Chess Engine', () => {
     expect(engine.move(kingSquareFrom, kingSquareTo)).toIncludeSameMembers([
       {
         eventType: 'PieceWasMoved',
-        piece: whitePiece,
-        from: bishopSquareFrom,
-        to: bishopSquareTo,
-      },
-      {
-        eventType: 'KingWasChecked',
-        king: blackPiece,
-        onSquare: { column: 'D', row: 8 },
-      },
-      {
-        eventType: 'PieceWasMoved',
         piece: blackPiece,
         from: kingSquareFrom,
         to: kingSquareTo,
@@ -167,7 +156,7 @@ describe('Chess Engine', () => {
       {
         eventType: 'KingWasUnchecked',
         king: blackPiece,
-        onSquare: { column: 'D', row: 7 },
+        onSquare: kingSquareFrom,
       },
     ]);
   });
