@@ -114,7 +114,7 @@ export class ChessEngine implements ChessModel {
     return this.isKingChecked(simulatedChessboard, this.currentSide);
   }
 
-  private pieceMovesNotCausingAllyKingCheckmate(position: Square): Square[] {
+  public pieceMovesNotCausingAllyKingCheckmate(position: Square): Square[] {
     const initialPossibleMoves = this.board.onPositionPiece(position)?.possibleMoves(position, this.board) ?? [];
     const filteringFunction = (onePossibleMove: Square) => !this.willBeKingChecked(position, onePossibleMove);
     return initialPossibleMoves.filter(filteringFunction);
