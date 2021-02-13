@@ -1,6 +1,6 @@
 import { ChessModel } from './ChessModel';
 import { Row, Side, Square, SquareWithPiece } from './Types';
-import { King, Piece } from './pieces';
+import { Piece } from './pieces';
 import { Player } from './Player';
 import { Chessboard } from './Chessboard';
 import { PieceWasMoved } from './PieceWasMoved';
@@ -75,7 +75,6 @@ export class ChessEngine implements ChessModel {
 
   private willBeKingChecked(player: Player, chessboard: Chessboard, squareFrom: Square, squareTo: Square): boolean {
     let isCheckedSquareFlag = false;
-    const k = new King(Side.WHITE);
     const proposedChessboard = _.cloneDeep(chessboard);
     const { squaresWithPiece: proposedSquaresWithPieces } = proposedChessboard;
 
