@@ -61,7 +61,7 @@ export class ChessEngine implements ChessModel {
       this.onKingWasUnchecked(kingWasUnchecked);
     }
 
-    return [pieceWasCaptured, pieceWasMoved, kingWasChecked, kingWasUnchecked].filter(this.hasOccurred);
+    return [pieceWasCaptured, pieceWasMoved, kingWasChecked, kingWasUnchecked, pawnPromotionWasEnabled].filter(this.hasOccurred);
   }
 
   private pieceWasCaptured(squareTo: Square, chosenPiece: Piece): PieceWasCaptured | undefined {
