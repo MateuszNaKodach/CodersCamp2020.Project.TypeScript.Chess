@@ -1,7 +1,5 @@
-import { Side, SquareWithPiece } from './Types';
-import { Bishop, Knight, Pawn, Queen, Rook, King } from './pieces';
-
-export const BOARD_SIZE = 8;
+import { Side, SquareWithPiece } from '../Types';
+import { Bishop, King, Knight, Pawn, Queen, Rook } from '../pieces';
 
 export const PIECES_START_POSITION: SquareWithPiece = {
   A1: new Rook(Side.WHITE),
