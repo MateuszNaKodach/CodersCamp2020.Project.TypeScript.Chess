@@ -1,7 +1,6 @@
 import { ChessModel } from './ChessModel';
 import { Row, Side, Square, SquareWithPiece } from './Types';
 import { Pawn, Piece } from './pieces';
-import { Player } from './Player';
 import { Chessboard } from './Chessboard';
 import { PieceWasMoved } from './PieceWasMoved';
 import { PieceWasCaptured } from './PieceWasCaptured';
@@ -17,7 +16,7 @@ export class ChessEngine implements ChessModel {
     this.squaresWithPiece = board.squaresWithPiece;
   }
 
-  move(byPlayer: Player, squareFrom: Square, squareTo: Square): (PieceWasMoved | PieceWasCaptured | PawnPromotionWasEnabled)[] {
+  move(squareFrom: Square, squareTo: Square): (PieceWasMoved | PieceWasCaptured | PawnPromotionWasEnabled)[] {
     const chosenPiece = this.board.onPositionPiece(squareFrom);
     if (!chosenPiece) {
       throw new Error('There is no piece on this square.');
@@ -25,11 +24,8 @@ export class ChessEngine implements ChessModel {
     if (this.promotingOnSquare) {
       throw new Error('No move is possible until promotion is done.');
     }
-    if (byPlayer.side !== this.currentSide) {
+    if (chosenPiece.side !== this.currentSide) {
       throw new Error(`It's not Your turn.`);
-    }
-    if (byPlayer.side !== chosenPiece.side) {
-      throw new Error('Player can not move other players pieces.');
     }
     if (!this.canMoveOnSquare(squareFrom, squareTo)) {
       throw new Error('Piece can not move to given square.');
