@@ -348,4 +348,100 @@ describe('Return player moves without those that cause his king to check', () =>
     const expectedResult = [] as Square[];
     expect(returnedResult).toIncludeSameMembers(expectedResult);
   });
+
+  it('After white players move, a black king is in white piece range, then black king is checked', () => {
+    const whitePiece = new Bishop(Side.WHITE);
+    const blackPiece = new King(Side.BLACK);
+    const boardWithPieces: SquareWithPiece = { D8: blackPiece, F4: whitePiece };
+    const chessBoard = new Chessboard(boardWithPieces);
+    const engine = new ChessEngine(chessBoard);
+    const bishopSquareFrom: Square = { column: 'F', row: 4 };
+    const bishopSquareTo: Square = { column: 'G', row: 5 };
+
+    expect(engine.move(bishopSquareFrom, bishopSquareTo)).toIncludeSameMembers([
+      {
+        eventType: 'PieceWasMoved',
+        piece: whitePiece,
+        from: bishopSquareFrom,
+        to: bishopSquareTo,
+      },
+      {
+        eventType: 'KingWasChecked',
+        king: blackPiece,
+        onSquare: { column: 'D', row: 8 },
+      },
+    ]);
+  });
+
+  it('After black players move his king, black king is no longer checked', () => {
+    const whitePiece = new Bishop(Side.WHITE);
+    const blackPiece = new King(Side.BLACK);
+    const boardWithPieces: SquareWithPiece = { D8: blackPiece, F4: whitePiece };
+    const chessBoard = new Chessboard(boardWithPieces);
+    const engine = new ChessEngine(chessBoard);
+    const kingSquareFrom: Square = { column: 'D', row: 8 };
+    const kingSquareTo: Square = { column: 'D', row: 7 };
+    const bishopSquareFrom: Square = { column: 'F', row: 4 };
+    const bishopSquareTo: Square = { column: 'G', row: 5 };
+
+    engine.move(bishopSquareFrom, bishopSquareTo);
+
+    expect(engine.move(kingSquareFrom, kingSquareTo)).toIncludeSameMembers([
+      {
+        eventType: 'PieceWasMoved',
+        piece: blackPiece,
+        from: kingSquareFrom,
+        to: kingSquareTo,
+      },
+      {
+        eventType: 'KingWasUnchecked',
+      },
+    ]);
+  });
+
+  it('After black players move piece to cover king, black king is no longer checked', () => {
+    const whiteBishop = new Bishop(Side.WHITE);
+    const blackKing = new King(Side.BLACK);
+    const blackQueen = new Queen(Side.BLACK);
+    const boardWithPieces: SquareWithPiece = { D8: blackKing, E8: blackQueen, F4: whiteBishop };
+    const chessBoard = new Chessboard(boardWithPieces);
+    const engine = new ChessEngine(chessBoard);
+    const queenSquareFrom: Square = { column: 'E', row: 8 };
+    const queenSquareTo: Square = { column: 'E', row: 7 };
+    const bishopSquareFrom: Square = { column: 'F', row: 4 };
+    const bishopSquareTo: Square = { column: 'G', row: 5 };
+
+    engine.move(bishopSquareFrom, bishopSquareTo);
+
+    expect(engine.move(queenSquareFrom, queenSquareTo)).toIncludeSameMembers([
+      {
+        eventType: 'PieceWasMoved',
+        piece: blackQueen,
+        from: queenSquareFrom,
+        to: queenSquareTo,
+      },
+      {
+        eventType: 'KingWasUnchecked',
+      },
+    ]);
+  });
+
+  it('Should throw an Error if player wants to make move that will result in check of his king', () => {
+    const whiteBishop = new Bishop(Side.WHITE);
+    const blackKing = new King(Side.BLACK);
+    const blackQueen = new Queen(Side.BLACK);
+    const boardWithPieces: SquareWithPiece = { D8: blackKing, E7: blackQueen, F4: whiteBishop };
+    const chessBoard = new Chessboard(boardWithPieces);
+    const engine = new ChessEngine(chessBoard);
+    const queenSquareFrom: Square = { column: 'E', row: 7 };
+    const queenSquareTo: Square = { column: 'E', row: 8 };
+    const bishopSquareFrom: Square = { column: 'F', row: 4 };
+    const bishopSquareTo: Square = { column: 'G', row: 5 };
+
+    engine.move(bishopSquareFrom, bishopSquareTo);
+
+    expect(() => engine.move(queenSquareFrom, queenSquareTo)).toThrowError(
+      'You must not make a move that will result in checking your king.',
+    );
+  });
 });
