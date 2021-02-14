@@ -5,7 +5,3 @@ export function isDefined<T>(x: T | undefined): x is T {
 export function isNotDefined<T>(x: T | undefined): x is undefined {
   return !isDefined(x);
 }
-
-export function hasOccurred<T>(x: T | undefined): x is T {
-  return typeof x !== 'undefined' && x !== null;
-}

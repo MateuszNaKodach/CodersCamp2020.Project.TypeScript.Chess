@@ -5,7 +5,7 @@ import { Chessboard } from './Chessboard';
 import { PieceWasMoved } from './PieceWasMoved';
 import { PieceWasCaptured } from './PieceWasCaptured';
 import { PawnPromotionWasEnabled } from './PawnPromotionWasEnabled';
-import { isDefined, hasOccurred } from './HelperFunctions';
+import { isDefined } from './HelperFunctions';
 
 export class ChessEngine implements ChessModel {
   private currentSide: Side = Side.WHITE;
@@ -42,7 +42,7 @@ export class ChessEngine implements ChessModel {
     const pawnPromotionWasEnabled = this.pawnPromotionWasEnabled(chosenPiece, squareTo);
     this.onPawnPromotionWasEnabled(pawnPromotionWasEnabled);
     this.onPieceWasMoved(pieceWasMoved);
-    return [pieceWasMoved, pieceWasCaptured, pawnPromotionWasEnabled].filter(hasOccurred);
+    return [pieceWasMoved, pieceWasCaptured, pawnPromotionWasEnabled].filter(this.hasOccurred);
   }
 
   private pieceWasCaptured(squareTo: Square, chosenPiece: Piece): PieceWasCaptured | undefined {
@@ -57,8 +57,8 @@ export class ChessEngine implements ChessModel {
   }
 
   private pawnPromotionWasEnabled(chosenPiece: Piece, squareTo: Square): PawnPromotionWasEnabled | undefined {
-    return (chosenPiece instanceof Pawn && chosenPiece.side === Side.WHITE && squareTo.row === 8) ||
-      (chosenPiece.side === Side.BLACK && squareTo.row === 1)
+    return chosenPiece instanceof Pawn &&
+      ((chosenPiece.side === Side.WHITE && squareTo.row === 8) || (chosenPiece.side === Side.BLACK && squareTo.row === 1))
       ? {
           eventType: 'PawnPromotionWasEnabled',
           onSquare: squareTo,
@@ -144,5 +144,9 @@ export class ChessEngine implements ChessModel {
 
   public possibleMoves(position: Square): Square[] {
     return this.pieceMovesNotCausingAllyKingCheckmate(position);
+  }
+
+  private hasOccurred<T>(x: T | undefined): x is T {
+    return typeof x !== 'undefined' && x !== null;
   }
 }
