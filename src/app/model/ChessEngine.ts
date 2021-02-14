@@ -19,6 +19,7 @@ export class ChessEngine implements ChessModel {
   move(squareFrom: Square, squareTo: Square): ChessboardEvent[] {
     const events = [];
     const chosenPiece = this.board.onPositionPiece(squareFrom);
+    //TODO warunek który sprawdza  czy nie chcemy wystawić własnego króla
     if (!chosenPiece) {
       throw new Error('There is no piece on this square.');
     }
