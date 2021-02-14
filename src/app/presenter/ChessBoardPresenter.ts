@@ -6,17 +6,18 @@ import { columns, Row, Square } from '../model';
 
 export class ChessBoardPresenter {
   constructor(private readonly view: ChessBoardView, private readonly chessModel: ChessModel) {
-    view.listenOn<SquareWasClicked>('SquareWasClicked', (event) => this.onSquareWasClicked(event.position));
+    view.listenOn<SquareWasClicked>('SquareWasClicked', (event) => {
+      this.onSquareWasClicked(event.position);
+      this.isPawnReadyForPromotion(event.position);
+    });
   }
 
   onSquareWasClicked(position: Position): void {
     this.view.hideSelection();
     this.view.showSelectedPiece(this.translatePositionToAlgebraicNotation(position));
-
     this.view.hideAllAvailableMoves();
     const squaresStringArray = this.getPossibleMoves(position);
     this.view.showAvailableMoves(squaresStringArray);
-    this.view.pawnPromotion();
   }
 
   startGame(): void {
@@ -31,5 +32,14 @@ export class ChessBoardPresenter {
   private translatePositionToAlgebraicNotation(position: Position): string {
     const square: Square = { column: columns[position.x - 1], row: position.y as Row };
     return `${square.column.toLowerCase()}${square.row}`;
+  }
+
+  private isPawnReadyForPromotion(position: Position): void {
+    const selectedSquare = this.translatePositionToAlgebraicNotation(position).toUpperCase();
+    const selectedSquareIsPawn = this.chessModel.squaresWithPiece[selectedSquare].name == 'Pawn';
+    if (selectedSquareIsPawn && (position.y == 1 || position.y == 8)) {
+      console.log('PromotionModalShouldBeOpened');
+      this.view.pawnPromotion();
+    }
   }
 }
