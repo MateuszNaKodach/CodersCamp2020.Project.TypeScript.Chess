@@ -1,23 +1,28 @@
 import { ChessModel } from './ChessModel';
 import { Row, Side, Square, SquareWithPiece } from './Types';
-import { Piece } from './pieces';
+import { Pawn, Piece } from './pieces';
 import { Chessboard } from './Chessboard';
 import { PieceWasMoved } from './PieceWasMoved';
 import { PieceWasCaptured } from './PieceWasCaptured';
+import { PawnPromotionWasEnabled } from './PawnPromotionWasEnabled';
 import { isDefined } from './HelperFunctions';
 
 export class ChessEngine implements ChessModel {
   private currentSide: Side = Side.WHITE;
   readonly squaresWithPiece: SquareWithPiece;
+  private promotingOnSquare: Square | undefined;
 
   constructor(private readonly board: Chessboard) {
     this.squaresWithPiece = board.squaresWithPiece;
   }
 
-  move(squareFrom: Square, squareTo: Square): (PieceWasMoved | PieceWasCaptured)[] {
+  move(squareFrom: Square, squareTo: Square): (PieceWasMoved | PieceWasCaptured | PawnPromotionWasEnabled)[] {
     const chosenPiece = this.board.onPositionPiece(squareFrom);
     if (!chosenPiece) {
       throw new Error('There is no piece on this square.');
+    }
+    if (this.promotingOnSquare) {
+      throw new Error('No move is possible until promotion is done.');
     }
     if (chosenPiece.side !== this.currentSide) {
       throw new Error(`It's not Your turn.`);
@@ -34,8 +39,10 @@ export class ChessEngine implements ChessModel {
     };
     const pieceWasCaptured = this.pieceWasCaptured(squareTo, chosenPiece);
 
+    const pawnPromotionWasEnabled = this.pawnPromotionWasEnabled(chosenPiece, squareTo);
+    this.onPawnPromotionWasEnabled(pawnPromotionWasEnabled);
     this.onPieceWasMoved(pieceWasMoved);
-    return pieceWasCaptured ? [pieceWasMoved, pieceWasCaptured] : [pieceWasMoved];
+    return [pieceWasMoved, pieceWasCaptured, pawnPromotionWasEnabled].filter(this.hasOccurred);
   }
 
   private pieceWasCaptured(squareTo: Square, chosenPiece: Piece): PieceWasCaptured | undefined {
@@ -49,9 +56,28 @@ export class ChessEngine implements ChessModel {
       : undefined;
   }
 
+  private pawnPromotionWasEnabled(chosenPiece: Piece, squareTo: Square): PawnPromotionWasEnabled | undefined {
+    return chosenPiece instanceof Pawn &&
+      ((chosenPiece.side === Side.WHITE && squareTo.row === 8) || (chosenPiece.side === Side.BLACK && squareTo.row === 1))
+      ? {
+          eventType: 'PawnPromotionWasEnabled',
+          onSquare: squareTo,
+          pawn: chosenPiece as Pawn,
+        }
+      : undefined;
+  }
+
   private onPieceWasMoved(event: PieceWasMoved): void {
     this.board.movePiece(event.from, event.to);
-    this.currentSide = this.changeTurn(event.piece.side);
+    if (!this.promotingOnSquare) {
+      this.currentSide = this.changeTurn(event.piece.side);
+    }
+  }
+
+  private onPawnPromotionWasEnabled(event: PawnPromotionWasEnabled | undefined): void {
+    if (event) {
+      this.promotingOnSquare = event.onSquare;
+    }
   }
 
   private canMoveOnSquare(squareFrom: Square, squareTo: Square): boolean {
@@ -118,5 +144,9 @@ export class ChessEngine implements ChessModel {
 
   public possibleMoves(position: Square): Square[] {
     return this.pieceMovesNotCausingAllyKingCheckmate(position);
+  }
+
+  private hasOccurred<T>(x: T | undefined): x is T {
+    return typeof x !== 'undefined' && x !== null;
   }
 }
