@@ -49,7 +49,7 @@ export class ChessEngine implements ChessModel {
     if (kingWasChecked) {
       this.onKingWasChecked(kingWasChecked);
     }
-    const kingWasUnchecked = this.kingWasUnchecked(pieceWasMoved);
+    const kingWasUnchecked = this.kingWasUnchecked();
     if (kingWasUnchecked) {
       this.onKingWasUnchecked(kingWasUnchecked);
     }
@@ -70,7 +70,7 @@ export class ChessEngine implements ChessModel {
 
   private onPieceWasMoved(event: PieceWasMoved): void {
     this.board.movePiece(event.from, event.to);
-    this.currentSide = this.changeSide(event.piece.side);
+    this.currentSide = this.anotherSide(event.piece.side);
   }
 
   private canMoveOnSquare(squareFrom: Square, squareTo: Square): boolean {
@@ -80,7 +80,7 @@ export class ChessEngine implements ChessModel {
     );
   }
 
-  private changeSide(side: Side): Side {
+  private anotherSide(side: Side): Side {
     return side === Side.WHITE ? Side.BLACK : Side.WHITE;
   }
 
@@ -159,18 +159,14 @@ export class ChessEngine implements ChessModel {
       : undefined;
   }
 
-  private kingWasUnchecked(pieceWasMoved: PieceWasMoved): KingWasUnchecked | undefined {
+  private kingWasUnchecked(): KingWasUnchecked | undefined {
     if (!this.checkedKing) {
       return undefined;
     }
-    const kingSide =
-      pieceWasMoved.piece.side === this.checkedKing.kingSide ? pieceWasMoved.piece.side : this.changeSide(pieceWasMoved.piece.side);
-    const isKingChecked = this.isKingChecked(this.board, kingSide);
+    const isKingChecked = this.isKingChecked(this.board, this.checkedKing.kingSide);
     return !isKingChecked
       ? {
           eventType: 'KingWasUnchecked',
-          king: new King(pieceWasMoved.piece.side),
-          onSquare: this.checkedKing?.position as Square,
         }
       : undefined;
   }

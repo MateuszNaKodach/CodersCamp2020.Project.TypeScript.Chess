@@ -155,8 +155,6 @@ describe('Chess Engine', () => {
       },
       {
         eventType: 'KingWasUnchecked',
-        king: blackPiece,
-        onSquare: kingSquareFrom,
       },
     ]);
   });
@@ -170,7 +168,6 @@ describe('Chess Engine', () => {
     const engine = new ChessEngine(chessBoard);
     const queenSquareFrom: Square = { column: 'E', row: 8 };
     const queenSquareTo: Square = { column: 'E', row: 7 };
-    const kingPosition: Square = { column: 'D', row: 8 };
     const bishopSquareFrom: Square = { column: 'F', row: 4 };
     const bishopSquareTo: Square = { column: 'G', row: 5 };
 
@@ -185,8 +182,6 @@ describe('Chess Engine', () => {
       },
       {
         eventType: 'KingWasUnchecked',
-        king: blackKing,
-        onSquare: kingPosition,
       },
     ]);
   });
