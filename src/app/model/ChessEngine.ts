@@ -7,6 +7,7 @@ import { PieceWasCaptured } from './PieceWasCaptured';
 import { isDefined } from './HelperFunctions';
 import { KingWasChecked } from './KingWasChecked';
 import { KingWasUnchecked } from './KingWasUnchecked';
+import { MoveResult } from './MoveResult';
 
 type CheckedKing = { kingSide: Side; position: Square };
 
@@ -178,5 +179,3 @@ export class ChessEngine implements ChessModel {
     this.checkedKing = undefined;
   }
 }
-
-export type MoveResult = PieceWasMoved | PieceWasCaptured | KingWasChecked | KingWasUnchecked;
