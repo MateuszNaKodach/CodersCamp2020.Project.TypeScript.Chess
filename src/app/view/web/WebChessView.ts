@@ -68,8 +68,6 @@ export class WebChessView implements ChessBoardView {
   }
 
   pawnPromotion(): void {
-    console.log('PIONEK!');
-
     const promotionModal = document.createElement('div');
     promotionModal.classList.add('promotionModal');
     document.body.appendChild(promotionModal);
@@ -106,7 +104,8 @@ export class WebChessView implements ChessBoardView {
     const clickedPawn = document.querySelectorAll('.promotionPawn');
     clickedPawn.forEach(function (element) {
       element.addEventListener('click', function (event: any) {
-        console.log('promocja na', event);
+        console.log('PawnToPromotionWasSelected:', event.target.innerText);
+        promotionModal.style.display = 'none';
       });
     });
 
