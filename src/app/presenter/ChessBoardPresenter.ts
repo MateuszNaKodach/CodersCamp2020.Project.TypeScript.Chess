@@ -66,7 +66,7 @@ export class ChessBoardPresenter {
         this.translatePositionToSquareNotation(this.lastMoveAsPosition),
         this.translatePositionToSquareNotation(position),
       );
-      this.checkEvents(moveEvents);
+      this.onEvents(moveEvents);
       this.view.hideSelection();
       this.view.hideAllAvailableMoves();
     }
