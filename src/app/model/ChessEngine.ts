@@ -150,10 +150,6 @@ export class ChessEngine implements ChessModel {
     const kingPosition = this.kingPosition(chessboard, kingSide);
     return kingPosition ? this.isSquareChecked(chessboard, kingSide, kingPosition) : false;
   }
-  private isCheckmatedKing(chessboard: Chessboard, kingSide: Side): boolean {
-    const kingPosition = this.kingPosition(chessboard, kingSide);
-    return kingPosition ? this.isSquareChecked(chessboard, kingSide, kingPosition) : false;
-  }
 
   private willBeKingChecked(squareFrom: Square, squareTo: Square): boolean {
     const simulatedChessboard = this.simulatedChessboardAfterMove(squareFrom, squareTo);
