@@ -2,7 +2,7 @@ import { PiecePositions } from './PiecesPositions';
 import { Piece } from './pieces';
 import { Square, SquareWithPiece } from './Types';
 import { PieceMoves } from './PieceMoves';
-import { PIECES_START_POSITION } from './Constances';
+import { PIECES_START_POSITION } from './constances';
 
 export class Chessboard implements PieceMoves, PiecePositions {
   constructor(public squaresWithPiece: SquareWithPiece = PIECES_START_POSITION) {}

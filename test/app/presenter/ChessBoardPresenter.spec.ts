@@ -1,11 +1,12 @@
 import '@testing-library/jest-dom';
 import { ChessBoardView } from '../../../src/app/view/ChessBoardView';
-import { ChessModel, Pawn, PIECES_START_POSITION, PieceWasMoved, Side, Square } from '../../../src/app/model';
+import { ChessModel, Square } from '../../../src/app/model';
 import { ChessBoardPresenter } from '../../../src/app/presenter/ChessBoardPresenter';
 import { ViewEventBus } from '../../../src/app/view/events/ViewEventBus';
 import { ViewEvent } from '../../../src/app/view/events/ViewEvent';
 import { SquareWasClicked } from '../../../src/app/view/events/SquareWasClicked';
 import { InMemoryViewEventBus } from '../../../src/app/view/events/InMemoryViewEventBus';
+import { PIECES_START_POSITION } from '../../../src/app/model/constances/PiecesStartPosition';
 
 describe('ChessBoardPresenter', () => {
   it('when square A1 was clicked on the view, then selected piece should be shown with its possible moves', () => {
