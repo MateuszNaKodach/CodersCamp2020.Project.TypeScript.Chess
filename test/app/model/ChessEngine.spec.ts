@@ -192,7 +192,7 @@ describe('Chess Engine', () => {
         { column: 'B', row: 3 },
       ];
 
-      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheck(movedPiecePosition);
 
       const expectedResult = possibleMovesBeforeFiltration;
       expect(returnedResult).toIncludeSameMembers(expectedResult);
@@ -208,7 +208,7 @@ describe('Chess Engine', () => {
       const engine = new ChessEngine(chessboard);
       const movedPiecePosition: Square = { column: 'A', row: 2 };
 
-      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheck(movedPiecePosition);
 
       const expectedResult = [
         { column: 'A', row: 1 },
@@ -227,7 +227,7 @@ describe('Chess Engine', () => {
       const engine = new ChessEngine(chessboard);
       const movedPiecePosition: Square = { column: 'A', row: 2 };
 
-      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheck(movedPiecePosition);
 
       const expectedResult = [
         { column: 'A', row: 1 },
@@ -246,7 +246,7 @@ describe('Chess Engine', () => {
       const engine = new ChessEngine(chessboard);
       const movedPiecePosition: Square = { column: 'A', row: 2 };
 
-      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheck(movedPiecePosition);
 
       const expectedResult = [
         { column: 'A', row: 1 },
@@ -266,7 +266,7 @@ describe('Chess Engine', () => {
       const engine = new ChessEngine(chessboard);
       const movedPiecePosition: Square = { column: 'A', row: 2 };
 
-      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheck(movedPiecePosition);
 
       const expectedResult = [{ column: 'A', row: 1 }];
       expect(returnedResult).toIncludeSameMembers(expectedResult);
@@ -282,7 +282,7 @@ describe('Chess Engine', () => {
       const engine = new ChessEngine(chessboard);
       const movedPiecePosition: Square = { column: 'A', row: 2 };
 
-      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheck(movedPiecePosition);
 
       const expectedResult = [
         { column: 'B', row: 1 },
@@ -303,7 +303,7 @@ describe('Chess Engine', () => {
       const engine = new ChessEngine(chessboard);
       const movedPiecePosition: Square = { column: 'A', row: 3 };
 
-      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheck(movedPiecePosition);
 
       const expectedResult = [
         { column: 'A', row: 4 },
@@ -325,7 +325,7 @@ describe('Chess Engine', () => {
       const engine = new ChessEngine(chessboard);
       const movedPiecePosition: Square = { column: 'A', row: 1 };
 
-      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheck(movedPiecePosition);
 
       const expectedResult = [] as Square[];
       expect(returnedResult).toIncludeSameMembers(expectedResult);
@@ -342,7 +342,7 @@ describe('Chess Engine', () => {
       const engine = new ChessEngine(chessboard);
       const movedPiecePosition: Square = { column: 'A', row: 2 };
 
-      const returnedResult = engine.pieceMovesNotCausingAllyKingCheckmate(movedPiecePosition);
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheck(movedPiecePosition);
 
       const expectedResult = [] as Square[];
       expect(returnedResult).toIncludeSameMembers(expectedResult);
@@ -445,9 +445,32 @@ describe('Chess Engine', () => {
     );
   });
 
-  describe('Return player moves without those that cause his king to check', () => {
-    it('NAZWA', () => {
-      expect(true).toBe(true);
+  describe('Checkmate event', () => {
+    const whiteKing = new King(Side.WHITE);
+    const blackKing = new King(Side.BLACK);
+    const whiteRook = new Rook(Side.WHITE);
+    const blackRook = new Rook(Side.BLACK);
+
+    it(`Should't return checkmate event If checkmate Hasn't Occurred`, () => {
+      const boardWithPieces: SquareWithPiece = {
+        A1: whiteKing,
+        B8: blackRook,
+        H8: blackKing,
+      };
+      const chessboard = new Chessboard(boardWithPieces);
+      const engine = new ChessEngine(chessboard);
+      const movedPiecePosition: Square = { column: 'B', row: 7 };
+
+      const returnedResult = engine.move();
+      const returnedResult = engine.pieceMovesNotCausingAllyKingCheck(movedPiecePosition);
+
+      const expectedResult = [
+        { column: 'A', row: 4 },
+        { column: 'A', row: 5 },
+        { column: 'A', row: 6 },
+        { column: 'A', row: 7 },
+      ];
+      expect(returnedResult).toIncludeSameMembers(expectedResult);
     });
   });
 });

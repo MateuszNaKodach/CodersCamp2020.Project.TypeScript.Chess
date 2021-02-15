@@ -155,14 +155,14 @@ export class ChessEngine implements ChessModel {
     return this.isKingChecked(simulatedChessboard, this.currentSide);
   }
 
-  public pieceMovesNotCausingAllyKingCheckmate(position: Square): Square[] {
+  public pieceMovesNotCausingAllyKingCheck(position: Square): Square[] {
     const initialPossibleMoves = this.board.onPositionPiece(position)?.possibleMoves(position, this.board) ?? [];
     const filteringFunction = (onePossibleMove: Square) => !this.willBeKingChecked(position, onePossibleMove);
     return initialPossibleMoves.filter(filteringFunction);
   }
 
   public possibleMoves(position: Square): Square[] {
-    return this.pieceMovesNotCausingAllyKingCheckmate(position);
+    return this.pieceMovesNotCausingAllyKingCheck(position);
   }
 
   private hasOccurred<T>(x: T | undefined): x is T {
