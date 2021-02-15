@@ -450,6 +450,7 @@ describe('Chess Engine', () => {
     const blackKing = new King(Side.BLACK);
     const whiteRook = new Rook(Side.WHITE);
     const blackRook = new Rook(Side.BLACK);
+    const blackPawn = new Pawn(Side.BLACK);
 
     const descriptionWithoutCheckmate = `Should't return checkmate event If checkmate Hasn't Occurred.`;
     const descriptionWithCheckmate = `Should return checkmate event If checkmate Has Occurred.`;
@@ -541,8 +542,8 @@ describe('Chess Engine', () => {
       const boardWithPieces: SquareWithPiece = {
         A1: whiteKing,
         B1: whiteRook,
-        H7: blackRook,
-        G7: blackRook,
+        H7: blackPawn,
+        G7: blackPawn,
         H8: blackKing,
       };
       const chessboard = new Chessboard(boardWithPieces);
