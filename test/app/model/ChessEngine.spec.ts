@@ -444,4 +444,25 @@ describe('Chess Engine', () => {
       'You must not make a move that will result in checking your king.',
     );
   });
+
+  describe('Return player moves without those that cause his king to check', () => {
+    it('NAZWA', () => {
+      const whiteBishop = new Bishop(Side.WHITE);
+      const blackKing = new King(Side.BLACK);
+      const blackQueen = new Queen(Side.BLACK);
+      const boardWithPieces: SquareWithPiece = { D8: blackKing, E7: blackQueen, F4: whiteBishop };
+      const chessBoard = new Chessboard(boardWithPieces);
+      const engine = new ChessEngine(chessBoard);
+      const queenSquareFrom: Square = { column: 'E', row: 7 };
+      const queenSquareTo: Square = { column: 'E', row: 8 };
+      const bishopSquareFrom: Square = { column: 'F', row: 4 };
+      const bishopSquareTo: Square = { column: 'G', row: 5 };
+
+      engine.move(bishopSquareFrom, bishopSquareTo);
+
+      expect(() => engine.move(queenSquareFrom, queenSquareTo)).toThrowError(
+        'You must not make a move that will result in checking your king.',
+      );
+    });
+  });
 });
