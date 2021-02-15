@@ -45,6 +45,26 @@ export class WebChessView implements ChessBoardView {
     });
   }
 
+  movePiece(squareFrom: string, squareTo: string): void {
+    const divFrom = this.parent.querySelector(`#${squareFrom}`);
+    const divTo = this.parent.querySelector(`#${squareTo}`);
+    const pieceImage = divFrom?.firstChild;
+
+    if (pieceImage) {
+      divFrom?.removeChild(pieceImage);
+      divTo?.appendChild(pieceImage);
+    }
+  }
+
+  capturePiece(onSquare: string): void {
+    const divFrom = this.parent.querySelector(`#${onSquare}`);
+    const pieceImage = divFrom?.firstChild;
+
+    if (pieceImage) {
+      divFrom?.removeChild(pieceImage);
+    }
+  }
+
   private renderPiecesOnBoard(piecesPositions: PiecesBoardPositions) {
     Object.keys(piecesPositions)
       .map((square) => {
