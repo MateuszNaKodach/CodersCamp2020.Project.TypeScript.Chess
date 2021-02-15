@@ -211,6 +211,6 @@ export class ChessEngine implements ChessModel {
   }
 
   private isCheckmateHasOccurred(): CheckmateHasOccurred {
-    return { eventType: 'CheckmateHasOccurred', king: { name: 'King', side: 'BLACK' }, onSquare: { column: 'H', row: 8 } };
+    return { eventType: 'CheckmateHasOccurred', king: new King(Side.BLACK), onSquare: { column: 'H', row: 8 } };
   }
 }
