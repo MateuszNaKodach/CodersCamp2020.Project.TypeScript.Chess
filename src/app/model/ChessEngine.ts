@@ -62,7 +62,7 @@ export class ChessEngine implements ChessModel {
       this.onKingWasUnchecked(kingWasUnchecked);
     }
 
-    const checkmateHasOccurred = this.isCheckmateHasOccurred();
+    const checkmateHasOccurred = this.checkmateHasOccurred();
 
     return [pieceWasCaptured, pieceWasMoved, kingWasChecked, kingWasUnchecked, checkmateHasOccurred, pawnPromotionWasEnabled].filter(
       this.hasOccurred,
@@ -150,7 +150,7 @@ export class ChessEngine implements ChessModel {
       );
   }
 
-  private isKingChecked(chessboard: Chessboard, kingSide: Side): boolean {
+  private isKingChecked(chessboard: Chessboard = this.board, kingSide: Side = this.currentSide): boolean {
     const kingPosition = this.kingPosition(chessboard, kingSide);
     return kingPosition ? this.isSquareChecked(chessboard, kingSide, kingPosition) : false;
   }
@@ -210,7 +210,28 @@ export class ChessEngine implements ChessModel {
     this.checkedKing = undefined;
   }
 
-  private isCheckmateHasOccurred(): CheckmateHasOccurred {
-    return { eventType: 'CheckmateHasOccurred', king: new King(Side.BLACK), onSquare: { column: 'H', row: 8 } };
+  private checkmateHasOccurred(): CheckmateHasOccurred | undefined {
+    if (!this.isKingChecked()) return undefined;
+    if (this.isPossibleMoves()) return undefined;
+
+    const kingPosition = this.kingPosition(this.board, this.currentSide);
+    const event: CheckmateHasOccurred = {
+      eventType: 'CheckmateHasOccurred',
+      king: new King(this.currentSide),
+      onSquare: kingPosition,
+    };
+    return event;
+  }
+
+  private isPossibleMoves() {
+    // TODO: tablica wszystkich figur
+    // TODO: sprawdź możliwe ruch
+    // TODO: jeśli brak ruchów
+    // TODO:
+    // TODO:
+    // TODO:
+    // TODO:
+    // TODO:
+    return false;
   }
 }
