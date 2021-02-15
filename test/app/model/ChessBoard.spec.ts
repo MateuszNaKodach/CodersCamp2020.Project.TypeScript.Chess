@@ -47,4 +47,13 @@ describe('ChessBoard', () => {
     expect(chessBoard.onPositionPiece(squareA3)).toBe(undefined);
     expect(chessBoard.onPositionPiece(squareA4)).toMatchObject(pawn);
   });
+
+  it('Should remove piece from square', () => {
+    const boardWithPieces: SquareWithPiece = { A4: rook };
+    const chessboard = new Chessboard(boardWithPieces);
+
+    chessboard.removePiece(squareA4);
+
+    expect(chessboard.onPositionPiece(squareA4)).toBe(undefined);
+  });
 });

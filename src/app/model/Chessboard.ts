@@ -19,4 +19,8 @@ export class Chessboard implements PieceMoves, PiecePositions {
     delete this.squaresWithPiece[`${squareFrom.column}${squareFrom.row}`];
     this.squaresWithPiece[`${squareTo.column}${squareTo.row}`] = piece;
   }
+
+  removePiece(square: Square) {
+    delete this.squaresWithPiece[`${square.column}${square.row}`];
+  }
 }

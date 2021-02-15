@@ -1,4 +1,4 @@
-import { Side, Square, SquareWithPiece, ChessEngine, Chessboard, Pawn, Queen, Knight, King, Rook, Bishop } from '../../../src/app/model';
+import { Bishop, Chessboard, ChessEngine, King, Knight, Pawn, Queen, Rook, Side, Square, SquareWithPiece } from '../../../src/app/model';
 import 'jest-extended';
 
 describe('Chess Engine', () => {
@@ -169,12 +169,66 @@ describe('Chess Engine', () => {
     expect(engine['promotingOnSquare']).toBeUndefined();
   });
 
+  it('When white pawn makes its first move and goes 2 squares from F2 to F4 and black pawn stands on E4, then black pawn can capture white pawn in passing (moves to F3)', () => {
+    const whitePawn = new Pawn(Side.WHITE);
+    const blackPawn = new Pawn(Side.BLACK);
+    const chessboard = new Chessboard({ F2: whitePawn, E4: blackPawn });
+    const engine = new ChessEngine(chessboard);
+    const whitePawnFrom: Square = { column: 'F', row: 2 };
+    const whitePawnTo: Square = { column: 'F', row: 4 };
+    const blackPawnFrom: Square = { column: 'E', row: 4 };
+    const blackPawnTo: Square = { column: 'F', row: 3 };
+
+    engine.move(whitePawnFrom, whitePawnTo);
+
+    expect(engine.move(blackPawnFrom, blackPawnTo)).toIncludeSameMembers([
+      { eventType: 'PieceWasCaptured', piece: whitePawn, onSquare: { column: 'F', row: 4 } },
+      { eventType: 'PieceWasMoved', piece: blackPawn, from: { column: 'E', row: 4 }, to: { column: 'F', row: 3 } },
+    ]);
+  });
+
+  it('When black pawn makes its first move and goes 2 squares from B7 to B5 and white pawn stands on C5, then white pawn can capture black pawn in passing (moves to B6)', () => {
+    const whitePawn = new Pawn(Side.WHITE);
+    const blackPawn = new Pawn(Side.BLACK);
+    const chessboard = new Chessboard({ C5: whitePawn, B7: blackPawn, A1: new Rook(Side.WHITE) });
+    const engine = new ChessEngine(chessboard);
+    const whitePawnFrom: Square = { column: 'C', row: 5 };
+    const whitePawnTo: Square = { column: 'B', row: 6 };
+    const blackPawnFrom: Square = { column: 'B', row: 7 };
+    const blackPawnTo: Square = { column: 'B', row: 5 };
+
+    engine.move({ column: 'A', row: 1 }, { column: 'A', row: 2 });
+    engine.move(blackPawnFrom, blackPawnTo);
+
+    expect(engine.move(whitePawnFrom, whitePawnTo)).toIncludeSameMembers([
+      { eventType: 'PieceWasCaptured', piece: blackPawn, onSquare: { column: 'B', row: 5 } },
+      { eventType: 'PieceWasMoved', piece: whitePawn, from: { column: 'C', row: 5 }, to: { column: 'B', row: 6 } },
+    ]);
+  });
+
+  it('When white pawn makes its first move and goes 2 squares from G2 to G4 and black pawn stands on E4, then black pawn cannot capture white pawn in passing (moves to F3)', () => {
+    const whitePawn = new Pawn(Side.WHITE);
+    const blackPawn = new Pawn(Side.BLACK);
+    const chessboard = new Chessboard({ G2: whitePawn, E4: blackPawn });
+    const engine = new ChessEngine(chessboard);
+    const whitePawnFrom: Square = { column: 'G', row: 2 };
+    const whitePawnTo: Square = { column: 'G', row: 4 };
+    const blackPawnFrom: Square = { column: 'E', row: 4 };
+    const blackPawnTo: Square = { column: 'F', row: 3 };
+
+    engine.move(whitePawnFrom, whitePawnTo);
+
+    expect(engine.move(blackPawnFrom, blackPawnTo)).toIncludeSameMembers([
+      { eventType: 'PieceWasCaptured', piece: whitePawn, onSquare: { column: 'F', row: 4 } },
+      { eventType: 'PieceWasMoved', piece: blackPawn, from: { column: 'E', row: 4 }, to: { column: 'F', row: 3 } },
+    ]);
+  });
+
   describe('Return player moves without those that cause his king to check', () => {
     const whiteKing = new King(Side.WHITE);
     const whiteRook = new Rook(Side.WHITE);
     const blackKing = new King(Side.BLACK);
     const blackRook = new Rook(Side.BLACK);
-    // const playerWhite = new Player(Side.WHITE);
 
     it(`Should return the same possible moves array if the king's move doesn't cause his check.`, () => {
       const boardWithPieces: SquareWithPiece = {

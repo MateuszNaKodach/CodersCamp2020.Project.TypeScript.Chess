@@ -1,5 +1,5 @@
 import { ChessModel } from './ChessModel';
-import { Row, Side, Square, SquareWithPiece } from './Types';
+import { columns, Row, Side, Square, SquareWithPiece } from './Types';
 import { King, Pawn, Piece } from './pieces';
 import { Chessboard } from './Chessboard';
 import { PieceWasMoved } from './PieceWasMoved';
@@ -17,6 +17,7 @@ export class ChessEngine implements ChessModel {
   readonly squaresWithPiece: SquareWithPiece;
   private promotingOnSquare: Square | undefined;
   private checkedKing: CheckedKing | undefined;
+  private lastMove: PieceWasMoved | undefined;
 
   constructor(private readonly board: Chessboard) {
     this.squaresWithPiece = board.squaresWithPiece;
@@ -39,6 +40,10 @@ export class ChessEngine implements ChessModel {
     if (this.willBeKingChecked(squareFrom, squareTo)) {
       throw new Error('You must not make a move that will result in checking your king.');
     }
+    if (this.lastMove && this.canAttackInPassing(squareFrom, this.lastMove)) {
+      this.onPawnCaptureInPassing(squareFrom, squareTo, this.lastMove);
+      return this.pawnCaptureInPassing(chosenPiece, this.lastMove, squareFrom, squareTo);
+    }
 
     const pieceWasMoved: PieceWasMoved = {
       eventType: 'PieceWasMoved',
@@ -60,7 +65,7 @@ export class ChessEngine implements ChessModel {
     if (kingWasUnchecked) {
       this.onKingWasUnchecked(kingWasUnchecked);
     }
-
+    this.lastMove = pieceWasMoved;
     return [pieceWasCaptured, pieceWasMoved, kingWasChecked, kingWasUnchecked, pawnPromotionWasEnabled].filter(this.hasOccurred);
   }
 
@@ -203,5 +208,50 @@ export class ChessEngine implements ChessModel {
 
   private onKingWasUnchecked(event: KingWasUnchecked): void {
     this.checkedKing = undefined;
+  }
+
+  private onPawnCaptureInPassing(squareFrom: Square, squareTo: Square, lastMove: PieceWasMoved): void {
+    this.board.movePiece(squareFrom, squareTo);
+    this.board.removePiece(lastMove.to);
+  }
+
+  private pawnCaptureInPassing(chosenPiece: Piece, lastMove: PieceWasMoved, squareFrom: Square, squareTo: Square): MoveResult[] {
+    return chosenPiece instanceof Pawn
+      ? [
+          {
+            eventType: 'PieceWasMoved',
+            piece: chosenPiece,
+            from: squareFrom,
+            to: squareTo,
+          },
+          {
+            eventType: 'PieceWasCaptured',
+            piece: lastMove.piece,
+            onSquare: lastMove.to,
+          },
+        ]
+      : [];
+  }
+
+  private lastMoveWasFirstPawnMove(lastMove: PieceWasMoved): boolean {
+    if (lastMove.piece.name === 'Pawn') {
+      if (lastMove.piece.side === Side.WHITE) {
+        return lastMove.from.row === 2 && lastMove.to.row === 4;
+      } else if (lastMove.piece.side === Side.BLACK) {
+        return lastMove.from.row === 7 && lastMove.to.row === 5;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  private canAttackInPassing(squareFrom: Square, lastMove: PieceWasMoved): boolean {
+    return this.lastMoveWasFirstPawnMove(lastMove) && this.isAdjacentColumn(squareFrom, lastMove.from);
+  }
+
+  private isAdjacentColumn(firstSquare: Square, secondSquare: Square): boolean {
+    return Math.abs(columns.indexOf(firstSquare.column) - columns.indexOf(secondSquare.column)) === 1;
   }
 }
