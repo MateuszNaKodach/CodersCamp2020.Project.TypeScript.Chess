@@ -11,6 +11,7 @@ import { KingWasUnchecked } from './KingWasUnchecked';
 import { MoveResult } from './MoveResult';
 
 type CheckedKing = { kingSide: Side; position: Square };
+type CheckmatedKing = { kingSide: Side; position: Square };
 
 export class ChessEngine implements ChessModel {
   private currentSide: Side = Side.WHITE;
@@ -146,6 +147,10 @@ export class ChessEngine implements ChessModel {
   }
 
   private isKingChecked(chessboard: Chessboard, kingSide: Side): boolean {
+    const kingPosition = this.kingPosition(chessboard, kingSide);
+    return kingPosition ? this.isSquareChecked(chessboard, kingSide, kingPosition) : false;
+  }
+  private isCheckmatedKing(chessboard: Chessboard, kingSide: Side): boolean {
     const kingPosition = this.kingPosition(chessboard, kingSide);
     return kingPosition ? this.isSquareChecked(chessboard, kingSide, kingPosition) : false;
   }
