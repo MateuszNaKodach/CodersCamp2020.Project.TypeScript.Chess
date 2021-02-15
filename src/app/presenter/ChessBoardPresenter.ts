@@ -1,7 +1,8 @@
 import { ChessBoardView } from '../view/ChessBoardView';
 import { Position } from './Position';
-import { ChessModel, columns, PieceWasCaptured, PieceWasMoved, Row, Square } from '../model';
+import { ChessModel, columns, Row, Square } from '../model';
 import { SquareWasClicked } from '../view/events/SquareWasClicked';
+import { MoveResult } from '../model/MoveResult';
 
 export class ChessBoardPresenter {
   constructor(private readonly view: ChessBoardView, private readonly chessModel: ChessModel) {
@@ -44,12 +45,19 @@ export class ChessBoardPresenter {
     return `${square.column.toLowerCase()}${square.row}`;
   }
 
-  private checkEvents(eventsArray: (PieceWasMoved | PieceWasCaptured)[]): void {
-    eventsArray.forEach((event) => {
-      event.eventType === 'PieceWasMoved'
-        ? this.view.movePiece(this.translateSquareToAlgebraicNotation(event.from), this.translateSquareToAlgebraicNotation(event.to))
-        : this.view.capturePiece(this.translateSquareToAlgebraicNotation(event.onSquare));
-    });
+  private onEvents(events: MoveResult[]): void {
+    events.forEach((event) => this.onEvent(event));
+  }
+
+  private onEvent(event: MoveResult) {
+    switch (event.eventType) {
+      case 'PieceWasCaptured':
+        this.view.capturePiece(this.translateSquareToAlgebraicNotation(event.onSquare));
+        break;
+      case 'PieceWasMoved':
+        this.view.movePiece(this.translateSquareToAlgebraicNotation(event.from), this.translateSquareToAlgebraicNotation(event.to));
+        break;
+    }
   }
 
   private pieceMovement(position: Position, squaresStringArray: string[]) {
