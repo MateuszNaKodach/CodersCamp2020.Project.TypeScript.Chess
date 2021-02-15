@@ -58,6 +58,9 @@ export class ChessBoardPresenter {
       case 'PieceWasMoved':
         this.view.movePiece(this.translateSquareToAlgebraicNotation(event.from), this.translateSquareToAlgebraicNotation(event.to));
         break;
+      case 'PawnPromotionWasEnabled':
+        this.view.pawnPromotion();
+        break;
     }
   }
 

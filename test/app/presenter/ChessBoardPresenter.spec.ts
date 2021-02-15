@@ -93,6 +93,29 @@ describe('ChessBoardPresenter', () => {
     expect(view.capturePiece).toHaveBeenCalledWith('c5');
     expect(view.movePiece).toHaveBeenCalledWith('d4', 'c5');
   });
+
+  it('Pawn promotion', () => {
+    const whitePawn: Pawn = new Pawn(Side.WHITE);
+    const viewEvents: ViewEventBus = new InMemoryViewEventBus();
+    const view: ChessBoardView = chessBoardViewMock(viewEvents);
+    const model: ChessModel = {
+      squaresWithPiece: { D7: whitePawn },
+      move: (squareFrom, squareTo) => {
+        return [
+          { eventType: 'PieceWasMoved', piece: whitePawn, from: squareFrom, to: squareTo },
+          { eventType: 'PawnPromotionWasEnabled', onSquare: squareTo, pawn: whitePawn },
+        ];
+      },
+      possibleMoves: () => [{ column: 'D', row: 8 }],
+    };
+    const presenter: ChessBoardPresenter = new ChessBoardPresenter(view, model);
+
+    viewEvents.publish(new SquareWasClicked({ x: 4, y: 7 }));
+    viewEvents.publish(new SquareWasClicked({ x: 4, y: 8 }));
+
+    expect(view.movePiece).toHaveBeenCalledWith('d7', 'd8');
+    expect(view.pawnPromotion).toHaveBeenCalled();
+  });
 });
 
 function chessBoardViewMock(viewEventBus: ViewEventBus): ChessBoardView {
