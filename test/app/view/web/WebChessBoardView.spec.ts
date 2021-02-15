@@ -6,7 +6,7 @@ import { WebChessView } from '../../../../src/app/view/web/WebChessView';
 import { ViewEventBus } from '../../../../src/app/view/events/ViewEventBus';
 import { SquareWasClicked } from '../../../../src/app/view/events/SquareWasClicked';
 import { PiecesBoardPositions } from '../../../../src/app/view/Types';
-import { Side } from '../../../../src/app/model/Types';
+import { Side } from '../../../../src/app/model';
 
 describe('Web Chess Board View with starting pieces positions', () => {
   const publishViewEventMock = jest.fn();
@@ -131,5 +131,66 @@ describe('Web Chess Board View with starting pieces positions', () => {
     expect(a3Square).not.toHaveClass('square--possibleMove');
     expect(a4Square).not.toHaveClass('square--possibleMove');
     expect(a5Square).not.toHaveClass('square--possibleMove');
+  });
+});
+
+describe('Web Chess Board View during move and capture methods', () => {
+  beforeEach(() => {
+    document.body.innerHTML = '';
+  });
+  const publishViewEventMock = jest.fn();
+  const viewEventBus: ViewEventBus = {
+    listenOn: jest.fn(),
+    publish: publishViewEventMock,
+  };
+  const chessBoardView: ChessBoardView = new WebChessView(viewEventBus);
+
+  it('move pawn from square A2 to A3', async () => {
+    const piecesPositions: PiecesBoardPositions = {
+      A2: { name: 'Pawn', side: Side.WHITE },
+    };
+    chessBoardView.showChessBoard(piecesPositions);
+    const a2Square = await screen.findByTestId('a2');
+    const a3Square = await screen.findByTestId('a3');
+    const a2WhitePawn = await screen.findByTestId('a2-img');
+
+    chessBoardView.movePiece('a2', 'a3');
+
+    expect(a2Square).not.toContainElement(a2WhitePawn);
+    expect(a3Square).toContainElement(a2WhitePawn);
+  });
+
+  it('move queen from square D1 to H5 when there is nothing on its way', async () => {
+    const piecesPositions: PiecesBoardPositions = {
+      D1: { name: 'Queen', side: Side.WHITE },
+    };
+    chessBoardView.showChessBoard(piecesPositions);
+    const d1Square = await screen.findByTestId('d1');
+    const h5Square = await screen.findByTestId('h5');
+    const d1WhiteQueen = await screen.findByTestId('d1-img');
+
+    chessBoardView.movePiece('d1', 'h5');
+
+    expect(d1Square).not.toContainElement(d1WhiteQueen);
+    expect(h5Square).toContainElement(d1WhiteQueen);
+  });
+
+  it('move and capture the black pawn while moving from square E4 to D5', async () => {
+    const piecesPositions: PiecesBoardPositions = {
+      E4: { name: 'Pawn', side: Side.WHITE },
+      D5: { name: 'Pawn', side: Side.BLACK },
+    };
+    chessBoardView.showChessBoard(piecesPositions);
+    const e4Square = await screen.findByTestId('e4');
+    const d5Square = await screen.findByTestId('d5');
+    const e4WhitePawn = await screen.findByTestId('e4-img');
+    const d5BlackPawn = await screen.findByTestId('d5-img');
+
+    chessBoardView.capturePiece('d5');
+    chessBoardView.movePiece('e4', 'd5');
+
+    expect(d5Square).not.toContainElement(d5BlackPawn);
+    expect(e4Square).not.toContainElement(e4WhitePawn);
+    expect(d5Square).toContainElement(e4WhitePawn);
   });
 });
