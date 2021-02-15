@@ -531,6 +531,7 @@ describe('Chess Engine', () => {
 
       const expectedResult = [
         { eventType: 'PieceWasMoved', from: { column: 'B', row: 1 }, piece: { name: 'Rook', side: 'WHITE' }, to: { column: 'B', row: 8 } },
+        { eventType: 'KingWasChecked', king: { name: 'King', side: 'BLACK' }, onSquare: { column: 'H', row: 8 } },
         { eventType: 'CheckmateHasOccurred', king: { name: 'King', side: 'BLACK' }, onSquare: { column: 'H', row: 8 } },
       ];
       expect(returnedResult).toIncludeSameMembers(expectedResult);
@@ -553,6 +554,7 @@ describe('Chess Engine', () => {
 
       const expectedResult = [
         { eventType: 'PieceWasMoved', from: { column: 'B', row: 1 }, piece: { name: 'Rook', side: 'WHITE' }, to: { column: 'B', row: 8 } },
+        { eventType: 'KingWasChecked', king: { name: 'King', side: 'BLACK' }, onSquare: { column: 'H', row: 8 } },
         { eventType: 'CheckmateHasOccurred', king: { name: 'King', side: 'BLACK' }, onSquare: { column: 'H', row: 8 } },
       ];
       expect(returnedResult).toIncludeSameMembers(expectedResult);
@@ -575,6 +577,7 @@ describe('Chess Engine', () => {
 
       const expectedResult = [
         { eventType: 'PieceWasMoved', from: { column: 'B', row: 1 }, piece: { name: 'Rook', side: 'WHITE' }, to: { column: 'B', row: 8 } },
+        { eventType: 'KingWasChecked', king: { name: 'King', side: 'BLACK' }, onSquare: { column: 'H', row: 8 } },
         { eventType: 'CheckmateHasOccurred', king: { name: 'King', side: 'BLACK' }, onSquare: { column: 'H', row: 8 } },
       ];
       expect(returnedResult).toIncludeSameMembers(expectedResult);
