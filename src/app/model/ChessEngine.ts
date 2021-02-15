@@ -1,6 +1,6 @@
 import { ChessModel } from './ChessModel';
 import { Row, Side, Square, SquareWithPiece } from './Types';
-import { King, Pawn, Piece } from './pieces';
+import { King, Pawn, Piece, Rook } from './pieces';
 import { Chessboard } from './Chessboard';
 import { PieceWasMoved } from './PieceWasMoved';
 import { PieceWasCaptured } from './PieceWasCaptured';
@@ -17,6 +17,7 @@ export class ChessEngine implements ChessModel {
   readonly squaresWithPiece: SquareWithPiece;
   private promotingOnSquare: Square | undefined;
   private checkedKing: CheckedKing | undefined;
+  private castlingOnSquare: Square | undefined;
 
   constructor(private readonly board: Chessboard) {
     this.squaresWithPiece = board.squaresWithPiece;
@@ -46,6 +47,7 @@ export class ChessEngine implements ChessModel {
       from: squareFrom,
       to: squareTo,
     };
+    const castlingWasDone = this.castlingWasDone();
     const pieceWasCaptured = this.pieceWasCaptured(squareTo, chosenPiece);
 
     const pawnPromotionWasEnabled = this.pawnPromotionWasEnabled(chosenPiece, squareTo);
@@ -61,7 +63,9 @@ export class ChessEngine implements ChessModel {
       this.onKingWasUnchecked(kingWasUnchecked);
     }
 
-    return [pieceWasCaptured, pieceWasMoved, kingWasChecked, kingWasUnchecked, pawnPromotionWasEnabled].filter(this.hasOccurred);
+    return [pieceWasCaptured, pieceWasMoved, kingWasChecked, kingWasUnchecked, pawnPromotionWasEnabled, castlingWasDone].filter(
+      this.hasOccurred,
+    );
   }
 
   private pieceWasCaptured(squareTo: Square, chosenPiece: Piece): PieceWasCaptured | undefined {
@@ -99,8 +103,102 @@ export class ChessEngine implements ChessModel {
     }
   }
 
+  private intendToCastling(squareFrom: Square, squareTo: Square): boolean {
+    const chosenPiece = this.board.onPositionPiece(squareFrom);
+    const whiteCastlingFrom: Square = { column: 'E', row: 1 };
+    const whiteLongCastlingTo: Square = { column: 'C', row: 1 };
+    const whiteShortCastlingTo: Square = { column: 'G', row: 1 };
+    const blackCastlingFrom: Square = { column: 'E', row: 8 };
+    const blackLongCastlingTo: Square = { column: 'C', row: 8 };
+    const blackShortCastlingTo: Square = { column: 'G', row: 8 };
+
+    return (
+      chosenPiece instanceof King &&
+      ((chosenPiece.side === Side.WHITE &&
+        this.isSameSquare(squareFrom, whiteCastlingFrom) &&
+        (this.isSameSquare(squareTo, whiteLongCastlingTo) || this.isSameSquare(squareTo, whiteShortCastlingTo))) ||
+        (chosenPiece.side === Side.BLACK &&
+          this.isSameSquare(squareFrom, blackCastlingFrom) &&
+          (this.isSameSquare(squareTo, blackLongCastlingTo) || this.isSameSquare(squareTo, blackShortCastlingTo))))
+    );
+  }
+
+  private isSameSquare(squareA: Square, squareB: Square) {
+    return squareA.column === squareB.column && squareA.row === squareB.row;
+  }
+
+  private isCastlingPossible(squareFrom: Square, squareTo: Square): boolean {
+    let squareCrossedByKing!: Square;
+    switch (squareTo.column) {
+      case 'C':
+        squareCrossedByKing = { column: 'D', row: squareTo.row };
+        break;
+      case 'G':
+        squareCrossedByKing = { column: 'F', row: squareTo.row };
+        break;
+    }
+    if (
+      this.isKingChecked(this.board, this.currentSide) ||
+      this.isSquareChecked(this.board, this.currentSide, squareCrossedByKing) ||
+      this.willBeKingChecked(squareFrom, squareTo)
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+  /*
+  private isAnyPieceBetweenKingAndRook(actualPosition: Square, endPosition: Square){
+    columns.indexOf(actualPosition.column) - columns.indexOf(endPosition.column)
+    const nextSquare: Square = {
+      column: columns[columns.indexOf(actualPosition.column) + vector.col],
+      row: (actualPosition.row + vector.row) as Row,
+    };
+    const isWithinChessboard = Piece.isWithinChessboardBorders(nextSquare);
+    if (!isWithinChessboard) {
+      return [];
+    }
+    const isSquareOccupied = board.onPositionPiece(nextSquare);
+    if (isSquareOccupied) {
+      return this.checkIfNotSameColorPiece(nextSquare, board) ? [nextSquare] : [];
+    } else {
+      return [nextSquare].concat(this.lineMoves(board, nextSquare, vector));
+    }
+  }
+  */
+
+  private castlingWasDone(): PieceWasMoved | undefined {
+    let rookSquareFrom: Square | undefined;
+    let rookSquareTo: Square | undefined;
+    switch (this.castlingOnSquare?.column) {
+      case 'C':
+        rookSquareFrom = { column: 'A', row: this.castlingOnSquare.row };
+        rookSquareTo = { column: 'D', row: this.castlingOnSquare.row };
+        break;
+      case 'G':
+        rookSquareFrom = { column: 'H', row: this.castlingOnSquare.row };
+        rookSquareTo = { column: 'F', row: this.castlingOnSquare.row };
+        break;
+    }
+    if (rookSquareFrom && rookSquareTo) {
+      this.board.movePiece(rookSquareFrom, rookSquareTo);
+      return {
+        eventType: 'PieceWasMoved',
+        piece: new Rook(this.currentSide),
+        from: rookSquareFrom,
+        to: rookSquareTo,
+      };
+    } else {
+      return undefined;
+    }
+  }
+
   private canMoveOnSquare(squareFrom: Square, squareTo: Square): boolean {
     const piecePossibleMoves = this.board.onPositionPiece(squareFrom)?.possibleMoves(squareFrom, this.board);
+    if (this.intendToCastling(squareFrom, squareTo) && this.isCastlingPossible(squareFrom, squareTo)) {
+      this.castlingOnSquare = squareTo;
+      piecePossibleMoves?.push(squareTo);
+    }
     return (
       piecePossibleMoves?.some((possibleMove) => possibleMove.column === squareTo.column && possibleMove.row === squareTo.row) ?? false
     );
