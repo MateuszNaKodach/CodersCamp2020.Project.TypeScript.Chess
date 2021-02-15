@@ -69,39 +69,39 @@ export class WebChessView implements ChessBoardView {
 
   pawnPromotion(): void {
     const promotionModal = document.createElement('div');
-    promotionModal.classList.add('promotionModal');
+    promotionModal.classList.add('modal');
     document.body.appendChild(promotionModal);
 
     const modalWindow = document.createElement('div');
-    modalWindow.classList.add('modalWindow');
+    modalWindow.classList.add('modal__window');
     modalWindow.textContent = 'Choose your promotion pawn';
     promotionModal.appendChild(modalWindow);
 
     const modalPawnWrap = document.createElement('h1');
-    modalPawnWrap.classList.add('modalPawnWrap');
+    modalPawnWrap.classList.add('modal__wrap');
     modalWindow.appendChild(modalPawnWrap);
 
     const queenPromotion = document.createElement('div');
-    queenPromotion.classList.add('promotionPawn');
+    queenPromotion.classList.add('modal__pawn');
     queenPromotion.textContent = 'Queen';
     modalPawnWrap.appendChild(queenPromotion);
 
     const rookPromotion = document.createElement('div');
-    rookPromotion.classList.add('promotionPawn');
+    rookPromotion.classList.add('modal__pawn');
     rookPromotion.textContent = 'Rook';
     modalPawnWrap.appendChild(rookPromotion);
 
     const knightPromotion = document.createElement('div');
-    knightPromotion.classList.add('promotionPawn');
+    knightPromotion.classList.add('modal__pawn');
     knightPromotion.textContent = 'Knight';
     modalPawnWrap.appendChild(knightPromotion);
 
     const bishopPromotion = document.createElement('div');
-    bishopPromotion.classList.add('promotionPawn');
+    bishopPromotion.classList.add('modal__pawn');
     bishopPromotion.textContent = 'Bishop';
     modalPawnWrap.appendChild(bishopPromotion);
 
-    const clickedPawn = document.querySelectorAll('.promotionPawn');
+    const clickedPawn = document.querySelectorAll('.modal__pawn');
     clickedPawn.forEach(function (element) {
       element.addEventListener('click', function (event: any) {
         console.log('PawnToPromotionWasSelected:', event.target.innerText);

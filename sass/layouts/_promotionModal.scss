@@ -1,4 +1,4 @@
-.promotionModal {
+.modal {
   position: fixed;
   z-index: 1;
   left: 0;
@@ -13,7 +13,7 @@
   animation-name: fadeIn;
   animation-duration: 0.4s;
 
-  .modalWindow {
+  .modal__window {
     height: 200px;
     padding: 0.5rem 0 2rem 0;
     padding: 0.5rem 1rem 2rem 2rem;
@@ -32,13 +32,13 @@
     justify-content: space-evenly;
     text-align: center;
 
-    .modalPawnWrap {
+    .modal__wrap {
       box-sizing: content-box;
       display: flex;
       justify-content: space-evenly;
       align-items: center;
 
-      .promotionPawn {
+      .modal__pawn {
         width: 15%;
         padding: 1rem 0;
         font-size: 2rem;
