@@ -451,24 +451,21 @@ describe('Chess Engine', () => {
     const whiteRook = new Rook(Side.WHITE);
     const blackRook = new Rook(Side.BLACK);
 
-    it(`Should't return checkmate event If checkmate Hasn't Occurred`, () => {
+    it(`Should't return checkmate event If checkmate Hasn't Occurred and king is not checked`, () => {
       const boardWithPieces: SquareWithPiece = {
         A1: whiteKing,
-        B8: blackRook,
+        B1: whiteRook,
         H8: blackKing,
       };
       const chessboard = new Chessboard(boardWithPieces);
       const engine = new ChessEngine(chessboard);
-      const movedPiecePosition: Square = { column: 'B', row: 7 };
+      const startPiecePosition: Square = { column: 'B', row: 1 };
+      const endPiecePosition: Square = { column: 'B', row: 2 };
 
-      const returnedResult = engine.move();
-      const returnedResult = engine.pieceMovesNotCausingAllyKingCheck(movedPiecePosition);
+      const returnedResult = engine.move(startPiecePosition, endPiecePosition);
 
       const expectedResult = [
-        { column: 'A', row: 4 },
-        { column: 'A', row: 5 },
-        { column: 'A', row: 6 },
-        { column: 'A', row: 7 },
+        { eventType: 'PieceWasMoved', from: { column: 'B', row: 1 }, piece: { name: 'Rook', side: 'WHITE' }, to: { column: 'B', row: 2 } },
       ];
       expect(returnedResult).toIncludeSameMembers(expectedResult);
     });
