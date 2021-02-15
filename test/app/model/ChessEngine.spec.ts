@@ -560,29 +560,6 @@ describe('Chess Engine', () => {
       expect(returnedResult).toIncludeSameMembers(expectedResult);
     });
 
-    it(descriptionWithCheckmate, () => {
-      const boardWithPieces: SquareWithPiece = {
-        A1: whiteKing,
-        B1: whiteRook,
-        G7: blackRook,
-        H7: blackRook,
-        H8: blackKing,
-      };
-      const chessboard = new Chessboard(boardWithPieces);
-      const engine = new ChessEngine(chessboard);
-      const startPiecePosition: Square = { column: 'B', row: 1 };
-      const endPiecePosition: Square = { column: 'B', row: 8 };
-
-      const returnedResult = engine.move(startPiecePosition, endPiecePosition);
-
-      const expectedResult = [
-        { eventType: 'PieceWasMoved', from: { column: 'B', row: 1 }, piece: { name: 'Rook', side: 'WHITE' }, to: { column: 'B', row: 8 } },
-        { eventType: 'KingWasChecked', king: { name: 'King', side: 'BLACK' }, onSquare: { column: 'H', row: 8 } },
-        { eventType: 'CheckmateHasOccurred', king: { name: 'King', side: 'BLACK' }, onSquare: { column: 'H', row: 8 } },
-      ];
-      expect(returnedResult).toIncludeSameMembers(expectedResult);
-    });
-
     it(`${descriptionWithCheckmate} Black king and black rook cannot capture`, () => {
       const boardWithPieces: SquareWithPiece = {
         A1: whiteKing,
