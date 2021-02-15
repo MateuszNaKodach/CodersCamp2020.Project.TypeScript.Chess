@@ -61,6 +61,10 @@ export class ChessBoardPresenter {
       case 'PawnPromotionWasEnabled':
         this.view.pawnPromotion();
         break;
+      case 'PawnWasPromoted':
+        // this.view.pawnPromotion();
+        console.log('podmiana');
+        break;
     }
   }
 

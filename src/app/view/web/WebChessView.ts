@@ -1,9 +1,13 @@
+import { Square } from './Square';
+import { PawnWasPromoted } from './../../model/PawnWasPromoted';
 import { Chessboard } from './Chessboard';
 import { ChessBoardView } from '../ChessBoardView';
 import { ViewEventBus } from '../events/ViewEventBus';
 import { ViewEvent } from '../events/ViewEvent';
 import { SquareWasClicked } from '../events/SquareWasClicked';
+import { PromotionChoosenPiece } from '../events/PromotionChoosenPiece';
 import { PiecesBoardPositions } from '../Types';
+import { Bishop, Knight, Pawn, Queen, Rook, Side } from '../../model';
 
 export class WebChessView implements ChessBoardView {
   constructor(private readonly viewEventBus: ViewEventBus, private readonly parent: HTMLElement = document.body) {}
@@ -87,6 +91,10 @@ export class WebChessView implements ChessBoardView {
     return newPieceElement;
   }
 
+  // private promotionPieceChoosen(pieceChoosen: string): void {
+  //   this.viewEventBus.publish(new PromotionChoosenPiece(pieceChoosen));
+  // }
+
   pawnPromotion(): void {
     const promotionModal = document.createElement('div');
     promotionModal.classList.add('modal');
@@ -122,17 +130,34 @@ export class WebChessView implements ChessBoardView {
     modalPawnWrap.appendChild(bishopPromotion);
 
     const clickedPawn = document.querySelectorAll('.modal__pawn');
-    clickedPawn.forEach(function (element) {
-      element.addEventListener('click', function (event: any) {
+    clickedPawn.forEach((element) => {
+      element.addEventListener('click', (event: any) => {
         console.log('PawnToPromotionWasSelected:', event.target.innerText);
+
+        // console.log(event);
+        console.log(event.target);
+        // console.log(event.target?.innerText);
+
+        // this.viewEventBus.publish(new PromotionChoosenPiece((event.target as any).innerText));
+
         promotionModal.style.display = 'none';
       });
     });
+    // element.addEventListener('click', (event) => {
+    //   // if (event !== null) {
+    //   console.log('PawnToPromotionWasSelected:', event.target);
+    // //   this.promotionPieceChoosen(event.target.innerText);
+    // // }
+
+    //         promotionModal.style.display = 'none';
+    // });
+    // })// ;
 
     window.onclick = function (event: any) {
       if (event.target == promotionModal) {
         promotionModal.style.display = 'none';
       }
     };
+    // }
   }
 }
