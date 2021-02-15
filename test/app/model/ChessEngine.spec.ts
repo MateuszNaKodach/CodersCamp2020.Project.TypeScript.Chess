@@ -175,7 +175,6 @@ describe('Return player moves without those that cause his king to check', () =>
   const whiteRook = new Rook(Side.WHITE);
   const blackKing = new King(Side.BLACK);
   const blackRook = new Rook(Side.BLACK);
-  // const playerWhite = new Player(Side.WHITE);
 
   it(`Should return the same possible moves array if the king's move doesn't cause his check.`, () => {
     const boardWithPieces: SquareWithPiece = {
@@ -442,6 +441,190 @@ describe('Return player moves without those that cause his king to check', () =>
 
     expect(() => engine.move(queenSquareFrom, queenSquareTo)).toThrowError(
       'You must not make a move that will result in checking your king.',
+    );
+  });
+});
+
+describe('Castling can be done only if neither king nor rook has moved and none of square which the king is passing by is under attack and no piece between the king and the rook', () => {
+  const whiteKing = new King(Side.WHITE);
+  const whiteRookA1 = new Rook(Side.WHITE);
+  const whiteRookH1 = new Rook(Side.WHITE);
+  const whiteBishop = new Bishop(Side.WHITE);
+  const blackKing = new King(Side.BLACK);
+  const blackRook = new Rook(Side.BLACK);
+  const blackKnight = new Knight(Side.BLACK);
+  const blackPawn = new Pawn(Side.BLACK);
+
+  it('When all conditions are fulfilled, then short castling can be done', () => {
+    const boardWithPieces: SquareWithPiece = { E1: whiteKing, H1: whiteRookH1 };
+    const chessBoard = new Chessboard(boardWithPieces);
+    const engine = new ChessEngine(chessBoard);
+    const kingSquareFrom: Square = { column: 'E', row: 1 };
+    const kingSquareTo: Square = { column: 'G', row: 1 };
+    const rookSquareFrom: Square = { column: 'H', row: 1 };
+    const rookSquareTo: Square = { column: 'F', row: 1 };
+
+    expect(engine.move(kingSquareFrom, kingSquareTo)).toIncludeSameMembers([
+      { eventType: 'PieceWasMoved', piece: whiteKing, from: kingSquareFrom, to: kingSquareTo },
+      { eventType: 'PieceWasMoved', piece: whiteRookH1, from: rookSquareFrom, to: rookSquareTo },
+    ]);
+  });
+
+  it('When all conditions are fulfilled, then long castling can be done', () => {
+    const boardWithPieces: SquareWithPiece = { E1: whiteKing, H1: whiteRookH1 };
+    const chessBoard = new Chessboard(boardWithPieces);
+    const engine = new ChessEngine(chessBoard);
+    const kingSquareFrom: Square = { column: 'E', row: 1 };
+    const kingSquareTo: Square = { column: 'C', row: 1 };
+    const rookSquareFrom: Square = { column: 'A', row: 1 };
+    const rookSquareTo: Square = { column: 'D', row: 1 };
+
+    expect(engine.move(kingSquareFrom, kingSquareTo)).toIncludeSameMembers([
+      { eventType: 'PieceWasMoved', piece: whiteKing, from: kingSquareFrom, to: kingSquareTo },
+      { eventType: 'PieceWasMoved', piece: whiteRookH1, from: rookSquareFrom, to: rookSquareTo },
+    ]);
+  });
+
+  it('When all conditions are fulfilled and square with rook is under attack, then short castling can be done', () => {
+    const boardWithPieces: SquareWithPiece = { C1: whiteBishop, E8: blackKing, H8: blackRook };
+    const chessBoard = new Chessboard(boardWithPieces);
+    const engine = new ChessEngine(chessBoard);
+    const bishopSquareFrom: Square = { column: 'C', row: 1 };
+    const bishopSquareTo: Square = { column: 'B', row: 2 };
+    const kingSquareFrom: Square = { column: 'E', row: 8 };
+    const kingSquareTo: Square = { column: 'G', row: 8 };
+    const rookSquareFrom: Square = { column: 'H', row: 8 };
+    const rookSquareTo: Square = { column: 'F', row: 8 };
+
+    engine.move(bishopSquareFrom, bishopSquareTo);
+    expect(engine.move(kingSquareFrom, kingSquareTo)).toIncludeSameMembers([
+      { eventType: 'PieceWasMoved', piece: blackKing, from: kingSquareFrom, to: kingSquareTo },
+      { eventType: 'PieceWasMoved', piece: blackRook, from: rookSquareFrom, to: rookSquareTo },
+    ]);
+  });
+
+  it('When all conditions are fulfilled and square B8 is under attack, then long castling can be done', () => {
+    const boardWithPieces: SquareWithPiece = { G1: whiteBishop, E8: blackKing, A8: blackRook };
+    const chessBoard = new Chessboard(boardWithPieces);
+    const engine = new ChessEngine(chessBoard);
+    const bishopSquareFrom: Square = { column: 'G', row: 1 };
+    const bishopSquareTo: Square = { column: 'H', row: 2 };
+    const kingSquareFrom: Square = { column: 'E', row: 8 };
+    const kingSquareTo: Square = { column: 'C', row: 8 };
+    const rookSquareFrom: Square = { column: 'A', row: 8 };
+    const rookSquareTo: Square = { column: 'D', row: 8 };
+
+    engine.move(bishopSquareFrom, bishopSquareTo);
+    expect(engine.move(kingSquareFrom, kingSquareTo)).toIncludeSameMembers([
+      { eventType: 'PieceWasMoved', piece: blackKing, from: kingSquareFrom, to: kingSquareTo },
+      { eventType: 'PieceWasMoved', piece: blackRook, from: rookSquareFrom, to: rookSquareTo },
+    ]);
+  });
+
+  it('When all conditions are fulfilled but move starts with the rook, then castling will not be done', () => {
+    const boardWithPieces: SquareWithPiece = { E1: whiteKing, H1: whiteRookH1 };
+    const chessBoard = new Chessboard(boardWithPieces);
+    const engine = new ChessEngine(chessBoard);
+    const rookSquareFrom: Square = { column: 'H', row: 1 };
+    const rookSquareTo: Square = { column: 'F', row: 1 };
+
+    expect(engine.move(rookSquareFrom, rookSquareTo)).toIncludeSameMembers([
+      { eventType: 'PieceWasMoved', piece: whiteRookH1, from: rookSquareFrom, to: rookSquareTo },
+    ]);
+  });
+
+  it('When king is checked, then castling cannot be done', () => {
+    const boardWithPieces: SquareWithPiece = { E1: whiteKing, H1: whiteRookH1, E8: blackRook };
+    const chessBoard = new Chessboard(boardWithPieces);
+    const engine = new ChessEngine(chessBoard);
+    const kingSquareFrom: Square = { column: 'E', row: 1 };
+    const shortCastlingSquareTo: Square = { column: 'G', row: 1 };
+    const longCastlingSquareTo: Square = { column: 'C', row: 1 };
+
+    expect(engine.move(kingSquareFrom, shortCastlingSquareTo)).toThrowError('Castling cannot be done when the king is checked.');
+
+    expect(engine.move(kingSquareFrom, longCastlingSquareTo)).toThrowError('Castling cannot be done when the king is checked.');
+  });
+
+  it('When king is moving through check, then castling cannot be done', () => {
+    const boardWithPieces: SquareWithPiece = { A1: whiteRookA1, E1: whiteKing, H1: whiteRookH1, E3: blackKnight };
+    const chessBoard = new Chessboard(boardWithPieces);
+    const engine = new ChessEngine(chessBoard);
+    const kingSquareFrom: Square = { column: 'E', row: 1 };
+    const shortCastlingSquareTo: Square = { column: 'G', row: 1 };
+    const longCastlingSquareTo: Square = { column: 'C', row: 1 };
+
+    expect(() => engine.move(kingSquareFrom, shortCastlingSquareTo)).toThrowError('Castling cannot be done through checked square.');
+
+    expect(() => engine.move(kingSquareFrom, longCastlingSquareTo)).toThrowError('Castling cannot be done through checked square.');
+  });
+
+  it('When king is moving into check, then castling cannot be done', () => {
+    const boardWithPieces: SquareWithPiece = { A1: whiteRookA1, E1: whiteKing, H1: whiteRookH1, E2: blackKnight };
+    const chessBoard = new Chessboard(boardWithPieces);
+    const engine = new ChessEngine(chessBoard);
+    const kingSquareFrom: Square = { column: 'E', row: 1 };
+    const shortCastlingSquareTo: Square = { column: 'G', row: 1 };
+    const longCastlingSquareTo: Square = { column: 'C', row: 1 };
+
+    expect(() => engine.move(kingSquareFrom, shortCastlingSquareTo)).toThrowError(
+      'You must not make a move that will result in checking your king.',
+    );
+
+    expect(() => engine.move(kingSquareFrom, longCastlingSquareTo)).toThrowError(
+      'You must not make a move that will result in checking your king.',
+    );
+  });
+
+  it('When some piece is between the king and the rook, then castling cannot be done', () => {
+    const boardWithPieces: SquareWithPiece = { E1: whiteKing, F1: whiteBishop, H1: whiteRookH1 };
+    const chessBoard = new Chessboard(boardWithPieces);
+    const engine = new ChessEngine(chessBoard);
+    const kingSquareFrom: Square = { column: 'E', row: 1 };
+    const kingSquareTo: Square = { column: 'G', row: 1 };
+
+    expect(() => engine.move(kingSquareFrom, kingSquareTo)).toThrowError(
+      'Castling cannot be done through square occupied be another piece.',
+    );
+  });
+
+  it('When the king has already moved, then castling cannot be done', () => {
+    const boardWithPieces: SquareWithPiece = { E1: whiteKing, H1: whiteRookH1, C7: blackPawn };
+    const chessBoard = new Chessboard(boardWithPieces);
+    const engine = new ChessEngine(chessBoard);
+    const kingStartingSquare: Square = { column: 'E', row: 1 };
+    const kingFirstMoveSquare: Square = { column: 'E', row: 2 };
+    const castlingSquareTo: Square = { column: 'G', row: 1 };
+    const pawnStartingSquare: Square = { column: 'C', row: 7 };
+    const pawnFirstMoveSquare: Square = { column: 'C', row: 6 };
+    const pawnSecondMoveSquare: Square = { column: 'C', row: 5 };
+
+    engine.move(kingStartingSquare, kingFirstMoveSquare);
+    engine.move(pawnStartingSquare, pawnFirstMoveSquare);
+    engine.move(kingFirstMoveSquare, kingStartingSquare);
+    engine.move(pawnFirstMoveSquare, pawnSecondMoveSquare);
+    expect(() => engine.move(kingStartingSquare, castlingSquareTo)).toThrowError(
+      'Castling cannot be done if the king or the rook has already moved.',
+    );
+  });
+  it('When the rook has already moved, then castling cannot be done', () => {
+    const boardWithPieces: SquareWithPiece = { E1: whiteKing, H1: whiteRookH1, C7: blackPawn };
+    const chessBoard = new Chessboard(boardWithPieces);
+    const engine = new ChessEngine(chessBoard);
+    const kingSquareFrom: Square = { column: 'E', row: 1 };
+    const kingSquareTo: Square = { column: 'G', row: 1 };
+    const rookStartingSquare: Square = { column: 'H', row: 1 };
+    const rookFirstMoveSquare: Square = { column: 'H', row: 2 };
+    const pawnStartingSquare: Square = { column: 'C', row: 7 };
+    const pawnFirstMoveSquare: Square = { column: 'C', row: 6 };
+    const pawnSecondMoveSquare: Square = { column: 'C', row: 5 };
+
+    engine.move(rookStartingSquare, rookFirstMoveSquare);
+    engine.move(pawnStartingSquare, pawnFirstMoveSquare);
+    engine.move(rookFirstMoveSquare, rookStartingSquare);
+    engine.move(pawnFirstMoveSquare, pawnSecondMoveSquare);
+    expect(() => engine.move(kingSquareFrom, kingSquareTo)).toThrowError(
+      'Castling cannot be done if the king or the rook has already moved.',
     );
   });
 });
