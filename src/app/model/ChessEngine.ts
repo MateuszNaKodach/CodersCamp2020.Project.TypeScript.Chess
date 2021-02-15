@@ -9,9 +9,9 @@ import { isDefined } from './HelperFunctions';
 import { KingWasChecked } from './KingWasChecked';
 import { KingWasUnchecked } from './KingWasUnchecked';
 import { MoveResult } from './MoveResult';
+import { CheckmateHasOccurred } from './CheckmateHasOccurred';
 
 type CheckedKing = { kingSide: Side; position: Square };
-type CheckmatedKing = { kingSide: Side; position: Square };
 
 export class ChessEngine implements ChessModel {
   private currentSide: Side = Side.WHITE;
@@ -62,7 +62,11 @@ export class ChessEngine implements ChessModel {
       this.onKingWasUnchecked(kingWasUnchecked);
     }
 
-    return [pieceWasCaptured, pieceWasMoved, kingWasChecked, kingWasUnchecked, pawnPromotionWasEnabled].filter(this.hasOccurred);
+    const checkmateHasOccurred = this.isCheckmateHasOccurred();
+
+    return [pieceWasCaptured, pieceWasMoved, kingWasChecked, kingWasUnchecked, checkmateHasOccurred, pawnPromotionWasEnabled].filter(
+      this.hasOccurred,
+    );
   }
 
   private pieceWasCaptured(squareTo: Square, chosenPiece: Piece): PieceWasCaptured | undefined {
@@ -204,5 +208,9 @@ export class ChessEngine implements ChessModel {
 
   private onKingWasUnchecked(event: KingWasUnchecked): void {
     this.checkedKing = undefined;
+  }
+
+  private isCheckmateHasOccurred(): CheckmateHasOccurred {
+    return { eventType: 'CheckmateHasOccurred', king: { name: 'King', side: 'BLACK' }, onSquare: { column: 'H', row: 8 } };
   }
 }
