@@ -451,7 +451,7 @@ describe('Chess Engine', () => {
     const whiteRook = new Rook(Side.WHITE);
     const blackRook = new Rook(Side.BLACK);
 
-    it(`Should't return checkmate event If checkmate Hasn't Occurred and king is not checked`, () => {
+    it(`Should't return checkmate event If checkmate Hasn't Occurred and enemy king is not checked`, () => {
       const boardWithPieces: SquareWithPiece = {
         A1: whiteKing,
         B1: whiteRook,
@@ -466,6 +466,26 @@ describe('Chess Engine', () => {
 
       const expectedResult = [
         { eventType: 'PieceWasMoved', from: { column: 'B', row: 1 }, piece: { name: 'Rook', side: 'WHITE' }, to: { column: 'B', row: 2 } },
+      ];
+      expect(returnedResult).toIncludeSameMembers(expectedResult);
+    });
+
+    it(`Should't return checkmate event If checkmate Hasn't Occurred and enemy king is checked`, () => {
+      const boardWithPieces: SquareWithPiece = {
+        A1: whiteKing,
+        B1: whiteRook,
+        H8: blackKing,
+      };
+      const chessboard = new Chessboard(boardWithPieces);
+      const engine = new ChessEngine(chessboard);
+      const startPiecePosition: Square = { column: 'B', row: 1 };
+      const endPiecePosition: Square = { column: 'B', row: 8 };
+
+      const returnedResult = engine.move(startPiecePosition, endPiecePosition);
+
+      const expectedResult = [
+        { eventType: 'PieceWasMoved', from: { column: 'B', row: 1 }, piece: { name: 'Rook', side: 'WHITE' }, to: { column: 'B', row: 8 } },
+        { eventType: 'KingWasChecked', king: { name: 'King', side: 'BLACK' }, onSquare: { column: 'H', row: 8 } },
       ];
       expect(returnedResult).toIncludeSameMembers(expectedResult);
     });
