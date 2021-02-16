@@ -19,8 +19,8 @@ export class ChessEngine implements ChessModel {
   readonly squaresWithPiece: SquareWithPiece;
   private promotingOnSquare: Square | undefined;
   private checkedKing: CheckedKing | undefined;
-  private lastMove: PieceWasMoved | undefined;
   private moveHistory: PieceWasMoved[] = [];
+  private lastMove: PieceWasMoved | undefined;
 
   constructor(private readonly board: Chessboard) {
     this.squaresWithPiece = board.squaresWithPiece;
@@ -69,9 +69,9 @@ export class ChessEngine implements ChessModel {
     if (kingWasUnchecked) {
       this.onKingWasUnchecked(kingWasUnchecked);
     }
-    this.lastMove = pieceWasMoved;
     const checkmateHasOccurred = this.checkmateHasOccurred();
     const stalemateHasOccurred = this.stalemateHasOccurred();
+    this.lastMove = pieceWasMoved;
 
     return [
       pieceWasCaptured,
@@ -366,14 +366,10 @@ export class ChessEngine implements ChessModel {
   }
 
   private lastMoveWasFirstPawnMove(lastMove: PieceWasMoved): boolean {
-    if (lastMove.piece.name === 'Pawn') {
-      if (lastMove.piece.side === Side.WHITE) {
-        return lastMove.from.row === 2 && lastMove.to.row === 4;
-      } else if (lastMove.piece.side === Side.BLACK) {
-        return lastMove.from.row === 7 && lastMove.to.row === 5;
-      } else {
-        return false;
-      }
+    if (lastMove.piece.side === Side.WHITE) {
+      return lastMove.from.row === 2 && lastMove.to.row === 4;
+    } else if (lastMove.piece.side === Side.BLACK) {
+      return lastMove.from.row === 7 && lastMove.to.row === 5;
     } else {
       return false;
     }
