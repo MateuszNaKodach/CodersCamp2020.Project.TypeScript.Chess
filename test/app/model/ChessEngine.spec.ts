@@ -243,10 +243,8 @@ describe('Chess Engine', () => {
         { column: 'B', row: 3 },
       ];
 
-      const returnedResult = engine.pieceMovesNotCausingAllyKingCheck(movedPiecePosition);
-
       const expectedResult = possibleMovesBeforeFiltration;
-      expect(returnedResult).toIncludeSameMembers(expectedResult);
+      expect(engine.possibleMoves(movedPiecePosition)).toIncludeSameMembers(expectedResult);
     });
 
     it(`Should return possible moves array if the king's move causes his check.`, () => {
@@ -259,13 +257,11 @@ describe('Chess Engine', () => {
       const engine = new ChessEngine(chessboard);
       const movedPiecePosition: Square = { column: 'A', row: 2 };
 
-      const returnedResult = engine.pieceMovesNotCausingAllyKingCheck(movedPiecePosition);
-
       const expectedResult = [
         { column: 'A', row: 1 },
         { column: 'A', row: 3 },
       ];
-      expect(returnedResult).toIncludeSameMembers(expectedResult);
+      expect(engine.possibleMoves(movedPiecePosition)).toIncludeSameMembers(expectedResult);
     });
 
     it(`Should return possible moves array if the king's move causes his check but king could capture his enemy whose check possible moves of king.`, () => {
@@ -278,13 +274,11 @@ describe('Chess Engine', () => {
       const engine = new ChessEngine(chessboard);
       const movedPiecePosition: Square = { column: 'A', row: 2 };
 
-      const returnedResult = engine.pieceMovesNotCausingAllyKingCheck(movedPiecePosition);
-
       const expectedResult = [
         { column: 'A', row: 1 },
         { column: 'B', row: 3 },
       ];
-      expect(returnedResult).toIncludeSameMembers(expectedResult);
+      expect(engine.possibleMoves(movedPiecePosition)).toIncludeSameMembers(expectedResult);
     });
 
     it(`Should return possible moves array if the king's move causes his check but king could capture his enemy whose check possible moves of king.`, () => {
@@ -297,13 +291,11 @@ describe('Chess Engine', () => {
       const engine = new ChessEngine(chessboard);
       const movedPiecePosition: Square = { column: 'A', row: 2 };
 
-      const returnedResult = engine.pieceMovesNotCausingAllyKingCheck(movedPiecePosition);
-
       const expectedResult = [
         { column: 'A', row: 1 },
         { column: 'B', row: 3 },
       ];
-      expect(returnedResult).toIncludeSameMembers(expectedResult);
+      expect(engine.possibleMoves(movedPiecePosition)).toIncludeSameMembers(expectedResult);
     });
 
     it(`Should return possible moves array if the king's move causes his check but king cannot capture his enemy whose check possible moves of king.`, () => {
@@ -317,10 +309,8 @@ describe('Chess Engine', () => {
       const engine = new ChessEngine(chessboard);
       const movedPiecePosition: Square = { column: 'A', row: 2 };
 
-      const returnedResult = engine.pieceMovesNotCausingAllyKingCheck(movedPiecePosition);
-
       const expectedResult = [{ column: 'A', row: 1 }];
-      expect(returnedResult).toIncludeSameMembers(expectedResult);
+      expect(engine.possibleMoves(movedPiecePosition)).toIncludeSameMembers(expectedResult);
     });
 
     it(`Should return possible king's moves array if the king is checked.`, () => {
@@ -333,14 +323,12 @@ describe('Chess Engine', () => {
       const engine = new ChessEngine(chessboard);
       const movedPiecePosition: Square = { column: 'A', row: 2 };
 
-      const returnedResult = engine.pieceMovesNotCausingAllyKingCheck(movedPiecePosition);
-
       const expectedResult = [
         { column: 'B', row: 1 },
         { column: 'B', row: 2 },
         { column: 'B', row: 3 },
       ];
-      expect(returnedResult).toIncludeSameMembers(expectedResult);
+      expect(engine.possibleMoves(movedPiecePosition)).toIncludeSameMembers(expectedResult);
     });
 
     it(`Should return possible rook's moves array if the rook's move causes his king check`, () => {
@@ -354,15 +342,13 @@ describe('Chess Engine', () => {
       const engine = new ChessEngine(chessboard);
       const movedPiecePosition: Square = { column: 'A', row: 3 };
 
-      const returnedResult = engine.pieceMovesNotCausingAllyKingCheck(movedPiecePosition);
-
       const expectedResult = [
         { column: 'A', row: 4 },
         { column: 'A', row: 5 },
         { column: 'A', row: 6 },
         { column: 'A', row: 7 },
       ];
-      expect(returnedResult).toIncludeSameMembers(expectedResult);
+      expect(engine.possibleMoves(movedPiecePosition)).toIncludeSameMembers(expectedResult);
     });
 
     it(`Should return empty possible rook's moves array if the king is checked and rook's move causes his king check`, () => {
@@ -376,10 +362,8 @@ describe('Chess Engine', () => {
       const engine = new ChessEngine(chessboard);
       const movedPiecePosition: Square = { column: 'A', row: 1 };
 
-      const returnedResult = engine.pieceMovesNotCausingAllyKingCheck(movedPiecePosition);
-
       const expectedResult = [] as Square[];
-      expect(returnedResult).toIncludeSameMembers(expectedResult);
+      expect(engine.possibleMoves(movedPiecePosition)).toIncludeSameMembers(expectedResult);
     });
 
     it(`Should return empty possible king's moves array if it's checkmate`, () => {
@@ -393,10 +377,8 @@ describe('Chess Engine', () => {
       const engine = new ChessEngine(chessboard);
       const movedPiecePosition: Square = { column: 'A', row: 2 };
 
-      const returnedResult = engine.pieceMovesNotCausingAllyKingCheck(movedPiecePosition);
-
       const expectedResult = [] as Square[];
-      expect(returnedResult).toIncludeSameMembers(expectedResult);
+      expect(engine.possibleMoves(movedPiecePosition)).toIncludeSameMembers(expectedResult);
     });
   });
 

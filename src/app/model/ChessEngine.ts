@@ -133,12 +133,7 @@ export class ChessEngine implements ChessModel {
   }
 
   private canMoveOnSquare(squareFrom: Square, squareTo: Square): boolean {
-    const piecePossibleMoves = this.board.onPositionPiece(squareFrom)?.possibleMoves(squareFrom, this.board);
-    if (this.lastMove && this.canAttackInPassing(squareFrom, this.lastMove)) {
-      const additionalSquareToAttack: Square =
-        this.lastMove.piece.side === Side.WHITE ? this.squareDown(this.lastMove.to) : this.squareUp(this.lastMove.to);
-      piecePossibleMoves?.push(additionalSquareToAttack);
-    }
+    const piecePossibleMoves = this.possibleMoves(squareFrom);
     return (
       piecePossibleMoves?.some((possibleMove) => possibleMove.column === squareTo.column && possibleMove.row === squareTo.row) ?? false
     );
@@ -193,14 +188,18 @@ export class ChessEngine implements ChessModel {
     return this.isKingChecked(simulatedChessboard, this.currentSide);
   }
 
-  public pieceMovesNotCausingAllyKingCheck(position: Square): Square[] {
-    const initialPossibleMoves = this.board.onPositionPiece(position)?.possibleMoves(position, this.board) ?? [];
-    const filteringFunction = (onePossibleMove: Square) => !this.willBeKingChecked(position, onePossibleMove);
-    return initialPossibleMoves.filter(filteringFunction);
+  private pieceMovesNotCausingAllyKingCheck(squareFrom: Square, possibleMoves: Square[]): Square[] {
+    return possibleMoves.filter((possibleSquare: Square) => !this.willBeKingChecked(squareFrom, possibleSquare));
   }
 
   public possibleMoves(position: Square): Square[] {
-    return this.pieceMovesNotCausingAllyKingCheck(position);
+    const possibleMoves = this.board.onPositionPiece(position)?.possibleMoves(position, this.board) ?? [];
+    if (this.lastMove && this.canAttackInPassing(position, this.lastMove)) {
+      const additionalSquareToAttack: Square =
+        this.lastMove.piece.side === Side.WHITE ? this.squareDown(this.lastMove.to) : this.squareUp(this.lastMove.to);
+      possibleMoves?.push(additionalSquareToAttack);
+    }
+    return this.pieceMovesNotCausingAllyKingCheck(position, possibleMoves);
   }
 
   private hasOccurred<T>(x: T | undefined): x is T {
@@ -283,7 +282,6 @@ export class ChessEngine implements ChessModel {
   }
 
   private lastMoveWasFirstPawnMove(lastMove: PieceWasMoved): boolean {
-    // if (lastMove.piece.name === 'Pawn') {
     if (lastMove.piece.side === Side.WHITE) {
       return lastMove.from.row === 2 && lastMove.to.row === 4;
     } else if (lastMove.piece.side === Side.BLACK) {
@@ -291,9 +289,6 @@ export class ChessEngine implements ChessModel {
     } else {
       return false;
     }
-    // } else {
-    //   return false;
-    // }
   }
 
   private canAttackInPassing(squareFrom: Square, lastMove: PieceWasMoved): boolean {
