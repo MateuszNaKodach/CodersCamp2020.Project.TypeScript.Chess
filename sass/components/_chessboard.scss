@@ -1,10 +1,11 @@
 .chessboard {
+  display: grid;
   height: $chessboard-size--portrait;
   width: $chessboard-size--portrait;
   margin: auto;
   max-height: 100%;
   max-width: 100%;
-  display: grid;
+  border: 2px black solid;
   grid-gap: 0;
   grid-template-columns: repeat(8, auto);
 }
