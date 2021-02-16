@@ -71,7 +71,7 @@ export class WebChessView implements ChessBoardView {
     const pieceImage = divFrom?.firstChild as HTMLImageElement;
 
     if (pieceImage) {
-      pieceImage.src = `static/img/pieces/${side}-${piece}.svg`;
+      pieceImage.src = `static/img/pieces/${side.toLowerCase()}-${piece.toLowerCase()}.svg`;
     }
   }
 
@@ -80,7 +80,7 @@ export class WebChessView implements ChessBoardView {
       .map((square) => {
         const pieceName = piecesPositions[square].name.toLowerCase();
         const pieceSide = piecesPositions[square].side.toLowerCase();
-        const pieceImage = `static/img/pieces/${pieceSide.toLowerCase()}-${pieceName.toLowerCase()}.svg`;
+        const pieceImage = `static/img/pieces/${pieceSide}-${pieceName}.svg`;
         return { path: pieceImage, squareId: `#${square.toLowerCase()}`, square: square };
       })
       .forEach((element) => {
