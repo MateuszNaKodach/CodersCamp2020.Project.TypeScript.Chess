@@ -348,11 +348,8 @@ export class ChessEngine implements ChessModel {
     if (this.isKingChecked()) return undefined;
     if (this.isAnyPossibleMoves()) return undefined;
 
-    const kingPosition = this.kingPosition(this.board, this.currentSide);
     return {
       eventType: 'StalemateHasOccurred',
-      king: new King(this.currentSide),
-      onSquare: kingPosition,
     };
   }
 
