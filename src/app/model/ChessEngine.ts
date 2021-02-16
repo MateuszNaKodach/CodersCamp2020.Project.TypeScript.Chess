@@ -211,7 +211,7 @@ export class ChessEngine implements ChessModel {
   }
 
   private intendToCastling(squareFrom: Square, squareTo: Square): boolean {
-    if (!this.isKingMovedFromStartingPosition(squareFrom)) {
+    if (!this.isKingMovingFromStartingPosition(squareFrom)) {
       return false;
     }
     const castling = {
