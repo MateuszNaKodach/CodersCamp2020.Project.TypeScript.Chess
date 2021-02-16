@@ -1,5 +1,5 @@
 import { ChessModel } from './ChessModel';
-import { columns, Row, Side, Square, SquareWithPiece } from './Types';
+import { Column, columns, Row, Side, Square, SquareWithPiece } from './Types';
 import { King, Pawn, Piece, Rook } from './pieces';
 import { Chessboard } from './Chessboard';
 import { PieceWasMoved } from './PieceWasMoved';
@@ -18,7 +18,7 @@ export class ChessEngine implements ChessModel {
   private promotingOnSquare: Square | undefined;
   private checkedKing: CheckedKing | undefined;
   private castlingOnSquare: Square | undefined;
-  private gameRecord: PieceWasMoved[] = [];
+  private moveHistory: PieceWasMoved[] = [];
 
   constructor(private readonly board: Chessboard) {
     this.squaresWithPiece = board.squaresWithPiece;
@@ -38,9 +38,6 @@ export class ChessEngine implements ChessModel {
     if (!this.canMoveOnSquare(squareFrom, squareTo)) {
       throw new Error('Piece can not move to given square.');
     }
-    if (this.willBeKingChecked(squareFrom, squareTo)) {
-      throw new Error('You must not make a move that will result in checking your king.');
-    }
 
     const pieceWasMoved: PieceWasMoved = {
       eventType: 'PieceWasMoved',
@@ -48,7 +45,7 @@ export class ChessEngine implements ChessModel {
       from: squareFrom,
       to: squareTo,
     };
-    const castlingWasDone = this.castlingWasDone();
+    const castlingWasDone = this.castlingWasDone(squareFrom, squareTo);
     const pieceWasCaptured = this.pieceWasCaptured(squareTo, chosenPiece);
 
     const pawnPromotionWasEnabled = this.pawnPromotionWasEnabled(chosenPiece, squareTo);
@@ -69,65 +66,31 @@ export class ChessEngine implements ChessModel {
     );
   }
 
-  private pieceWasCaptured(squareTo: Square, chosenPiece: Piece): PieceWasCaptured | undefined {
-    const pieceOnSquare = this.board.onPositionPiece(squareTo);
-    return isDefined(pieceOnSquare) && pieceOnSquare.isOpponentOf(chosenPiece)
-      ? {
-          eventType: 'PieceWasCaptured',
-          piece: pieceOnSquare,
-          onSquare: squareTo,
-        }
-      : undefined;
-  }
-
-  private pawnPromotionWasEnabled(chosenPiece: Piece, squareTo: Square): PawnPromotionWasEnabled | undefined {
-    return chosenPiece instanceof Pawn &&
-      ((chosenPiece.side === Side.WHITE && squareTo.row === 8) || (chosenPiece.side === Side.BLACK && squareTo.row === 1))
-      ? {
-          eventType: 'PawnPromotionWasEnabled',
-          onSquare: squareTo,
-          pawn: chosenPiece as Pawn,
-        }
-      : undefined;
-  }
-
-  private onPieceWasMoved(event: PieceWasMoved): void {
-    this.board.movePiece(event.from, event.to);
-    this.gameRecord.push(event);
-    if (!this.promotingOnSquare) {
-      this.currentSide = this.anotherSide(event.piece.side);
+  public possibleMoves(position: Square): Square[] {
+    const possibleMoves = this.board.onPositionPiece(position)?.possibleMoves(position, this.board) ?? [];
+    if (this.isKingMovedFromStartingPosition(position)) {
+      const castlingSquaresTo: Square[] = this.kingsMovesForCastling(position);
+      castlingSquaresTo
+        .filter((squareTo) => this.isCastlingPossible(position, squareTo))
+        .forEach((squareTo) => possibleMoves.push(squareTo));
     }
+    return this.pieceMovesNotCausingAllyKingCheck(position, possibleMoves);
   }
 
-  private onPawnPromotionWasEnabled(event: PawnPromotionWasEnabled | undefined): void {
-    if (event) {
-      this.promotingOnSquare = event.onSquare;
-    }
-  }
-
-  private intendToCastling(squareFrom: Square, squareTo: Square): boolean {
-    const chosenPiece = this.board.onPositionPiece(squareFrom);
-    if (!(chosenPiece instanceof King)) {
-      return false;
-    }
-
-    const castling = {
-      WHITE: {
-        from: { column: 'E', row: 1 } as Square,
-        longTo: { column: 'C', row: 1 } as Square,
-        shortTo: { column: 'G', row: 1 } as Square,
-      },
-      BLACK: {
-        from: { column: 'E', row: 8 } as Square,
-        longTo: { column: 'C', row: 8 } as Square,
-        shortTo: { column: 'G', row: 8 } as Square,
-      },
+  private isKingMovedFromStartingPosition(position: Square): boolean {
+    const chosenPiece = this.board.onPositionPiece(position);
+    const startingPosition = {
+      WHITE: { column: 'E', row: 1 } as Square,
+      BLACK: { column: 'E', row: 8 } as Square,
     };
+    return chosenPiece instanceof King && this.isSameSquare(position, startingPosition[chosenPiece.side]);
+  }
 
-    return (
-      this.isSameSquare(squareFrom, castling[chosenPiece.side].from) &&
-      (this.isSameSquare(squareTo, castling[chosenPiece.side].longTo) || this.isSameSquare(squareTo, castling[chosenPiece.side].shortTo))
-    );
+  private kingsMovesForCastling(kingPosition: Square): Square[] {
+    return [
+      { column: 'C', row: kingPosition.row },
+      { column: 'G', row: kingPosition.row },
+    ];
   }
 
   private isSameSquare(squareA: Square, squareB: Square) {
@@ -174,41 +137,90 @@ export class ChessEngine implements ChessModel {
 
   private pieceWasAlreadyMoved(squareWithPiece: Square) {
     const piece = this.board.onPositionPiece(squareWithPiece);
-    return this.gameRecord?.some((record) => record.piece === piece && this.isSameSquare(record.from, squareWithPiece));
+    return this.moveHistory?.some((move) => move.piece === piece && this.isSameSquare(move.from, squareWithPiece));
   }
 
-  private castlingWasDone(): PieceWasMoved | undefined {
-    let rookSquareFrom: Square | undefined;
-    let rookSquareTo: Square | undefined;
-    switch (this.castlingOnSquare?.column) {
-      case 'C':
-        rookSquareFrom = { column: 'A', row: this.castlingOnSquare.row };
-        rookSquareTo = { column: 'D', row: this.castlingOnSquare.row };
-        break;
-      case 'G':
-        rookSquareFrom = { column: 'H', row: this.castlingOnSquare.row };
-        rookSquareTo = { column: 'F', row: this.castlingOnSquare.row };
-        break;
+  private pieceWasCaptured(squareTo: Square, chosenPiece: Piece): PieceWasCaptured | undefined {
+    const pieceOnSquare = this.board.onPositionPiece(squareTo);
+    return isDefined(pieceOnSquare) && pieceOnSquare.isOpponentOf(chosenPiece)
+      ? {
+          eventType: 'PieceWasCaptured',
+          piece: pieceOnSquare,
+          onSquare: squareTo,
+        }
+      : undefined;
+  }
+
+  private pawnPromotionWasEnabled(chosenPiece: Piece, squareTo: Square): PawnPromotionWasEnabled | undefined {
+    return chosenPiece instanceof Pawn &&
+      ((chosenPiece.side === Side.WHITE && squareTo.row === 8) || (chosenPiece.side === Side.BLACK && squareTo.row === 1))
+      ? {
+          eventType: 'PawnPromotionWasEnabled',
+          onSquare: squareTo,
+          pawn: chosenPiece as Pawn,
+        }
+      : undefined;
+  }
+
+  private onPieceWasMoved(event: PieceWasMoved): void {
+    this.board.movePiece(event.from, event.to);
+    this.moveHistory.push(event);
+    if (!this.promotingOnSquare) {
+      this.currentSide = this.anotherSide(event.piece.side);
     }
-    if (rookSquareFrom && rookSquareTo) {
-      this.board.movePiece(rookSquareFrom, rookSquareTo);
-      return {
-        eventType: 'PieceWasMoved',
-        piece: new Rook(this.currentSide),
-        from: rookSquareFrom,
-        to: rookSquareTo,
-      };
-    } else {
+  }
+
+  private onPawnPromotionWasEnabled(event: PawnPromotionWasEnabled | undefined): void {
+    if (event) {
+      this.promotingOnSquare = event.onSquare;
+    }
+  }
+
+  private castlingWasDone(squareFrom: Square, squareTo: Square): PieceWasMoved | undefined {
+    if (!this.intendToCastling(squareFrom, squareTo)) {
       return undefined;
     }
+    const rookMove = {
+      ['C' as Column]: {
+        rookSquareFrom: { column: 'A', row: squareTo.row } as Square,
+        rookSquareTo: { column: 'D', row: squareTo.row } as Square,
+      },
+      ['G' as Column]: {
+        rookSquareFrom: { column: 'H', row: squareTo.row } as Square,
+        rookSquareTo: { column: 'F', row: squareTo.row } as Square,
+      },
+    };
+    this.board.movePiece(rookMove[squareTo.column].rookSquareFrom, rookMove[squareTo.column].rookSquareTo);
+    return {
+      eventType: 'PieceWasMoved',
+      piece: new Rook(this.currentSide),
+      from: rookMove[squareTo.column].rookSquareFrom,
+      to: rookMove[squareTo.column].rookSquareTo,
+    };
+  }
+
+  private intendToCastling(squareFrom: Square, squareTo: Square): boolean {
+    if (!this.isKingMovedFromStartingPosition(squareFrom)) {
+      return false;
+    }
+    const castling = {
+      WHITE: {
+        longTo: { column: 'C', row: 1 } as Square,
+        shortTo: { column: 'G', row: 1 } as Square,
+      },
+      BLACK: {
+        longTo: { column: 'C', row: 8 } as Square,
+        shortTo: { column: 'G', row: 8 } as Square,
+      },
+    };
+
+    return (
+      this.isSameSquare(squareTo, castling[this.currentSide].longTo) || this.isSameSquare(squareTo, castling[this.currentSide].shortTo)
+    );
   }
 
   private canMoveOnSquare(squareFrom: Square, squareTo: Square): boolean {
-    const piecePossibleMoves = this.board.onPositionPiece(squareFrom)?.possibleMoves(squareFrom, this.board);
-    if (this.intendToCastling(squareFrom, squareTo) && this.isCastlingPossible(squareFrom, squareTo)) {
-      this.castlingOnSquare = squareTo;
-      piecePossibleMoves?.push(squareTo);
-    }
+    const piecePossibleMoves = this.possibleMoves(squareFrom);
     return (
       piecePossibleMoves?.some((possibleMove) => possibleMove.column === squareTo.column && possibleMove.row === squareTo.row) ?? false
     );
@@ -263,14 +275,8 @@ export class ChessEngine implements ChessModel {
     return this.isKingChecked(simulatedChessboard, this.currentSide);
   }
 
-  public pieceMovesNotCausingAllyKingCheckmate(position: Square): Square[] {
-    const initialPossibleMoves = this.board.onPositionPiece(position)?.possibleMoves(position, this.board) ?? [];
-    const filteringFunction = (onePossibleMove: Square) => !this.willBeKingChecked(position, onePossibleMove);
-    return initialPossibleMoves.filter(filteringFunction);
-  }
-
-  public possibleMoves(position: Square): Square[] {
-    return this.pieceMovesNotCausingAllyKingCheckmate(position);
+  private pieceMovesNotCausingAllyKingCheck(squareFrom: Square, possibleMoves: Square[]): Square[] {
+    return possibleMoves.filter((possibleSquare: Square) => !this.willBeKingChecked(squareFrom, possibleSquare));
   }
 
   private hasOccurred<T>(x: T | undefined): x is T {
