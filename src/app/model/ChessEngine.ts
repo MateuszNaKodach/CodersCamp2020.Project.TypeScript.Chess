@@ -337,10 +337,12 @@ export class ChessEngine implements ChessModel {
     if (this.isAnyPossibleMoves()) return undefined;
 
     const kingPosition = this.kingPosition(this.board, this.currentSide);
+    if (!kingPosition) return undefined;
+
     return {
       eventType: 'CheckmateHasOccurred',
       king: new King(this.currentSide),
-      onSquare: kingPosition as Square,
+      onSquare: kingPosition,
     };
   }
 
