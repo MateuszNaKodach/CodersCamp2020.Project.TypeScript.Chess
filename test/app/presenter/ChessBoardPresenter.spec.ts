@@ -1,4 +1,4 @@
-import { SquareWithPiece } from './../model/BoardFixture';
+import { SquareWithPiece } from '../model/BoardFixture';
 import '@testing-library/jest-dom';
 import { ChessBoardView } from '../../../src/app/view/ChessBoardView';
 import { Bishop, ChessModel, King, Knight, Pawn, Queen, Rook, Side, Square } from '../../../src/app/model';
@@ -38,7 +38,12 @@ describe('ChessBoardPresenter', () => {
   it('when game starts, check if pieces will show on the screen', () => {
     const viewEvents: ViewEventBus = new InMemoryViewEventBus();
     const view: ChessBoardView = chessBoardViewMock(viewEvents);
-    const model: ChessModel = { squaresWithPiece: PIECES_START_POSITION, move: jest.fn(), possibleMoves: jest.fn() };
+    const model: ChessModel = {
+      squaresWithPiece: PIECES_START_POSITION,
+      move: jest.fn(),
+      possibleMoves: jest.fn(),
+      pawnWasPromoted: jest.fn(),
+    };
     const presenter: ChessBoardPresenter = new ChessBoardPresenter(view, model);
     presenter.startGame();
 
@@ -58,6 +63,7 @@ describe('ChessBoardPresenter', () => {
         { column: 'A', row: 3 },
         { column: 'A', row: 4 },
       ],
+      pawnWasPromoted: jest.fn(),
     };
     const presenter: ChessBoardPresenter = new ChessBoardPresenter(view, model);
 
@@ -84,6 +90,7 @@ describe('ChessBoardPresenter', () => {
         { column: 'D', row: 5 },
         { column: 'C', row: 5 },
       ],
+      pawnWasPromoted: jest.fn(),
     };
     const presenter: ChessBoardPresenter = new ChessBoardPresenter(view, model);
 
@@ -107,6 +114,7 @@ describe('ChessBoardPresenter', () => {
         ];
       },
       possibleMoves: () => [{ column: 'D', row: 8 }],
+      pawnWasPromoted: jest.fn(),
     };
     const presenter: ChessBoardPresenter = new ChessBoardPresenter(view, model);
 
@@ -131,6 +139,7 @@ function chessBoardViewMock(viewEventBus: ViewEventBus): ChessBoardView {
     pawnPromotion: jest.fn(),
     movePiece: jest.fn(),
     capturePiece: jest.fn(),
+    afterPromotionPiece: jest.fn(),
   };
 }
 
@@ -143,6 +152,7 @@ function chessboardStateMock(square: Square[]) {
     possibleMoves(position: Square): Square[] {
       return square;
     },
+    pawnWasPromoted: jest.fn(),
   };
 
   new ChessBoardPresenter(view, model);
@@ -159,6 +169,7 @@ function promotionChessBoardStateMock(square: Square[]) {
     possibleMoves(position: Square): Square[] {
       return square;
     },
+    pawnWasPromoted: jest.fn(),
   };
 
   new ChessBoardPresenter(view, model);

@@ -1,13 +1,10 @@
-import { Square } from './Square';
-import { PawnWasPromoted } from './../../model/PawnWasPromoted';
 import { Chessboard } from './Chessboard';
 import { ChessBoardView } from '../ChessBoardView';
 import { ViewEventBus } from '../events/ViewEventBus';
 import { ViewEvent } from '../events/ViewEvent';
 import { SquareWasClicked } from '../events/SquareWasClicked';
-import { PromotionChoosenPiece } from '../events/PromotionChoosenPiece';
+import { PromotionChosenPiece } from '../events/PromotionChosenPiece';
 import { PiecesBoardPositions } from '../Types';
-import { Bishop, Knight, Pawn, Queen, Rook, Side } from '../../model';
 
 export class WebChessView implements ChessBoardView {
   constructor(private readonly viewEventBus: ViewEventBus, private readonly parent: HTMLElement = document.body) {}
@@ -69,6 +66,15 @@ export class WebChessView implements ChessBoardView {
     }
   }
 
+  afterPromotionPiece(onSquare: string, piece: string, side: string) {
+    const divFrom = this.parent.querySelector(`#${onSquare}`);
+    const pieceImage = divFrom?.firstChild as HTMLImageElement;
+
+    if (pieceImage) {
+      pieceImage.src = `static/img/pieces/${side}-${piece}.svg`;
+    }
+  }
+
   private renderPiecesOnBoard(piecesPositions: PiecesBoardPositions) {
     Object.keys(piecesPositions)
       .map((square) => {
@@ -90,10 +96,6 @@ export class WebChessView implements ChessBoardView {
     newPieceElement.src = pieceImage;
     return newPieceElement;
   }
-
-  // private promotionPieceChoosen(pieceChoosen: string): void {
-  //   this.viewEventBus.publish(new PromotionChoosenPiece(pieceChoosen));
-  // }
 
   pawnPromotion(): void {
     const promotionModal = document.createElement('div');
@@ -131,33 +133,11 @@ export class WebChessView implements ChessBoardView {
 
     const clickedPawn = document.querySelectorAll('.modal__pawn');
     clickedPawn.forEach((element) => {
-      element.addEventListener('click', (event: any) => {
-        console.log('PawnToPromotionWasSelected:', event.target.innerText);
-
-        // console.log(event);
-        console.log(event.target);
-        // console.log(event.target?.innerText);
-
-        // this.viewEventBus.publish(new PromotionChoosenPiece((event.target as any).innerText));
-
+      element.addEventListener('click', () => {
+        // console.log(element.innerHTML);
+        this.viewEventBus.publish(new PromotionChosenPiece(element.innerHTML));
         promotionModal.style.display = 'none';
       });
     });
-    // element.addEventListener('click', (event) => {
-    //   // if (event !== null) {
-    //   console.log('PawnToPromotionWasSelected:', event.target);
-    // //   this.promotionPieceChoosen(event.target.innerText);
-    // // }
-
-    //         promotionModal.style.display = 'none';
-    // });
-    // })// ;
-
-    window.onclick = function (event: any) {
-      if (event.target == promotionModal) {
-        promotionModal.style.display = 'none';
-      }
-    };
-    // }
   }
 }

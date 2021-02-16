@@ -3,16 +3,24 @@ import { Position } from './Position';
 import { ChessModel, columns, Row, Square } from '../model';
 import { SquareWasClicked } from '../view/events/SquareWasClicked';
 import { MoveResult } from '../model/MoveResult';
+import { PromotionChosenPiece } from '../view/events/PromotionChosenPiece';
 
 export class ChessBoardPresenter {
   constructor(private readonly view: ChessBoardView, private readonly chessModel: ChessModel) {
     view.listenOn<SquareWasClicked>('SquareWasClicked', (event) => {
       this.onSquareWasClicked(event.position);
     });
+    view.listenOn<PromotionChosenPiece>('PromotionChosenPiece', (event) => {
+      this.onPromotionPieceWasClicked(event.chosenPiece);
+    });
   }
 
   private lastPossibleMoves: string[] = [];
   private lastMoveAsPosition: Position = { x: 0, y: 0 };
+
+  onPromotionPieceWasClicked(chosenPiece: string): void {
+    this.onEvent(this.chessModel.pawnWasPromoted(chosenPiece)!);
+  }
 
   onSquareWasClicked(position: Position): void {
     this.view.hideSelection();
@@ -62,8 +70,13 @@ export class ChessBoardPresenter {
         this.view.pawnPromotion();
         break;
       case 'PawnWasPromoted':
-        // this.view.pawnPromotion();
-        console.log('podmiana');
+        this.view.afterPromotionPiece(
+          this.translateSquareToAlgebraicNotation(event.onSquare),
+          event.chosenPiece.name.toLowerCase(),
+          event.chosenPiece.side,
+        );
+        break;
+      default:
         break;
     }
   }

@@ -1,6 +1,6 @@
 import { ChessModel } from './ChessModel';
 import { Row, Side, Square, SquareWithPiece } from './Types';
-import { King, Pawn, Piece } from './pieces';
+import { Bishop, King, Knight, Pawn, Piece, Queen, Rook } from './pieces';
 import { Chessboard } from './Chessboard';
 import { PieceWasMoved } from './PieceWasMoved';
 import { PieceWasCaptured } from './PieceWasCaptured';
@@ -9,13 +9,14 @@ import { isDefined } from './HelperFunctions';
 import { KingWasChecked } from './KingWasChecked';
 import { KingWasUnchecked } from './KingWasUnchecked';
 import { MoveResult } from './MoveResult';
+import { PawnWasPromoted } from './PawnWasPromoted';
 
 type CheckedKing = { kingSide: Side; position: Square };
 
 export class ChessEngine implements ChessModel {
   private currentSide: Side = Side.WHITE;
   readonly squaresWithPiece: SquareWithPiece;
-  private promotingOnSquare: Square | undefined;
+  promotingOnSquare: Square | undefined;
   private checkedKing: CheckedKing | undefined;
 
   constructor(private readonly board: Chessboard) {
@@ -64,6 +65,44 @@ export class ChessEngine implements ChessModel {
     return [pieceWasCaptured, pieceWasMoved, kingWasChecked, kingWasUnchecked, pawnPromotionWasEnabled].filter(this.hasOccurred);
   }
 
+  pawnWasPromoted(chosenPiece: string): PawnWasPromoted | undefined {
+    if (this.promotingOnSquare) {
+      const onSquarePromotion = this.promotingOnSquare;
+      const pawnToRemove = this.squaresWithPiece[this.translateSquareToAlgebraicNotationCapital(onSquarePromotion)];
+      const createChosenPiece = this.objectCreator(chosenPiece, pawnToRemove.side);
+      this.squaresWithPiece[this.translateSquareToAlgebraicNotationCapital(onSquarePromotion)] = createChosenPiece;
+      this.promotingOnSquare = undefined;
+      this.currentSide = this.anotherSide(this.currentSide);
+
+      return {
+        eventType: 'PawnWasPromoted',
+        onSquare: onSquarePromotion,
+        chosenPiece: createChosenPiece,
+      };
+    } else {
+      return undefined;
+    }
+  }
+
+  private translateSquareToAlgebraicNotationCapital(square: Square): string {
+    return `${square.column}${square.row}`;
+  }
+
+  private objectCreator(pieceName: string, side: Side): Knight | Rook | Bishop | Queen {
+    switch (pieceName) {
+      case 'Queen':
+        return new Queen(side);
+      case 'Rook':
+        return new Rook(side);
+      case 'Bishop':
+        return new Bishop(side);
+      case 'Knight':
+        return new Knight(side);
+      default:
+        throw new Error();
+    }
+  }
+
   private pieceWasCaptured(squareTo: Square, chosenPiece: Piece): PieceWasCaptured | undefined {
     const pieceOnSquare = this.board.onPositionPiece(squareTo);
     return isDefined(pieceOnSquare) && pieceOnSquare.isOpponentOf(chosenPiece)
@@ -88,6 +127,7 @@ export class ChessEngine implements ChessModel {
 
   private onPieceWasMoved(event: PieceWasMoved): void {
     this.board.movePiece(event.from, event.to);
+    // this.currentSide = this.anotherSide(event.piece.side);
     if (!this.promotingOnSquare) {
       this.currentSide = this.anotherSide(event.piece.side);
     }
