@@ -106,6 +106,7 @@ function chessBoardViewMock(viewEventBus: ViewEventBus): ChessBoardView {
     hideAllAvailableMoves: jest.fn(),
     movePiece: jest.fn(),
     capturePiece: jest.fn(),
+    showEndGameWindow: jest.fn(),
   };
 }
 

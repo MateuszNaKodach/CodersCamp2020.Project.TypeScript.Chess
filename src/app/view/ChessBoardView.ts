@@ -15,4 +15,6 @@ export interface ChessBoardView extends ViewEventSource {
 
   movePiece(squareFrom: string, squareTo: string): void;
   capturePiece(onSquare: string): void;
+
+  showEndGameWindow(side?: string, position?: string): void;
 }

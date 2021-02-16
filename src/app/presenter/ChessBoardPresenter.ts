@@ -57,6 +57,11 @@ export class ChessBoardPresenter {
       case 'PieceWasMoved':
         this.view.movePiece(this.translateSquareToAlgebraicNotation(event.from), this.translateSquareToAlgebraicNotation(event.to));
         break;
+      case 'CheckmateHasOccurred':
+        this.view.showEndGameWindow(event.king.side.toString(), this.translateSquareToAlgebraicNotation(event.onSquare as Square));
+        break;
+      case 'StalemateHasOccurred':
+        this.view.showEndGameWindow();
     }
   }
 

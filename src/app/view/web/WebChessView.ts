@@ -86,4 +86,20 @@ export class WebChessView implements ChessBoardView {
     newPieceElement.src = pieceImage;
     return newPieceElement;
   }
+
+  showEndGameWindow(side: string, position: string): void {
+    //TODO zbudować ładne okno z wyświetleniem wyniku
+    const endGameModal = document.createElement('div');
+    endGameModal.classList.add('endGame');
+
+    const endGameText = document.createElement('div');
+    endGameText.classList.add('endGame__text');
+    if (side && position) {
+      endGameText.innerText = `${side} player lost! Checkmate on ${position}.`;
+    } else {
+      endGameText.innerText = `Draw!`;
+    }
+    endGameModal.appendChild(endGameText);
+    this.parent.appendChild(endGameModal);
+  }
 }
