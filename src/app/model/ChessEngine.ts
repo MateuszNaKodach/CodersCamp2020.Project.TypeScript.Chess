@@ -66,22 +66,22 @@ export class ChessEngine implements ChessModel {
   }
 
   pawnWasPromoted(chosenPiece: string): PawnWasPromoted | undefined {
-    if (this.promotingOnSquare) {
-      const onSquarePromotion = this.promotingOnSquare;
-      const pawnToRemove = this.squaresWithPiece[this.translateSquareToAlgebraicNotationCapital(onSquarePromotion)];
-      const createChosenPiece = this.objectCreator(chosenPiece, pawnToRemove.side);
-      this.squaresWithPiece[this.translateSquareToAlgebraicNotationCapital(onSquarePromotion)] = createChosenPiece;
-      this.promotingOnSquare = undefined;
-      this.currentSide = this.anotherSide(this.currentSide);
-
-      return {
-        eventType: 'PawnWasPromoted',
-        onSquare: onSquarePromotion,
-        chosenPiece: createChosenPiece,
-      };
-    } else {
+    if (!this.promotingOnSquare) {
       return undefined;
     }
+
+    const onSquarePromotion = this.promotingOnSquare;
+    const pawnToRemove = this.squaresWithPiece[this.translateSquareToAlgebraicNotationCapital(onSquarePromotion)];
+    const createChosenPiece = this.objectCreator(chosenPiece, pawnToRemove.side);
+    this.squaresWithPiece[this.translateSquareToAlgebraicNotationCapital(onSquarePromotion)] = createChosenPiece;
+    this.promotingOnSquare = undefined;
+    this.currentSide = this.anotherSide(this.currentSide);
+
+    return {
+      eventType: 'PawnWasPromoted',
+      onSquare: onSquarePromotion,
+      chosenPiece: createChosenPiece,
+    };
   }
 
   private translateSquareToAlgebraicNotationCapital(square: Square): string {

@@ -19,7 +19,14 @@ export class ChessBoardPresenter {
   private lastMoveAsPosition: Position = { x: 0, y: 0 };
 
   onPromotionPieceWasClicked(chosenPiece: string): void {
-    this.onEvent(this.chessModel.pawnWasPromoted(chosenPiece)!);
+    const pawnWasPromoted = this.chessModel.pawnWasPromoted(chosenPiece);
+    if (pawnWasPromoted) {
+      this.view.afterPromotionPiece(
+        this.translateSquareToAlgebraicNotation(pawnWasPromoted.onSquare),
+        pawnWasPromoted.chosenPiece.name.toLowerCase(),
+        pawnWasPromoted.chosenPiece.side,
+      );
+    }
   }
 
   onSquareWasClicked(position: Position): void {
@@ -69,13 +76,13 @@ export class ChessBoardPresenter {
       case 'PawnPromotionWasEnabled':
         this.view.pawnPromotion();
         break;
-      case 'PawnWasPromoted':
-        this.view.afterPromotionPiece(
-          this.translateSquareToAlgebraicNotation(event.onSquare),
-          event.chosenPiece.name.toLowerCase(),
-          event.chosenPiece.side,
-        );
-        break;
+      // case 'PawnWasPromoted':
+      //   this.view.afterPromotionPiece(
+      //     this.translateSquareToAlgebraicNotation(event.onSquare),
+      //     event.chosenPiece.name.toLowerCase(),
+      //     event.chosenPiece.side,
+      //   );
+      //   break;
       default:
         break;
     }
