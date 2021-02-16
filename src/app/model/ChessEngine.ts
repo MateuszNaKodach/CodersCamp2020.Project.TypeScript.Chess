@@ -233,17 +233,17 @@ export class ChessEngine implements ChessModel {
   }
 
   private lastMoveWasFirstPawnMove(lastMove: PieceWasMoved): boolean {
-    if (lastMove.piece.name === 'Pawn') {
-      if (lastMove.piece.side === Side.WHITE) {
-        return lastMove.from.row === 2 && lastMove.to.row === 4;
-      } else if (lastMove.piece.side === Side.BLACK) {
-        return lastMove.from.row === 7 && lastMove.to.row === 5;
-      } else {
-        return false;
-      }
+    // if (lastMove.piece.name === 'Pawn') {
+    if (lastMove.piece.side === Side.WHITE) {
+      return lastMove.from.row === 2 && lastMove.to.row === 4;
+    } else if (lastMove.piece.side === Side.BLACK) {
+      return lastMove.from.row === 7 && lastMove.to.row === 5;
     } else {
       return false;
     }
+    // } else {
+    //   return false;
+    // }
   }
 
   private canAttackInPassing(squareFrom: Square, lastMove: PieceWasMoved): boolean {
