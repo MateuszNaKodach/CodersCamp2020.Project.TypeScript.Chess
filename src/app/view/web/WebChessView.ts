@@ -3,6 +3,7 @@ import { ChessBoardView } from '../ChessBoardView';
 import { ViewEventBus } from '../events/ViewEventBus';
 import { ViewEvent } from '../events/ViewEvent';
 import { SquareWasClicked } from '../events/SquareWasClicked';
+import { PromotionChosenPiece } from '../events/PromotionChosenPiece';
 import { PiecesBoardPositions } from '../Types';
 
 export class WebChessView implements ChessBoardView {
@@ -65,6 +66,15 @@ export class WebChessView implements ChessBoardView {
     }
   }
 
+  afterPromotionPiece(onSquare: string, piece: string, side: string) {
+    const divFrom = this.parent.querySelector(`#${onSquare}`);
+    const pieceImage = divFrom?.firstChild as HTMLImageElement;
+
+    if (pieceImage) {
+      pieceImage.src = `static/img/pieces/${side}-${piece}.svg`;
+    }
+  }
+
   private renderPiecesOnBoard(piecesPositions: PiecesBoardPositions) {
     Object.keys(piecesPositions)
       .map((square) => {
@@ -85,5 +95,49 @@ export class WebChessView implements ChessBoardView {
     newPieceElement.setAttribute('data-testid', `${id}-img`);
     newPieceElement.src = pieceImage;
     return newPieceElement;
+  }
+
+  pawnPromotion(): void {
+    const promotionModal = document.createElement('div');
+    promotionModal.classList.add('modal');
+    document.body.appendChild(promotionModal);
+
+    const modalWindow = document.createElement('div');
+    modalWindow.classList.add('modal__window');
+    modalWindow.textContent = 'Choose your promotion pawn';
+    promotionModal.appendChild(modalWindow);
+
+    const modalPawnWrap = document.createElement('h1');
+    modalPawnWrap.classList.add('modal__wrap');
+    modalWindow.appendChild(modalPawnWrap);
+
+    const queenPromotion = document.createElement('div');
+    queenPromotion.classList.add('modal__pawn');
+    queenPromotion.textContent = 'Queen';
+    modalPawnWrap.appendChild(queenPromotion);
+
+    const rookPromotion = document.createElement('div');
+    rookPromotion.classList.add('modal__pawn');
+    rookPromotion.textContent = 'Rook';
+    modalPawnWrap.appendChild(rookPromotion);
+
+    const knightPromotion = document.createElement('div');
+    knightPromotion.classList.add('modal__pawn');
+    knightPromotion.textContent = 'Knight';
+    modalPawnWrap.appendChild(knightPromotion);
+
+    const bishopPromotion = document.createElement('div');
+    bishopPromotion.classList.add('modal__pawn');
+    bishopPromotion.textContent = 'Bishop';
+    modalPawnWrap.appendChild(bishopPromotion);
+
+    const clickedPawn = document.querySelectorAll('.modal__pawn');
+    clickedPawn.forEach((element) => {
+      element.addEventListener('click', () => {
+        // console.log(element.innerHTML);
+        this.viewEventBus.publish(new PromotionChosenPiece(element.innerHTML));
+        promotionModal.style.display = 'none';
+      });
+    });
   }
 }

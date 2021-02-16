@@ -1,13 +1,8 @@
 .piece {
-  overflow: auto;
   position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  width: 90%;
-  height: auto;
-  margin: auto;
+  padding: 5%;
+  width: 100%;
+  height: 100%;
   animation: appearing 1s ease-in;
 }
 
