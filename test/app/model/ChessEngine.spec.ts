@@ -626,22 +626,22 @@ describe('Chess Engine', () => {
       const boardWithPieces: SquareWithPiece = {
         A1: whiteKing,
         A6: whiteRook,
-        H7: whiteRook,
+        G7: whiteRook,
         H8: blackKing,
       };
       const chessboard = new Chessboard(boardWithPieces);
       const engine = new ChessEngine(chessboard);
       const startPiecePosition: Square = { column: 'A', row: 6 };
-      const endPiecePosition: Square = { column: 'H', row: 7 };
+      const endPiecePosition: Square = { column: 'G', row: 6 };
 
       const returnedResult = engine.move(startPiecePosition, endPiecePosition);
 
       const expectedResult = [
         {
           eventType: 'PieceWasMoved',
-          from: { column: 'B', row: 1 },
+          from: { column: 'A', row: 6 },
           piece: { name: 'Rook', side: 'WHITE' },
-          to: { column: 'B', row: 8 },
+          to: { column: 'G', row: 6 },
         },
         { eventType: 'StalemateHasOccurred', king: { name: 'King', side: 'BLACK' }, onSquare: { column: 'H', row: 8 } },
       ];
