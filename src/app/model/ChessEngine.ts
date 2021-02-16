@@ -79,13 +79,15 @@ export class ChessEngine implements ChessModel {
 
   public possibleMoves(pieceMovingFrom: Square): Square[] {
     const possibleMoves = this.board.onPositionPiece(pieceMovingFrom)?.possibleMoves(pieceMovingFrom, this.board) ?? [];
-    if (this.isKingMovingFromStartingPosition(pieceMovingFrom)) {
-      const castlingSquaresTo: Square[] = this.kingsMovesForCastling(pieceMovingFrom);
-      castlingSquaresTo
-        .filter((squareTo) => this.isCastlingPossible(pieceMovingFrom, squareTo))
-        .forEach((squareTo) => possibleMoves.push(squareTo));
+    const castlingMoves = this.castlingMoves(pieceMovingFrom);
+    return this.pieceMovesNotCausingAllyKingCheck(pieceMovingFrom, [...possibleMoves, ...castlingMoves]);
+  }
+
+  private castlingMoves(pieceMovingFrom: Square): Square[] {
+    if (!this.isKingMovingFromStartingPosition(pieceMovingFrom)) {
+      return [];
     }
-    return this.pieceMovesNotCausingAllyKingCheck(pieceMovingFrom, possibleMoves);
+    return this.kingsMovesForCastling(pieceMovingFrom).filter((squareTo) => this.isCastlingPossible(pieceMovingFrom, squareTo));
   }
 
   private isKingMovingFromStartingPosition(squareFrom: Square): boolean {
