@@ -9,6 +9,8 @@ import { isDefined } from './HelperFunctions';
 import { KingWasChecked } from './KingWasChecked';
 import { KingWasUnchecked } from './KingWasUnchecked';
 import { MoveResult } from './MoveResult';
+import { CheckmateHasOccurred } from './CheckmateHasOccurred';
+import { StalemateHasOccurred } from './StalemateHasOccurred';
 
 type CheckedKing = { kingSide: Side; position: Square };
 
@@ -60,10 +62,19 @@ export class ChessEngine implements ChessModel {
     if (kingWasUnchecked) {
       this.onKingWasUnchecked(kingWasUnchecked);
     }
+    const checkmateHasOccurred = this.checkmateHasOccurred();
+    const stalemateHasOccurred = this.stalemateHasOccurred();
 
-    return [pieceWasCaptured, pieceWasMoved, kingWasChecked, kingWasUnchecked, pawnPromotionWasEnabled, castlingWasDone].filter(
-      this.hasOccurred,
-    );
+    return [
+      pieceWasCaptured,
+      pieceWasMoved,
+      kingWasChecked,
+      kingWasUnchecked,
+      checkmateHasOccurred,
+      stalemateHasOccurred,
+      pawnPromotionWasEnabled,
+      castlingWasDone,
+    ].filter(this.hasOccurred);
   }
 
   public possibleMoves(position: Square): Square[] {
@@ -265,7 +276,7 @@ export class ChessEngine implements ChessModel {
       );
   }
 
-  private isKingChecked(chessboard: Chessboard, kingSide: Side): boolean {
+  private isKingChecked(chessboard: Chessboard = this.board, kingSide: Side = this.currentSide): boolean {
     const kingPosition = this.kingPosition(chessboard, kingSide);
     return kingPosition ? this.isSquareChecked(chessboard, kingSide, kingPosition) : false;
   }
@@ -317,5 +328,40 @@ export class ChessEngine implements ChessModel {
 
   private onKingWasUnchecked(event: KingWasUnchecked): void {
     this.checkedKing = undefined;
+  }
+
+  private checkmateHasOccurred(): CheckmateHasOccurred | undefined {
+    if (!this.isKingChecked()) return undefined;
+    if (this.isAnyPossibleMoves()) return undefined;
+
+    const kingPosition = this.kingPosition(this.board, this.currentSide);
+    return {
+      eventType: 'CheckmateHasOccurred',
+      king: new King(this.currentSide),
+      onSquare: kingPosition,
+    };
+  }
+
+  private stalemateHasOccurred(): StalemateHasOccurred | undefined {
+    if (this.isKingChecked()) return undefined;
+    if (this.isAnyPossibleMoves()) return undefined;
+
+    const kingPosition = this.kingPosition(this.board, this.currentSide);
+    return {
+      eventType: 'StalemateHasOccurred',
+      king: new King(this.currentSide),
+      onSquare: kingPosition,
+    };
+  }
+
+  private isAnyPossibleMoves() {
+    const squaresWithPieces = this.board.squaresWithPiece;
+    return Object.keys(squaresWithPieces)
+      .map((squareKey) => ({
+        position: { column: squareKey[0], row: Number(squareKey[1]) as Row },
+        piece: squaresWithPieces[squareKey],
+      }))
+      .filter(({ piece }) => piece.side == this.currentSide)
+      .some(({ position }) => this.possibleMoves(position).length);
   }
 }

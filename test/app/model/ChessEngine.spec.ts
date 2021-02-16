@@ -5,7 +5,7 @@ describe('Chess Engine', () => {
   it('Given white piece on A2 and black piece on A4, when move white piece from A2 to A3, then white piece was moved from A2 to A3', () => {
     const whitePiece = new Pawn(Side.WHITE);
     const blackPiece = new Pawn(Side.BLACK);
-    const boardWithPieces: SquareWithPiece = { A2: whitePiece, A4: blackPiece };
+    const boardWithPieces: SquareWithPiece = { A2: whitePiece, A4: blackPiece, H7: blackPiece };
     const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
     const squareFrom: Square = { column: 'A', row: 2 };
@@ -24,7 +24,7 @@ describe('Chess Engine', () => {
   it('Given white piece on A2 and black piece on A4, when move white piece from A2 to A4, then white piece was moved from A2 to A4 and piece from A4 was captured', () => {
     const whitePiece = new Queen(Side.WHITE);
     const blackPiece = new Pawn(Side.BLACK);
-    const boardWithPieces: SquareWithPiece = { A2: whitePiece, A4: blackPiece };
+    const boardWithPieces: SquareWithPiece = { A2: whitePiece, A4: blackPiece, H7: blackPiece };
     const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
     const squareFrom: Square = { column: 'A', row: 2 };
@@ -40,7 +40,7 @@ describe('Chess Engine', () => {
     const whitePawn = new Pawn(Side.WHITE);
     const whiteKnight = new Knight(Side.WHITE);
     const blackPawn = new Pawn(Side.BLACK);
-    const boardWithPieces: SquareWithPiece = { C2: whitePawn, B1: whiteKnight, B4: blackPawn };
+    const boardWithPieces: SquareWithPiece = { C2: whitePawn, B1: whiteKnight, B4: blackPawn, H7: blackPawn };
     const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
 
@@ -437,7 +437,7 @@ describe('Castling can be done only if neither king nor rook has moved and none 
   const blackPawn = new Pawn(Side.BLACK);
 
   it('Short castling can be done', () => {
-    const boardWithPieces: SquareWithPiece = { E1: whiteKing, H1: whiteRookH1 };
+    const boardWithPieces: SquareWithPiece = { E1: whiteKing, H1: whiteRookH1, E8: blackKing };
     const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
     const kingSquareFrom: Square = { column: 'E', row: 1 };
@@ -452,7 +452,7 @@ describe('Castling can be done only if neither king nor rook has moved and none 
   });
 
   it('Long castling can be done', () => {
-    const boardWithPieces: SquareWithPiece = { E1: whiteKing, A1: whiteRookA1 };
+    const boardWithPieces: SquareWithPiece = { E1: whiteKing, A1: whiteRookA1, E8: blackKing };
     const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
     const kingSquareFrom: Square = { column: 'E', row: 1 };
@@ -503,7 +503,7 @@ describe('Castling can be done only if neither king nor rook has moved and none 
   });
 
   it('When all conditions are fulfilled but move starts with the rook, then castling will not be done', () => {
-    const boardWithPieces: SquareWithPiece = { E1: whiteKing, H1: whiteRookH1 };
+    const boardWithPieces: SquareWithPiece = { E1: whiteKing, H1: whiteRookH1, E8: blackKing };
     const chessBoard = new Chessboard(boardWithPieces);
     const engine = new ChessEngine(chessBoard);
     const rookSquareFrom: Square = { column: 'H', row: 1 };
@@ -597,5 +597,209 @@ describe('Castling can be done only if neither king nor rook has moved and none 
     engine.move(rookFirstMoveSquare, rookStartingSquare);
     engine.move(pawnFirstMoveSquare, pawnSecondMoveSquare);
     expect(() => engine.move(kingSquareFrom, kingSquareTo)).toThrowError('Piece can not move to given square.');
+  });
+
+  describe('Checkmate and Stalemate event', () => {
+    const whiteKing = new King(Side.WHITE);
+    const blackKing = new King(Side.BLACK);
+    const whiteRook = new Rook(Side.WHITE);
+    const blackRook = new Rook(Side.BLACK);
+    const blackPawn = new Pawn(Side.BLACK);
+
+    const descriptionWithoutCheckmate = `Should't return checkmate event If checkmate Hasn't Occurred.`;
+    const descriptionWithCheckmate = `Should return checkmate event If checkmate Has Occurred.`;
+    const descriptionWithStalemate = `Should return Stalemate event If stalemate Has Occurred.`;
+
+    it(`${descriptionWithoutCheckmate} Enemy king is not checked`, () => {
+      const boardWithPieces: SquareWithPiece = {
+        A1: whiteKing,
+        B1: whiteRook,
+        H8: blackKing,
+      };
+      const chessboard = new Chessboard(boardWithPieces);
+      const engine = new ChessEngine(chessboard);
+      const startPiecePosition: Square = { column: 'B', row: 1 };
+      const endPiecePosition: Square = { column: 'B', row: 2 };
+
+      const returnedResult = engine.move(startPiecePosition, endPiecePosition);
+
+      const expectedResult = [
+        { eventType: 'PieceWasMoved', from: { column: 'B', row: 1 }, piece: { name: 'Rook', side: 'WHITE' }, to: { column: 'B', row: 2 } },
+      ];
+      expect(returnedResult).toIncludeSameMembers(expectedResult);
+    });
+
+    it(`${descriptionWithoutCheckmate} Enemy king is checked.`, () => {
+      const boardWithPieces: SquareWithPiece = {
+        A1: whiteKing,
+        B1: whiteRook,
+        H8: blackKing,
+      };
+      const chessboard = new Chessboard(boardWithPieces);
+      const engine = new ChessEngine(chessboard);
+      const startPiecePosition: Square = { column: 'B', row: 1 };
+      const endPiecePosition: Square = { column: 'B', row: 8 };
+
+      const returnedResult = engine.move(startPiecePosition, endPiecePosition);
+
+      const expectedResult = [
+        { eventType: 'PieceWasMoved', from: { column: 'B', row: 1 }, piece: { name: 'Rook', side: 'WHITE' }, to: { column: 'B', row: 8 } },
+        { eventType: 'KingWasChecked', king: { name: 'King', side: 'BLACK' }, onSquare: { column: 'H', row: 8 } },
+      ];
+      expect(returnedResult).toIncludeSameMembers(expectedResult);
+    });
+
+    it(`${descriptionWithoutCheckmate} Enemy king is checked. King can capture.`, () => {
+      const boardWithPieces: SquareWithPiece = {
+        A1: whiteKing,
+        B1: whiteRook,
+        G7: whiteRook,
+        H7: blackRook,
+        H8: blackKing,
+      };
+      const chessboard = new Chessboard(boardWithPieces);
+      const engine = new ChessEngine(chessboard);
+      const startPiecePosition: Square = { column: 'B', row: 1 };
+      const endPiecePosition: Square = { column: 'B', row: 8 };
+
+      const returnedResult = engine.move(startPiecePosition, endPiecePosition);
+
+      const expectedResult = [
+        { eventType: 'PieceWasMoved', from: { column: 'B', row: 1 }, piece: { name: 'Rook', side: 'WHITE' }, to: { column: 'B', row: 8 } },
+        { eventType: 'KingWasChecked', king: { name: 'King', side: 'BLACK' }, onSquare: { column: 'H', row: 8 } },
+      ];
+      expect(returnedResult).toIncludeSameMembers(expectedResult);
+    });
+
+    it(descriptionWithCheckmate, () => {
+      const boardWithPieces: SquareWithPiece = {
+        A1: whiteKing,
+        A7: whiteRook,
+        B1: whiteRook,
+        H8: blackKing,
+      };
+      const chessboard = new Chessboard(boardWithPieces);
+      const engine = new ChessEngine(chessboard);
+      const startPiecePosition: Square = { column: 'B', row: 1 };
+      const endPiecePosition: Square = { column: 'B', row: 8 };
+
+      const returnedResult = engine.move(startPiecePosition, endPiecePosition);
+
+      const expectedResult = [
+        { eventType: 'PieceWasMoved', from: { column: 'B', row: 1 }, piece: { name: 'Rook', side: 'WHITE' }, to: { column: 'B', row: 8 } },
+        { eventType: 'KingWasChecked', king: { name: 'King', side: 'BLACK' }, onSquare: { column: 'H', row: 8 } },
+        { eventType: 'CheckmateHasOccurred', king: { name: 'King', side: 'BLACK' }, onSquare: { column: 'H', row: 8 } },
+      ];
+      expect(returnedResult).toIncludeSameMembers(expectedResult);
+    });
+
+    it(descriptionWithCheckmate, () => {
+      const boardWithPieces: SquareWithPiece = {
+        A1: whiteKing,
+        B1: whiteRook,
+        H7: blackPawn,
+        G7: blackPawn,
+        H8: blackKing,
+      };
+      const chessboard = new Chessboard(boardWithPieces);
+      const engine = new ChessEngine(chessboard);
+      const startPiecePosition: Square = { column: 'B', row: 1 };
+      const endPiecePosition: Square = { column: 'B', row: 8 };
+
+      const returnedResult = engine.move(startPiecePosition, endPiecePosition);
+
+      const expectedResult = [
+        { eventType: 'PieceWasMoved', from: { column: 'B', row: 1 }, piece: { name: 'Rook', side: 'WHITE' }, to: { column: 'B', row: 8 } },
+        { eventType: 'KingWasChecked', king: { name: 'King', side: 'BLACK' }, onSquare: { column: 'H', row: 8 } },
+        { eventType: 'CheckmateHasOccurred', king: { name: 'King', side: 'BLACK' }, onSquare: { column: 'H', row: 8 } },
+      ];
+      expect(returnedResult).toIncludeSameMembers(expectedResult);
+    });
+
+    it(`${descriptionWithCheckmate} Black king and black rook cannot capture`, () => {
+      const boardWithPieces: SquareWithPiece = {
+        A1: whiteKing,
+        B1: whiteRook,
+        G6: whiteRook,
+        G7: whiteRook,
+        H6: whiteRook,
+        H7: blackRook,
+        H8: blackKing,
+      };
+      const chessboard = new Chessboard(boardWithPieces);
+      const engine = new ChessEngine(chessboard);
+      const startPiecePosition: Square = { column: 'B', row: 1 };
+      const endPiecePosition: Square = { column: 'B', row: 8 };
+
+      const returnedResult = engine.move(startPiecePosition, endPiecePosition);
+
+      const expectedResult = [
+        {
+          eventType: 'PieceWasMoved',
+          from: { column: 'B', row: 1 },
+          piece: { name: 'Rook', side: 'WHITE' },
+          to: { column: 'B', row: 8 },
+        },
+        { eventType: 'KingWasChecked', king: { name: 'King', side: 'BLACK' }, onSquare: { column: 'H', row: 8 } },
+        { eventType: 'CheckmateHasOccurred', king: { name: 'King', side: 'BLACK' }, onSquare: { column: 'H', row: 8 } },
+      ];
+      expect(returnedResult).toIncludeSameMembers(expectedResult);
+    });
+
+    it(`${descriptionWithCheckmate} Black king and black rook cannot capture`, () => {
+      const boardWithPieces: SquareWithPiece = {
+        A1: whiteKing,
+        B1: whiteRook,
+        G6: whiteRook,
+        G7: whiteRook,
+        H6: whiteRook,
+        H7: blackRook,
+        H8: blackKing,
+      };
+      const chessboard = new Chessboard(boardWithPieces);
+      const engine = new ChessEngine(chessboard);
+      const startPiecePosition: Square = { column: 'B', row: 1 };
+      const endPiecePosition: Square = { column: 'B', row: 8 };
+
+      const returnedResult = engine.move(startPiecePosition, endPiecePosition);
+
+      const expectedResult = [
+        {
+          eventType: 'PieceWasMoved',
+          from: { column: 'B', row: 1 },
+          piece: { name: 'Rook', side: 'WHITE' },
+          to: { column: 'B', row: 8 },
+        },
+        { eventType: 'KingWasChecked', king: { name: 'King', side: 'BLACK' }, onSquare: { column: 'H', row: 8 } },
+        { eventType: 'CheckmateHasOccurred', king: { name: 'King', side: 'BLACK' }, onSquare: { column: 'H', row: 8 } },
+      ];
+      expect(returnedResult).toIncludeSameMembers(expectedResult);
+    });
+
+    it(descriptionWithStalemate, () => {
+      const boardWithPieces: SquareWithPiece = {
+        A1: whiteKing,
+        A6: whiteRook,
+        G7: whiteRook,
+        H8: blackKing,
+      };
+      const chessboard = new Chessboard(boardWithPieces);
+      const engine = new ChessEngine(chessboard);
+      const startPiecePosition: Square = { column: 'A', row: 6 };
+      const endPiecePosition: Square = { column: 'G', row: 6 };
+
+      const returnedResult = engine.move(startPiecePosition, endPiecePosition);
+
+      const expectedResult = [
+        {
+          eventType: 'PieceWasMoved',
+          from: { column: 'A', row: 6 },
+          piece: { name: 'Rook', side: 'WHITE' },
+          to: { column: 'G', row: 6 },
+        },
+        { eventType: 'StalemateHasOccurred', king: { name: 'King', side: 'BLACK' }, onSquare: { column: 'H', row: 8 } },
+      ];
+      expect(returnedResult).toIncludeSameMembers(expectedResult);
+    });
   });
 });
