@@ -218,10 +218,7 @@ describe('Chess Engine', () => {
 
     engine.move(whitePawnFrom, whitePawnTo);
 
-    expect(engine.move(blackPawnFrom, blackPawnTo)).toIncludeSameMembers([
-      { eventType: 'PieceWasCaptured', piece: whitePawn, onSquare: { column: 'F', row: 4 } },
-      { eventType: 'PieceWasMoved', piece: blackPawn, from: { column: 'E', row: 4 }, to: { column: 'F', row: 3 } },
-    ]);
+    expect(() => engine.move(blackPawnFrom, blackPawnTo)).toThrowError('Piece can not move to given square.');
   });
 
   describe('Return player moves without those that cause his king to check', () => {
