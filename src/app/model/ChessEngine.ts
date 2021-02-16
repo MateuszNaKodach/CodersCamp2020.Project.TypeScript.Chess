@@ -223,12 +223,11 @@ export class ChessEngine implements ChessModel {
     if (this.isAnyPossibleMoves()) return undefined;
 
     const kingPosition = this.kingPosition(this.board, this.currentSide);
-    const event: CheckmateHasOccurred = {
+    return {
       eventType: 'CheckmateHasOccurred',
       king: new King(this.currentSide),
       onSquare: kingPosition,
     };
-    return event;
   }
 
   private stalemateHasOccurred(): StalemateHasOccurred | undefined {
@@ -236,24 +235,21 @@ export class ChessEngine implements ChessModel {
     if (this.isAnyPossibleMoves()) return undefined;
 
     const kingPosition = this.kingPosition(this.board, this.currentSide);
-    const event: StalemateHasOccurred = {
+    return {
       eventType: 'StalemateHasOccurred',
       king: new King(this.currentSide),
       onSquare: kingPosition,
     };
-    return event;
   }
 
   private isAnyPossibleMoves() {
     const squaresWithPieces = this.board.squaresWithPiece;
-    const isAnyPossibleMoves = Object.keys(squaresWithPieces)
+    return Object.keys(squaresWithPieces)
       .map((squareKey) => ({
         position: { column: squareKey[0], row: Number(squareKey[1]) as Row },
         piece: squaresWithPieces[squareKey],
       }))
       .filter(({ piece }) => piece.side == this.currentSide)
       .some(({ position }) => this.possibleMoves(position).length);
-
-    return isAnyPossibleMoves;
   }
 }
