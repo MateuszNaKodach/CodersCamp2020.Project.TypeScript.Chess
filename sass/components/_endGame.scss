@@ -1,11 +1,18 @@
 .endGame {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 200px;
   width: 500px;
-  background-color: #0074d9;
+  background-image: url('../static/img/papirus-background.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
   position: absolute;
   top: calc(50vh - 100px);
   left: calc(50vw - 250px);
   &__text {
+    text-align: center;
     font-size: 3rem;
     font-family: $font-family--primary;
   }
