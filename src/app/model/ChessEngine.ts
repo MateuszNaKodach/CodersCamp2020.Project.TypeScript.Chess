@@ -20,8 +20,8 @@ export class ChessEngine implements ChessModel {
   readonly squaresWithPiece: SquareWithPiece;
   private promotingOnSquare: Square | undefined;
   private checkedKing: CheckedKing | undefined;
-  private castlingOnSquare: Square | undefined;
   private moveHistory: PieceWasMoved[] = [];
+  private lastMove: PieceWasMoved | undefined;
 
   constructor(private readonly board: Chessboard) {
     this.squaresWithPiece = board.squaresWithPiece;
@@ -48,8 +48,15 @@ export class ChessEngine implements ChessModel {
       from: squareFrom,
       to: squareTo,
     };
+
     const castlingWasDone = this.castlingWasDone(squareFrom, squareTo);
-    const pieceWasCaptured = this.pieceWasCaptured(squareTo, chosenPiece);
+    let pieceWasCaptured;
+    if (this.lastMove && this.canAttackInPassing(squareFrom, this.lastMove)) {
+      pieceWasCaptured = this.pieceWasCapturedInPassing(this.lastMove);
+      this.onPawnCaptureInPassing(this.lastMove);
+    } else {
+      pieceWasCaptured = this.pieceWasCaptured(squareTo, chosenPiece);
+    }
 
     const pawnPromotionWasEnabled = this.pawnPromotionWasEnabled(chosenPiece, squareTo);
     this.onPawnPromotionWasEnabled(pawnPromotionWasEnabled);
@@ -65,6 +72,7 @@ export class ChessEngine implements ChessModel {
     }
     const checkmateHasOccurred = this.checkmateHasOccurred();
     const stalemateHasOccurred = this.stalemateHasOccurred();
+    this.lastMove = pieceWasMoved;
 
     return [
       pieceWasCaptured,
@@ -119,7 +127,18 @@ export class ChessEngine implements ChessModel {
   public possibleMoves(pieceMovingFrom: Square): Square[] {
     const possibleMoves = this.board.onPositionPiece(pieceMovingFrom)?.possibleMoves(pieceMovingFrom, this.board) ?? [];
     const castlingMoves = this.castlingMoves(pieceMovingFrom);
-    return this.pieceMovesNotCausingAllyKingCheck(pieceMovingFrom, [...possibleMoves, ...castlingMoves]);
+    const enPassantMoves = this.enPassantMoves(pieceMovingFrom);
+    return this.pieceMovesNotCausingAllyKingCheck(pieceMovingFrom, [...possibleMoves, ...castlingMoves, ...enPassantMoves]);
+  }
+
+  private enPassantMoves(squareFrom: Square): Square[] {
+    if (this.lastMove && this.canAttackInPassing(squareFrom, this.lastMove)) {
+      const additionalSquareToAttack: Square =
+        this.lastMove.piece.side === Side.WHITE ? this.squareDown(this.lastMove.to) : this.squareUp(this.lastMove.to);
+      return [additionalSquareToAttack];
+    } else {
+      return [];
+    }
   }
 
   private castlingMoves(pieceMovingFrom: Square): Square[] {
@@ -199,6 +218,16 @@ export class ChessEngine implements ChessModel {
           eventType: 'PieceWasCaptured',
           piece: pieceOnSquare,
           onSquare: squareTo,
+        }
+      : undefined;
+  }
+
+  private pieceWasCapturedInPassing(lastMove: PieceWasMoved): PieceWasCaptured | undefined {
+    return lastMove
+      ? {
+          eventType: 'PieceWasCaptured',
+          piece: lastMove.piece,
+          onSquare: lastMove.to,
         }
       : undefined;
   }
@@ -369,6 +398,42 @@ export class ChessEngine implements ChessModel {
 
   private onKingWasUnchecked(event: KingWasUnchecked): void {
     this.checkedKing = undefined;
+  }
+
+  private onPawnCaptureInPassing(lastMove: PieceWasMoved): void {
+    this.board.removePiece(lastMove.to);
+  }
+
+  private lastMoveWasFirstPawnMove(lastMove: PieceWasMoved): boolean {
+    if (lastMove.piece.side === Side.WHITE) {
+      return lastMove.from.row === 2 && lastMove.to.row === 4;
+    } else if (lastMove.piece.side === Side.BLACK) {
+      return lastMove.from.row === 7 && lastMove.to.row === 5;
+    } else {
+      return false;
+    }
+  }
+
+  private canAttackInPassing(squareFrom: Square, lastMove: PieceWasMoved): boolean {
+    return this.lastMoveWasFirstPawnMove(lastMove) && this.isAdjacentColumn(squareFrom, lastMove.from);
+  }
+
+  private isAdjacentColumn(firstSquare: Square, secondSquare: Square): boolean {
+    return Math.abs(columns.indexOf(firstSquare.column) - columns.indexOf(secondSquare.column)) === 1;
+  }
+
+  private squareUp(startSquare: Square): Square {
+    return {
+      column: columns[columns.indexOf(startSquare.column)],
+      row: (startSquare.row + 1) as Row,
+    };
+  }
+
+  private squareDown(startSquare: Square): Square {
+    return {
+      column: columns[columns.indexOf(startSquare.column)],
+      row: (startSquare.row - 1) as Row,
+    };
   }
 
   private checkmateHasOccurred(): CheckmateHasOccurred | undefined {
