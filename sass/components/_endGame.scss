@@ -1,0 +1,12 @@
+.endGame {
+  height: 200px;
+  width: 500px;
+  background-color: #0074d9;
+  position: absolute;
+  top: calc(50vh - 100px);
+  left: calc(50vw - 250px);
+  &__text {
+    font-size: 3rem;
+    font-family: $font-family--primary;
+  }
+}
