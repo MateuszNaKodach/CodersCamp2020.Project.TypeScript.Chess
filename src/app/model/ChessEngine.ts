@@ -1,6 +1,6 @@
 import { ChessModel } from './ChessModel';
-import { columns, Row, Side, Square, SquareWithPiece } from './Types';
-import { King, Pawn, Piece } from './pieces';
+import { Column, columns, Row, Side, Square, SquareWithPiece } from './Types';
+import { King, Pawn, Piece, Rook } from './pieces';
 import { Chessboard } from './Chessboard';
 import { PieceWasMoved } from './PieceWasMoved';
 import { PieceWasCaptured } from './PieceWasCaptured';
@@ -19,6 +19,8 @@ export class ChessEngine implements ChessModel {
   readonly squaresWithPiece: SquareWithPiece;
   private promotingOnSquare: Square | undefined;
   private checkedKing: CheckedKing | undefined;
+  private castlingOnSquare: Square | undefined;
+  private moveHistory: PieceWasMoved[] = [];
   private lastMove: PieceWasMoved | undefined;
 
   constructor(private readonly board: Chessboard) {
@@ -39,9 +41,6 @@ export class ChessEngine implements ChessModel {
     if (!this.canMoveOnSquare(squareFrom, squareTo)) {
       throw new Error('Piece can not move to given square.');
     }
-    if (this.willBeKingChecked(squareFrom, squareTo)) {
-      throw new Error('You must not make a move that will result in checking your king.');
-    }
 
     const pieceWasMoved: PieceWasMoved = {
       eventType: 'PieceWasMoved',
@@ -49,14 +48,8 @@ export class ChessEngine implements ChessModel {
       from: squareFrom,
       to: squareTo,
     };
-
-    let pieceWasCaptured;
-    if (this.lastMove && this.canAttackInPassing(squareFrom, this.lastMove)) {
-      pieceWasCaptured = this.pieceWasCapturedInPassing(this.lastMove);
-      this.onPawnCaptureInPassing(this.lastMove);
-    } else {
-      pieceWasCaptured = this.pieceWasCaptured(squareTo, chosenPiece);
-    }
+    const castlingWasDone = this.castlingWasDone(squareFrom, squareTo);
+    const pieceWasCaptured = this.pieceWasCaptured(squareTo, chosenPiece);
 
     const pawnPromotionWasEnabled = this.pawnPromotionWasEnabled(chosenPiece, squareTo);
     this.onPawnPromotionWasEnabled(pawnPromotionWasEnabled);
@@ -70,10 +63,9 @@ export class ChessEngine implements ChessModel {
     if (kingWasUnchecked) {
       this.onKingWasUnchecked(kingWasUnchecked);
     }
-
     const checkmateHasOccurred = this.checkmateHasOccurred();
     const stalemateHasOccurred = this.stalemateHasOccurred();
-
+    this.lastMove = pieceWasMoved;
     return [
       pieceWasCaptured,
       pieceWasMoved,
@@ -82,9 +74,84 @@ export class ChessEngine implements ChessModel {
       checkmateHasOccurred,
       stalemateHasOccurred,
       pawnPromotionWasEnabled,
+      castlingWasDone,
     ].filter(this.hasOccurred);
-    this.lastMove = pieceWasMoved;
-    return [pieceWasCaptured, pieceWasMoved, kingWasChecked, kingWasUnchecked, pawnPromotionWasEnabled].filter(this.hasOccurred);
+  }
+
+  public possibleMoves(pieceMovingFrom: Square): Square[] {
+    const possibleMoves = this.board.onPositionPiece(pieceMovingFrom)?.possibleMoves(pieceMovingFrom, this.board) ?? [];
+    const castlingMoves = this.castlingMoves(pieceMovingFrom);
+    return this.pieceMovesNotCausingAllyKingCheck(pieceMovingFrom, [...possibleMoves, ...castlingMoves]);
+  }
+
+  private castlingMoves(pieceMovingFrom: Square): Square[] {
+    if (!this.isKingMovingFromStartingPosition(pieceMovingFrom)) {
+      return [];
+    }
+    return this.kingsMovesForCastling(pieceMovingFrom).filter((squareTo) => this.isCastlingPossible(pieceMovingFrom, squareTo));
+  }
+
+  private isKingMovingFromStartingPosition(squareFrom: Square): boolean {
+    const chosenPiece = this.board.onPositionPiece(squareFrom);
+    const startingPosition = {
+      WHITE: { column: 'E', row: 1 } as Square,
+      BLACK: { column: 'E', row: 8 } as Square,
+    };
+    return chosenPiece instanceof King && this.isSameSquare(squareFrom, startingPosition[chosenPiece.side]);
+  }
+
+  private kingsMovesForCastling(kingPosition: Square): Square[] {
+    return [
+      { column: 'C', row: kingPosition.row },
+      { column: 'G', row: kingPosition.row },
+    ];
+  }
+
+  private isSameSquare(squareA: Square, squareB: Square) {
+    return squareA.column === squareB.column && squareA.row === squareB.row;
+  }
+
+  private isCastlingPossible(kingSquareFrom: Square, kingSquareTo: Square): boolean {
+    let squareCrossedByKing!: Square;
+    let rookPosition!: Square;
+    let moveDirection!: number;
+    switch (kingSquareTo.column) {
+      case 'C':
+        squareCrossedByKing = { column: 'D', row: kingSquareTo.row };
+        rookPosition = { column: 'A', row: kingSquareTo.row };
+        moveDirection = -1;
+        break;
+      case 'G':
+        squareCrossedByKing = { column: 'F', row: kingSquareTo.row };
+        rookPosition = { column: 'H', row: kingSquareTo.row };
+        moveDirection = 1;
+        break;
+    }
+    return !(
+      this.isKingChecked(this.board, this.currentSide) ||
+      this.isSquareChecked(this.board, this.currentSide, squareCrossedByKing) ||
+      this.willBeKingChecked(kingSquareFrom, kingSquareTo) ||
+      this.isAnyPieceBetweenKingAndRook(kingSquareFrom, rookPosition, moveDirection) ||
+      this.pieceWasAlreadyMoved(kingSquareFrom) ||
+      this.pieceWasAlreadyMoved(rookPosition)
+    );
+  }
+
+  private isAnyPieceBetweenKingAndRook(actualPosition: Square, rookPosition: Square, moveDirection: number): boolean {
+    const nextSquare: Square = {
+      column: columns[columns.indexOf(actualPosition.column) + moveDirection],
+      row: actualPosition.row,
+    };
+    if (nextSquare.column === rookPosition.column) {
+      return false;
+    }
+    const isSquareOccupied = this.board.onPositionPiece(nextSquare);
+    return isSquareOccupied ? true : this.isAnyPieceBetweenKingAndRook(nextSquare, rookPosition, moveDirection);
+  }
+
+  private pieceWasAlreadyMoved(squareWithPiece: Square) {
+    const piece = this.board.onPositionPiece(squareWithPiece);
+    return this.moveHistory?.some((move) => move.piece === piece && this.isSameSquare(move.from, squareWithPiece));
   }
 
   private pieceWasCaptured(squareTo: Square, chosenPiece: Piece): PieceWasCaptured | undefined {
@@ -121,6 +188,7 @@ export class ChessEngine implements ChessModel {
 
   private onPieceWasMoved(event: PieceWasMoved): void {
     this.board.movePiece(event.from, event.to);
+    this.moveHistory.push(event);
     if (!this.promotingOnSquare) {
       this.currentSide = this.anotherSide(event.piece.side);
     }
@@ -130,6 +198,49 @@ export class ChessEngine implements ChessModel {
     if (event) {
       this.promotingOnSquare = event.onSquare;
     }
+  }
+
+  private castlingWasDone(squareFrom: Square, squareTo: Square): PieceWasMoved | undefined {
+    if (!this.intendToCastling(squareFrom, squareTo)) {
+      return undefined;
+    }
+    const rookMove = {
+      ['C' as Column]: {
+        rookSquareFrom: { column: 'A', row: squareTo.row } as Square,
+        rookSquareTo: { column: 'D', row: squareTo.row } as Square,
+      },
+      ['G' as Column]: {
+        rookSquareFrom: { column: 'H', row: squareTo.row } as Square,
+        rookSquareTo: { column: 'F', row: squareTo.row } as Square,
+      },
+    };
+    this.board.movePiece(rookMove[squareTo.column].rookSquareFrom, rookMove[squareTo.column].rookSquareTo);
+    return {
+      eventType: 'PieceWasMoved',
+      piece: new Rook(this.currentSide),
+      from: rookMove[squareTo.column].rookSquareFrom,
+      to: rookMove[squareTo.column].rookSquareTo,
+    };
+  }
+
+  private intendToCastling(squareFrom: Square, squareTo: Square): boolean {
+    if (!this.isKingMovingFromStartingPosition(squareFrom)) {
+      return false;
+    }
+    const castling = {
+      WHITE: {
+        longTo: { column: 'C', row: 1 } as Square,
+        shortTo: { column: 'G', row: 1 } as Square,
+      },
+      BLACK: {
+        longTo: { column: 'C', row: 8 } as Square,
+        shortTo: { column: 'G', row: 8 } as Square,
+      },
+    };
+
+    return (
+      this.isSameSquare(squareTo, castling[this.currentSide].longTo) || this.isSameSquare(squareTo, castling[this.currentSide].shortTo)
+    );
   }
 
   private canMoveOnSquare(squareFrom: Square, squareTo: Square): boolean {
@@ -190,16 +301,6 @@ export class ChessEngine implements ChessModel {
 
   private pieceMovesNotCausingAllyKingCheck(squareFrom: Square, possibleMoves: Square[]): Square[] {
     return possibleMoves.filter((possibleSquare: Square) => !this.willBeKingChecked(squareFrom, possibleSquare));
-  }
-
-  public possibleMoves(position: Square): Square[] {
-    const possibleMoves = this.board.onPositionPiece(position)?.possibleMoves(position, this.board) ?? [];
-    if (this.lastMove && this.canAttackInPassing(position, this.lastMove)) {
-      const additionalSquareToAttack: Square =
-        this.lastMove.piece.side === Side.WHITE ? this.squareDown(this.lastMove.to) : this.squareUp(this.lastMove.to);
-      possibleMoves?.push(additionalSquareToAttack);
-    }
-    return this.pieceMovesNotCausingAllyKingCheck(position, possibleMoves);
   }
 
   private hasOccurred<T>(x: T | undefined): x is T {
