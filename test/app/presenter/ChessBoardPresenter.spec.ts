@@ -1,6 +1,7 @@
+import { SquareWithPiece } from '../model/BoardFixture';
 import '@testing-library/jest-dom';
 import { ChessBoardView } from '../../../src/app/view/ChessBoardView';
-import { ChessModel, Pawn, Side, Square } from '../../../src/app/model';
+import { Bishop, ChessModel, King, Knight, Pawn, Queen, Rook, Side, Square } from '../../../src/app/model';
 import { ChessBoardPresenter } from '../../../src/app/presenter/ChessBoardPresenter';
 import { ViewEventBus } from '../../../src/app/view/events/ViewEventBus';
 import { ViewEvent } from '../../../src/app/view/events/ViewEvent';
@@ -37,7 +38,12 @@ describe('ChessBoardPresenter', () => {
   it('when game starts, check if pieces will show on the screen', () => {
     const viewEvents: ViewEventBus = new InMemoryViewEventBus();
     const view: ChessBoardView = chessBoardViewMock(viewEvents);
-    const model: ChessModel = { squaresWithPiece: PIECES_START_POSITION, move: jest.fn(), possibleMoves: jest.fn() };
+    const model: ChessModel = {
+      squaresWithPiece: PIECES_START_POSITION,
+      move: jest.fn(),
+      possibleMoves: jest.fn(),
+      pawnWasPromoted: jest.fn(),
+    };
     const presenter: ChessBoardPresenter = new ChessBoardPresenter(view, model);
     presenter.startGame();
 
@@ -57,6 +63,7 @@ describe('ChessBoardPresenter', () => {
         { column: 'A', row: 3 },
         { column: 'A', row: 4 },
       ],
+      pawnWasPromoted: jest.fn(),
     };
     const presenter: ChessBoardPresenter = new ChessBoardPresenter(view, model);
 
@@ -83,6 +90,7 @@ describe('ChessBoardPresenter', () => {
         { column: 'D', row: 5 },
         { column: 'C', row: 5 },
       ],
+      pawnWasPromoted: jest.fn(),
     };
     const presenter: ChessBoardPresenter = new ChessBoardPresenter(view, model);
 
@@ -91,6 +99,30 @@ describe('ChessBoardPresenter', () => {
 
     expect(view.capturePiece).toHaveBeenCalledWith('c5');
     expect(view.movePiece).toHaveBeenCalledWith('d4', 'c5');
+  });
+
+  it('Pawn promotion', () => {
+    const whitePawn: Pawn = new Pawn(Side.WHITE);
+    const viewEvents: ViewEventBus = new InMemoryViewEventBus();
+    const view: ChessBoardView = chessBoardViewMock(viewEvents);
+    const model: ChessModel = {
+      squaresWithPiece: { D7: whitePawn },
+      move: (squareFrom, squareTo) => {
+        return [
+          { eventType: 'PieceWasMoved', piece: whitePawn, from: squareFrom, to: squareTo },
+          { eventType: 'PawnPromotionWasEnabled', onSquare: squareTo, pawn: whitePawn },
+        ];
+      },
+      possibleMoves: () => [{ column: 'D', row: 8 }],
+      pawnWasPromoted: jest.fn(),
+    };
+    const presenter: ChessBoardPresenter = new ChessBoardPresenter(view, model);
+
+    viewEvents.publish(new SquareWasClicked({ x: 4, y: 7 }));
+    viewEvents.publish(new SquareWasClicked({ x: 4, y: 8 }));
+
+    expect(view.movePiece).toHaveBeenCalledWith('d7', 'd8');
+    expect(view.pawnPromotion).toHaveBeenCalled();
   });
 });
 
@@ -104,8 +136,10 @@ function chessBoardViewMock(viewEventBus: ViewEventBus): ChessBoardView {
     hideSelection: jest.fn(),
     showAvailableMoves: jest.fn(),
     hideAllAvailableMoves: jest.fn(),
+    pawnPromotion: jest.fn(),
     movePiece: jest.fn(),
     capturePiece: jest.fn(),
+    afterPromotionPiece: jest.fn(),
   };
 }
 
@@ -118,9 +152,39 @@ function chessboardStateMock(square: Square[]) {
     possibleMoves(position: Square): Square[] {
       return square;
     },
+    pawnWasPromoted: jest.fn(),
   };
 
   new ChessBoardPresenter(view, model);
 
   return { view, viewEvents };
 }
+
+function promotionChessBoardStateMock(square: Square[]) {
+  const viewEvents: ViewEventBus = new InMemoryViewEventBus();
+  const view: ChessBoardView = chessBoardViewMock(viewEvents);
+  const model: ChessModel = {
+    squaresWithPiece: mockedPiecesStartPosition,
+    move: jest.fn(),
+    possibleMoves(position: Square): Square[] {
+      return square;
+    },
+    pawnWasPromoted: jest.fn(),
+  };
+
+  new ChessBoardPresenter(view, model);
+
+  return { view, viewEvents };
+}
+
+const mockedPiecesStartPosition: SquareWithPiece = {
+  E1: new King(Side.WHITE),
+  F1: new Bishop(Side.WHITE),
+  G1: new Knight(Side.WHITE),
+  H1: new Rook(Side.WHITE),
+  A8: new Pawn(Side.WHITE),
+  B8: new Knight(Side.BLACK),
+  C8: new Bishop(Side.BLACK),
+  D8: new Queen(Side.BLACK),
+  E8: new King(Side.BLACK),
+};
