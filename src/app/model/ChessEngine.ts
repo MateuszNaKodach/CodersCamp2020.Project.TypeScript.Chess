@@ -1,6 +1,6 @@
 import { ChessModel } from './ChessModel';
+import { Bishop, King, Knight, Pawn, Piece, Queen, Rook } from './pieces';
 import { Column, columns, Row, Side, Square, SquareWithPiece } from './Types';
-import { King, Pawn, Piece, Rook } from './pieces';
 import { Chessboard } from './Chessboard';
 import { PieceWasMoved } from './PieceWasMoved';
 import { PieceWasCaptured } from './PieceWasCaptured';
@@ -9,6 +9,7 @@ import { isDefined } from './HelperFunctions';
 import { KingWasChecked } from './KingWasChecked';
 import { KingWasUnchecked } from './KingWasUnchecked';
 import { MoveResult } from './MoveResult';
+import { PawnWasPromoted } from './PawnWasPromoted';
 import { CheckmateHasOccurred } from './CheckmateHasOccurred';
 import { StalemateHasOccurred } from './StalemateHasOccurred';
 
@@ -75,6 +76,44 @@ export class ChessEngine implements ChessModel {
       pawnPromotionWasEnabled,
       castlingWasDone,
     ].filter(this.hasOccurred);
+  }
+
+  pawnWasPromoted(chosenPiece: string): PawnWasPromoted | undefined {
+    if (!this.promotingOnSquare) {
+      return undefined;
+    }
+
+    const onSquarePromotion = this.promotingOnSquare;
+    const pawnToRemove = this.squaresWithPiece[this.translateSquareToAlgebraicNotationCapital(onSquarePromotion)];
+    const createChosenPiece = this.objectCreator(chosenPiece, pawnToRemove.side);
+    this.squaresWithPiece[this.translateSquareToAlgebraicNotationCapital(onSquarePromotion)] = createChosenPiece;
+    this.promotingOnSquare = undefined;
+    this.currentSide = this.anotherSide(this.currentSide);
+
+    return {
+      eventType: 'PawnWasPromoted',
+      onSquare: onSquarePromotion,
+      chosenPiece: createChosenPiece,
+    };
+  }
+
+  private translateSquareToAlgebraicNotationCapital(square: Square): string {
+    return `${square.column}${square.row}`;
+  }
+
+  private objectCreator(pieceName: string, side: Side): Knight | Rook | Bishop | Queen {
+    switch (pieceName) {
+      case 'Queen':
+        return new Queen(side);
+      case 'Rook':
+        return new Rook(side);
+      case 'Bishop':
+        return new Bishop(side);
+      case 'Knight':
+        return new Knight(side);
+      default:
+        throw new Error();
+    }
   }
 
   public possibleMoves(pieceMovingFrom: Square): Square[] {
