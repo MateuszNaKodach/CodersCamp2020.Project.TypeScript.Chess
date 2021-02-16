@@ -77,24 +77,24 @@ export class ChessEngine implements ChessModel {
     ].filter(this.hasOccurred);
   }
 
-  public possibleMoves(position: Square): Square[] {
-    const possibleMoves = this.board.onPositionPiece(position)?.possibleMoves(position, this.board) ?? [];
-    if (this.isKingMovedFromStartingPosition(position)) {
-      const castlingSquaresTo: Square[] = this.kingsMovesForCastling(position);
+  public possibleMoves(pieceMovingFrom: Square): Square[] {
+    const possibleMoves = this.board.onPositionPiece(pieceMovingFrom)?.possibleMoves(pieceMovingFrom, this.board) ?? [];
+    if (this.isKingMovingFromStartingPosition(pieceMovingFrom)) {
+      const castlingSquaresTo: Square[] = this.kingsMovesForCastling(pieceMovingFrom);
       castlingSquaresTo
-        .filter((squareTo) => this.isCastlingPossible(position, squareTo))
+        .filter((squareTo) => this.isCastlingPossible(pieceMovingFrom, squareTo))
         .forEach((squareTo) => possibleMoves.push(squareTo));
     }
-    return this.pieceMovesNotCausingAllyKingCheck(position, possibleMoves);
+    return this.pieceMovesNotCausingAllyKingCheck(pieceMovingFrom, possibleMoves);
   }
 
-  private isKingMovedFromStartingPosition(position: Square): boolean {
-    const chosenPiece = this.board.onPositionPiece(position);
+  private isKingMovingFromStartingPosition(squareFrom: Square): boolean {
+    const chosenPiece = this.board.onPositionPiece(squareFrom);
     const startingPosition = {
       WHITE: { column: 'E', row: 1 } as Square,
       BLACK: { column: 'E', row: 8 } as Square,
     };
-    return chosenPiece instanceof King && this.isSameSquare(position, startingPosition[chosenPiece.side]);
+    return chosenPiece instanceof King && this.isSameSquare(squareFrom, startingPosition[chosenPiece.side]);
   }
 
   private kingsMovesForCastling(kingPosition: Square): Square[] {
