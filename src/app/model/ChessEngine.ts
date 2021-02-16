@@ -212,7 +212,7 @@ export class ChessEngine implements ChessModel {
 
   private checkmateHasOccurred(): CheckmateHasOccurred | undefined {
     if (!this.isKingChecked()) return undefined;
-    if (this.isPossibleMoves()) return undefined;
+    if (this.isAnyPossibleMoves()) return undefined;
 
     const kingPosition = this.kingPosition(this.board, this.currentSide);
     const event: CheckmateHasOccurred = {
@@ -223,15 +223,15 @@ export class ChessEngine implements ChessModel {
     return event;
   }
 
-  private isPossibleMoves() {
-    // TODO: tablica wszystkich figur
-    // TODO: sprawdź możliwe ruch
-    // TODO: jeśli brak ruchów
-    // TODO:
-    // TODO:
-    // TODO:
-    // TODO:
-    // TODO:
-    return false;
+  private isAnyPossibleMoves() {
+    const squaresWithPieces = this.board.squaresWithPiece;
+    const isAnyPossibleMoves = Object.keys(squaresWithPieces)
+      .map((squareKey) => ({
+        position: { column: squareKey[0], row: Number(squareKey[1]) as Row },
+        piece: squaresWithPieces[squareKey],
+      }))
+      .filter(({ piece }) => piece.side == this.currentSide)
+      .some(({ position, piece }) => this.possibleMoves(position).length);
+    return isAnyPossibleMoves;
   }
 }
