@@ -206,21 +206,6 @@ describe('Chess Engine', () => {
     ]);
   });
 
-  it('When white pawn makes its first move and goes 2 squares from G2 to G4 and black pawn stands on E4, then black pawn cannot capture white pawn in passing (moves to F3)', () => {
-    const whitePawn = new Pawn(Side.WHITE);
-    const blackPawn = new Pawn(Side.BLACK);
-    const chessboard = new Chessboard({ G2: whitePawn, E4: blackPawn });
-    const engine = new ChessEngine(chessboard);
-    const whitePawnFrom: Square = { column: 'G', row: 2 };
-    const whitePawnTo: Square = { column: 'G', row: 4 };
-    const blackPawnFrom: Square = { column: 'E', row: 4 };
-    const blackPawnTo: Square = { column: 'F', row: 3 };
-
-    engine.move(whitePawnFrom, whitePawnTo);
-
-    expect(() => engine.move(blackPawnFrom, blackPawnTo)).toThrowError('Piece can not move to given square.');
-  });
-
   describe('Return player moves without those that cause his king to check', () => {
     const whiteKing = new King(Side.WHITE);
     const whiteRook = new Rook(Side.WHITE);
