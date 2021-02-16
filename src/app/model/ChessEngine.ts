@@ -9,7 +9,6 @@ import { isDefined } from './HelperFunctions';
 import { KingWasChecked } from './KingWasChecked';
 import { KingWasUnchecked } from './KingWasUnchecked';
 import { MoveResult } from './MoveResult';
-import { GameRecord } from './GameRecord';
 
 type CheckedKing = { kingSide: Side; position: Square };
 
@@ -19,7 +18,7 @@ export class ChessEngine implements ChessModel {
   private promotingOnSquare: Square | undefined;
   private checkedKing: CheckedKing | undefined;
   private castlingOnSquare: Square | undefined;
-  private gameRecord: GameRecord[] = [];
+  private gameRecord: PieceWasMoved[] = [];
 
   constructor(private readonly board: Chessboard) {
     this.squaresWithPiece = board.squaresWithPiece;
@@ -94,12 +93,7 @@ export class ChessEngine implements ChessModel {
 
   private onPieceWasMoved(event: PieceWasMoved): void {
     this.board.movePiece(event.from, event.to);
-    this.gameRecord.push({
-      side: event.piece.side,
-      piece: event.piece,
-      moveFrom: event.from,
-      moveTo: event.to,
-    });
+    this.gameRecord.push(event);
     if (!this.promotingOnSquare) {
       this.currentSide = this.anotherSide(event.piece.side);
     }
@@ -113,21 +107,26 @@ export class ChessEngine implements ChessModel {
 
   private intendToCastling(squareFrom: Square, squareTo: Square): boolean {
     const chosenPiece = this.board.onPositionPiece(squareFrom);
-    const whiteCastlingFrom: Square = { column: 'E', row: 1 };
-    const whiteLongCastlingTo: Square = { column: 'C', row: 1 };
-    const whiteShortCastlingTo: Square = { column: 'G', row: 1 };
-    const blackCastlingFrom: Square = { column: 'E', row: 8 };
-    const blackLongCastlingTo: Square = { column: 'C', row: 8 };
-    const blackShortCastlingTo: Square = { column: 'G', row: 8 };
+    if (!(chosenPiece instanceof King)) {
+      return false;
+    }
+
+    const castling = {
+      WHITE: {
+        from: { column: 'E', row: 1 } as Square,
+        longTo: { column: 'C', row: 1 } as Square,
+        shortTo: { column: 'G', row: 1 } as Square,
+      },
+      BLACK: {
+        from: { column: 'E', row: 8 } as Square,
+        longTo: { column: 'C', row: 8 } as Square,
+        shortTo: { column: 'G', row: 8 } as Square,
+      },
+    };
 
     return (
-      chosenPiece instanceof King &&
-      ((chosenPiece.side === Side.WHITE &&
-        this.isSameSquare(squareFrom, whiteCastlingFrom) &&
-        (this.isSameSquare(squareTo, whiteLongCastlingTo) || this.isSameSquare(squareTo, whiteShortCastlingTo))) ||
-        (chosenPiece.side === Side.BLACK &&
-          this.isSameSquare(squareFrom, blackCastlingFrom) &&
-          (this.isSameSquare(squareTo, blackLongCastlingTo) || this.isSameSquare(squareTo, blackShortCastlingTo))))
+      this.isSameSquare(squareFrom, castling[chosenPiece.side].from) &&
+      (this.isSameSquare(squareTo, castling[chosenPiece.side].longTo) || this.isSameSquare(squareTo, castling[chosenPiece.side].shortTo))
     );
   }
 
@@ -175,9 +174,7 @@ export class ChessEngine implements ChessModel {
 
   private pieceWasAlreadyMoved(squareWithPiece: Square) {
     const piece = this.board.onPositionPiece(squareWithPiece);
-    return this.gameRecord?.some(
-      (record) => record.side === this.currentSide && record.piece === piece && this.isSameSquare(record.moveFrom, squareWithPiece),
-    );
+    return this.gameRecord?.some((record) => record.piece === piece && this.isSameSquare(record.from, squareWithPiece));
   }
 
   private castlingWasDone(): PieceWasMoved | undefined {
