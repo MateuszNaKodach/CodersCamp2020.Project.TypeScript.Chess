@@ -1,5 +1,5 @@
 import { ChessModel } from './ChessModel';
-import { Row, Side, Square, SquareWithPiece } from './Types';
+import { columns, Row, Side, Square, SquareWithPiece } from './Types';
 import { King, Pawn, Piece, Rook } from './pieces';
 import { Chessboard } from './Chessboard';
 import { PieceWasMoved } from './PieceWasMoved';
@@ -9,6 +9,7 @@ import { isDefined } from './HelperFunctions';
 import { KingWasChecked } from './KingWasChecked';
 import { KingWasUnchecked } from './KingWasUnchecked';
 import { MoveResult } from './MoveResult';
+import { GameRecord } from './GameRecord';
 
 type CheckedKing = { kingSide: Side; position: Square };
 
@@ -18,6 +19,7 @@ export class ChessEngine implements ChessModel {
   private promotingOnSquare: Square | undefined;
   private checkedKing: CheckedKing | undefined;
   private castlingOnSquare: Square | undefined;
+  private gameRecord: GameRecord[] = [];
 
   constructor(private readonly board: Chessboard) {
     this.squaresWithPiece = board.squaresWithPiece;
@@ -92,6 +94,12 @@ export class ChessEngine implements ChessModel {
 
   private onPieceWasMoved(event: PieceWasMoved): void {
     this.board.movePiece(event.from, event.to);
+    this.gameRecord.push({
+      side: event.piece.side,
+      piece: event.piece,
+      moveFrom: event.from,
+      moveTo: event.to,
+    });
     if (!this.promotingOnSquare) {
       this.currentSide = this.anotherSide(event.piece.side);
     }
@@ -127,45 +135,50 @@ export class ChessEngine implements ChessModel {
     return squareA.column === squareB.column && squareA.row === squareB.row;
   }
 
-  private isCastlingPossible(squareFrom: Square, squareTo: Square): boolean {
+  private isCastlingPossible(kingSquareFrom: Square, kingSquareTo: Square): boolean {
     let squareCrossedByKing!: Square;
-    switch (squareTo.column) {
+    let rookPosition!: Square;
+    let moveDirection!: number;
+    switch (kingSquareTo.column) {
       case 'C':
-        squareCrossedByKing = { column: 'D', row: squareTo.row };
+        squareCrossedByKing = { column: 'D', row: kingSquareTo.row };
+        rookPosition = { column: 'A', row: kingSquareTo.row };
+        moveDirection = -1;
         break;
       case 'G':
-        squareCrossedByKing = { column: 'F', row: squareTo.row };
+        squareCrossedByKing = { column: 'F', row: kingSquareTo.row };
+        rookPosition = { column: 'H', row: kingSquareTo.row };
+        moveDirection = 1;
         break;
     }
-    if (
+    return !(
       this.isKingChecked(this.board, this.currentSide) ||
       this.isSquareChecked(this.board, this.currentSide, squareCrossedByKing) ||
-      this.willBeKingChecked(squareFrom, squareTo)
-    ) {
-      return false;
-    } else {
-      return true;
-    }
+      this.willBeKingChecked(kingSquareFrom, kingSquareTo) ||
+      this.isAnyPieceBetweenKingAndRook(kingSquareFrom, rookPosition, moveDirection) ||
+      this.pieceWasAlreadyMoved(kingSquareFrom) ||
+      this.pieceWasAlreadyMoved(rookPosition)
+    );
   }
-  /*
-  private isAnyPieceBetweenKingAndRook(actualPosition: Square, endPosition: Square){
-    columns.indexOf(actualPosition.column) - columns.indexOf(endPosition.column)
+
+  private isAnyPieceBetweenKingAndRook(actualPosition: Square, rookPosition: Square, moveDirection: number): boolean {
     const nextSquare: Square = {
-      column: columns[columns.indexOf(actualPosition.column) + vector.col],
-      row: (actualPosition.row + vector.row) as Row,
+      column: columns[columns.indexOf(actualPosition.column) + moveDirection],
+      row: actualPosition.row,
     };
-    const isWithinChessboard = Piece.isWithinChessboardBorders(nextSquare);
-    if (!isWithinChessboard) {
-      return [];
+    if (nextSquare.column === rookPosition.column) {
+      return false;
     }
-    const isSquareOccupied = board.onPositionPiece(nextSquare);
-    if (isSquareOccupied) {
-      return this.checkIfNotSameColorPiece(nextSquare, board) ? [nextSquare] : [];
-    } else {
-      return [nextSquare].concat(this.lineMoves(board, nextSquare, vector));
-    }
+    const isSquareOccupied = this.board.onPositionPiece(nextSquare);
+    return isSquareOccupied ? true : this.isAnyPieceBetweenKingAndRook(nextSquare, rookPosition, moveDirection);
   }
-  */
+
+  private pieceWasAlreadyMoved(squareWithPiece: Square) {
+    const piece = this.board.onPositionPiece(squareWithPiece);
+    return this.gameRecord?.some(
+      (record) => record.side === this.currentSide && record.piece === piece && this.isSameSquare(record.moveFrom, squareWithPiece),
+    );
+  }
 
   private castlingWasDone(): PieceWasMoved | undefined {
     let rookSquareFrom: Square | undefined;
