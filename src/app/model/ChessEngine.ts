@@ -127,7 +127,6 @@ export class ChessEngine implements ChessModel {
 
   private onPieceWasMoved(event: PieceWasMoved): void {
     this.board.movePiece(event.from, event.to);
-    // this.currentSide = this.anotherSide(event.piece.side);
     if (!this.promotingOnSquare) {
       this.currentSide = this.anotherSide(event.piece.side);
     }
