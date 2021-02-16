@@ -340,7 +340,7 @@ export class ChessEngine implements ChessModel {
     return {
       eventType: 'CheckmateHasOccurred',
       king: new King(this.currentSide),
-      onSquare: kingPosition,
+      onSquare: kingPosition as Square,
     };
   }
 
