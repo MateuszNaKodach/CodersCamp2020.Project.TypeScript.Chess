@@ -16,7 +16,7 @@ type CheckedKing = { kingSide: Side; position: Square };
 export class ChessEngine implements ChessModel {
   private currentSide: Side = Side.WHITE;
   readonly squaresWithPiece: SquareWithPiece;
-  promotingOnSquare: Square | undefined;
+  private promotingOnSquare: Square | undefined;
   private checkedKing: CheckedKing | undefined;
 
   constructor(private readonly board: Chessboard) {
