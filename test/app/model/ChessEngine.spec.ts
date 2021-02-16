@@ -223,6 +223,25 @@ describe('Chess Engine', () => {
     expect(() => engine.move(blackPawnFrom, blackPawnTo)).toThrowError('Piece can not move to given square.');
   });
 
+  it('When white pawn makes its first move and goes 2 squares ahead and black pawn not standing in the same row, then black pawn cannot attack in passing', () => {
+    const whitePawn = new Pawn(Side.WHITE);
+    const blackPawn = new Pawn(Side.BLACK);
+    const chessboard = new Chessboard({ E2: whitePawn, F7: blackPawn });
+    const engine = new ChessEngine(chessboard);
+    const whitePawnFrom: Square = { column: 'E', row: 2 };
+    const whitePawnTo: Square = { column: 'E', row: 4 };
+    const blackPawnFrom: Square = { column: 'F', row: 7 };
+    const blackPawnTo: Square = { column: 'E', row: 3 };
+
+    engine.move(whitePawnFrom, whitePawnTo);
+
+    expect(engine.possibleMoves(blackPawnFrom)).toIncludeSameMembers([
+      { column: 'F', row: 6 },
+      { column: 'F', row: 5 },
+    ]);
+    expect(() => engine.move(blackPawnFrom, blackPawnTo)).toThrowError('Piece can not move to given square.');
+  });
+
   describe('Return player moves without those that cause his king to check', () => {
     const whiteKing = new King(Side.WHITE);
     const whiteRook = new Rook(Side.WHITE);
