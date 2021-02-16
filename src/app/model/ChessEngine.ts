@@ -415,7 +415,9 @@ export class ChessEngine implements ChessModel {
   }
 
   private canAttackInPassing(squareFrom: Square, lastMove: PieceWasMoved): boolean {
-    return this.lastMoveWasFirstPawnMove(lastMove) && this.isAdjacentColumn(squareFrom, lastMove.from);
+    return (
+      this.lastMoveWasFirstPawnMove(lastMove) && this.isAdjacentColumn(squareFrom, lastMove.from) && squareFrom.row === lastMove.to.row
+    );
   }
 
   private isAdjacentColumn(firstSquare: Square, secondSquare: Square): boolean {
