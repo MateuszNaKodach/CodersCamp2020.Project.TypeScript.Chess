@@ -71,7 +71,7 @@ export class WebChessView implements ChessBoardView {
     const pieceImage = divFrom?.firstChild as HTMLImageElement;
 
     if (pieceImage) {
-      pieceImage.src = `static/img/pieces/${side}-${piece}.svg`;
+      pieceImage.src = `static/img/pieces/${side.toLowerCase()}-${piece.toLowerCase()}.svg`;
     }
   }
 
