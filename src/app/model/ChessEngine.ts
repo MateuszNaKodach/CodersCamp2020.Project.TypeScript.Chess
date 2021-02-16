@@ -231,7 +231,8 @@ export class ChessEngine implements ChessModel {
         piece: squaresWithPieces[squareKey],
       }))
       .filter(({ piece }) => piece.side == this.currentSide)
-      .some(({ position, piece }) => this.possibleMoves(position).length);
+      .some(({ position }) => this.possibleMoves(position).length);
+
     return isAnyPossibleMoves;
   }
 }
