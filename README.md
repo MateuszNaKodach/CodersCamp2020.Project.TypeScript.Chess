@@ -16,12 +16,6 @@ Mentor **[Mateusz Nowak](https://github.com/nowakprojects)**
 - [Paweł Szambelan](https://github.com/Szambelan)
 - [Dominika Zwolenik](https://github.com/DomiZet)
 
-<<<<<<< Updated upstream
-
-=======
-
-> > > > > > > Stashed changes
-
 ## Functionalities
 
 1. Moving all pieces (making a move, as well as showing possible ones):
@@ -29,17 +23,11 @@ Mentor **[Mateusz Nowak](https://github.com/nowakprojects)**
 3. Castling
 4. Checking king
 5. Checkmate
-   <<<<<<< Updated upstream
-6. Performing the whole chess game
-7. Ending the game by Pat
+6. Beating en passant
+7. Performing the whole chess game
+8. Ending the game by Pat
 
 **Our game is fully covered by Unit Tests!**
-
-======= 6. Beating en passant 7. Performing the whole chess game 8. Ending the game by Pat
-
-**Our game is fully covered by Unit Tests!**
-
-> > > > > > > Stashed changes
 
 ## Running the project
 
@@ -47,12 +35,7 @@ Running this project locally
 
 ###### Live version:
 
-<<<<<<< Updated upstream
-
-=======
-(https://nowakprojects.github.io/CodersCamp2020.Project.TypeScript.Chess/)
-
-> > > > > > > Stashed changes
+[live version](https://nowakprojects.github.io/CodersCamp2020.Project.TypeScript.Chess/)
 
 ###### From the repo:
 
@@ -69,10 +52,6 @@ The following technologies were used :
 - CSS
 - TypeScript
 - [Jest](https://jestjs.io/) and [Testing Library](https://testing-library.com/docs/)
-  <<<<<<< Updated upstream
-  =======
 
 ![ancientchessshot](https://user-images.githubusercontent.com/57037612/108393044-8e2a1600-7213-11eb-90f9-7ecc55a0516a.png)
 ![ancientchessshot2](https://user-images.githubusercontent.com/57037612/108393054-91250680-7213-11eb-8e89-67fd56f8aab7.png)
-
-> > > > > > > Stashed changes
