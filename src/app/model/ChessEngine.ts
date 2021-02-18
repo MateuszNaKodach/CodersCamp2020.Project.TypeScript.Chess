@@ -186,7 +186,7 @@ export class ChessEngine implements ChessModel {
     }
     return !(
       this.isKingChecked(this.board, this.currentSide) ||
-      this.isSquareChecked(this.board, this.currentSide, squareCrossedByKing) ||
+      this.willBeKingChecked(kingSquareFrom, squareCrossedByKing) ||
       this.willBeKingChecked(kingSquareFrom, kingSquareTo) ||
       this.isAnyPieceBetweenKingAndRook(kingSquareFrom, rookPosition, moveDirection) ||
       this.pieceWasAlreadyMoved(kingSquareFrom) ||

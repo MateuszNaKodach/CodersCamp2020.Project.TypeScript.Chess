@@ -502,6 +502,7 @@ describe('Chess Engine', () => {
     const whiteRookA1 = new Rook(Side.WHITE);
     const whiteRookH1 = new Rook(Side.WHITE);
     const whiteBishop = new Bishop(Side.WHITE);
+    const whitePawn = new Pawn(Side.WHITE);
     const blackKing = new King(Side.BLACK);
     const blackRook = new Rook(Side.BLACK);
     const blackKnight = new Knight(Side.BLACK);
@@ -598,13 +599,30 @@ describe('Chess Engine', () => {
       expect(() => engine.move(kingSquareFrom, longCastlingSquareTo)).toThrowError('Piece can not move to given square.');
     });
 
-    it('When king is moving through check, then castling cannot be done', () => {
+    it('When king is moving through square checked by knight, then castling cannot be done', () => {
       const boardWithPieces: SquareWithPiece = { A1: whiteRookA1, E1: whiteKing, H1: whiteRookH1, E3: blackKnight };
       const chessBoard = new Chessboard(boardWithPieces);
       const engine = new ChessEngine(chessBoard);
       const kingSquareFrom: Square = { column: 'E', row: 1 };
       const shortCastlingSquareTo: Square = { column: 'G', row: 1 };
       const longCastlingSquareTo: Square = { column: 'C', row: 1 };
+
+      expect(() => engine.move(kingSquareFrom, shortCastlingSquareTo)).toThrowError('Piece can not move to given square.');
+
+      expect(() => engine.move(kingSquareFrom, longCastlingSquareTo)).toThrowError('Piece can not move to given square.');
+    });
+
+    it('When king is moving through square checked by pawn, then castling cannot be done', () => {
+      const boardWithPieces: SquareWithPiece = { E6: whitePawn, E8: blackKing, H8: blackRook };
+      const chessBoard = new Chessboard(boardWithPieces);
+      const engine = new ChessEngine(chessBoard);
+      const pawnSquareFrom: Square = { column: 'E', row: 6 };
+      const pawnSquareTo: Square = { column: 'E', row: 7 };
+      const kingSquareFrom: Square = { column: 'E', row: 8 };
+      const shortCastlingSquareTo: Square = { column: 'G', row: 8 };
+      const longCastlingSquareTo: Square = { column: 'C', row: 8 };
+
+      engine.move(pawnSquareFrom, pawnSquareTo);
 
       expect(() => engine.move(kingSquareFrom, shortCastlingSquareTo)).toThrowError('Piece can not move to given square.');
 
