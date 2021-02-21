@@ -28,6 +28,8 @@ Mentor **[Mateusz Nowak](https://github.com/nowakprojects)**
 8. Ending the game by Pat
 
 **Our game is fully covered by Unit Tests!**
+[![codecov](https://codecov.io/gh/nowakprojects/CodersCamp2020.Project.TypeScript.Chess/branch/develop/graph/badge.svg?token=N3DLMXP3WM)](https://codecov.io/gh/nowakprojects/CodersCamp2020.Project.TypeScript.Chess)
+
 
 ## Running the project
 
