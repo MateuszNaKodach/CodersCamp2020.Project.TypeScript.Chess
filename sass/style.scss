@@ -1,0 +1,9 @@
+@import 'reset';
+@import 'fonts';
+@import 'vars';
+@import 'main';
+
+@import 'components/chessboard';
+@import 'components/button';
+@import 'components/piece';
+@import 'layouts/promotionModal';

@@ -1,0 +1,55 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: CodersCamp2020 | ♟️ Chess Game - TypeScript CI
+
+on:
+  push:
+    paths-ignore:
+      - '**/*.md'
+
+jobs:
+  build:
+    name: 'Build Ancient Egypt Chess application'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - run: npm ci
+      - run: npm run lint:ci
+      - run: npm run format:ci
+      - run: npm run build --if-present
+      - run: npm run test:ci
+      - uses: actions/upload-artifact@v1
+        name: Upload build as artifact
+        with:
+          name: chess-dist
+          path: ./dist
+      - name: Upload test coverage report to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          flags: typescript-project-chess
+
+  deploy-on-github-pages:
+    name: 'Deploy app to GitHub Pages from develop branch source code'
+    if: github.ref == 'refs/heads/develop'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: chess-dist
+          path: ./dist
+      - name: Deploy app as GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3.7.0-6
+        if: ${{ github.event_name != 'pull_request' && always() }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: './dist'
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          force_orphan: true
+          keep_files: false
